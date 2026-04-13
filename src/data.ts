@@ -1,0 +1,268 @@
+export interface Influencer {
+  handle: string
+  name: string
+  followers: string
+  avatar: string // emoji fallback
+}
+
+export interface Restaurant {
+  id: string
+  name: string
+  cuisine: string
+  city: string
+  address: string
+  priceRange: '€' | '€€' | '€€€' | '€€€€'
+  rating: number
+  cover: string // couleur de fond pour le visuel
+  coverEmoji: string
+  tags: string[]
+  recommendedBy: Influencer
+  instagramPost: string
+  description: string
+}
+
+export const CITIES = ['Toutes les villes', 'Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice', 'Toulouse']
+export const CUISINES = ['Toutes les cuisines', 'Japonaise', 'Italienne', 'Française', 'Coréenne', 'Mexicaine', 'Libanaise', 'Grecque', 'Péruvienne', 'Végétarienne']
+
+export const RESTAURANTS: Restaurant[] = [
+  {
+    id: '1',
+    name: 'Kibo',
+    cuisine: 'Japonaise',
+    city: 'Paris',
+    address: '18 rue du Faubourg Saint-Antoine, 75011',
+    priceRange: '€€€',
+    rating: 4.8,
+    cover: '#FDF0FD',
+    coverEmoji: '🍣',
+    tags: ['Omakase', 'Incontournable', 'Réservation obligatoire'],
+    recommendedBy: {
+      handle: '@lefooding',
+      name: 'Le Fooding',
+      followers: '412K',
+      avatar: '🍽️',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Un comptoir omakase confidentiel où le chef propose 12 services autour du meilleur poisson de saison. Liste d\'attente de plusieurs semaines.',
+  },
+  {
+    id: '2',
+    name: 'Boca Grande',
+    cuisine: 'Mexicaine',
+    city: 'Paris',
+    address: '6 rue Guilleminot, 75014',
+    priceRange: '€€',
+    rating: 4.6,
+    cover: '#FFF8EC',
+    coverEmoji: '🌮',
+    tags: ['Tacos', 'Festif', 'Cocktails'],
+    recommendedBy: {
+      handle: '@sortiraparis',
+      name: 'Sortir à Paris',
+      followers: '890K',
+      avatar: '🗺️',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'La cantine mexicaine qui cartonne. Tacos al pastor préparés sur place, guacamole minute et mezcal de qualité. Ambiance festive garantie.',
+  },
+  {
+    id: '3',
+    name: 'Pépone',
+    cuisine: 'Italienne',
+    city: 'Lyon',
+    address: '23 place Bellecour, 69002',
+    priceRange: '€€',
+    rating: 4.7,
+    cover: '#ECF8F6',
+    coverEmoji: '🍝',
+    tags: ['Pasta fraîche', 'Terrasse', 'Vin naturel'],
+    recommendedBy: {
+      handle: '@lyonfoodie',
+      name: 'Lyon Foodie',
+      followers: '156K',
+      avatar: '🦁',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Trattoria moderne avec des pâtes fraîches faites chaque matin. La carbonara y est considérée comme la meilleure de la ville.',
+  },
+  {
+    id: '4',
+    name: 'Chez Fonfon',
+    cuisine: 'Française',
+    city: 'Marseille',
+    address: '140 Vallon des Auffes, 13007',
+    priceRange: '€€€',
+    rating: 4.9,
+    cover: '#EBE9FA',
+    coverEmoji: '🐟',
+    tags: ['Bouillabaisse', 'Vue mer', 'Classique'],
+    recommendedBy: {
+      handle: '@marseillecityguide',
+      name: 'Marseille City Guide',
+      followers: '234K',
+      avatar: '⛵',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'L\'institution marseillaise. Bouillabaisse préparée selon la charte, vue imprenable sur le vallon des Auffes. Une adresse intemporelle.',
+  },
+  {
+    id: '5',
+    name: 'Séoul Kitchen',
+    cuisine: 'Coréenne',
+    city: 'Paris',
+    address: '42 rue du Temple, 75004',
+    priceRange: '€€',
+    rating: 4.5,
+    cover: '#F5FBF7',
+    coverEmoji: '🥩',
+    tags: ['BBQ', 'Grill à table', 'Soju'],
+    recommendedBy: {
+      handle: '@davidtoutenbois',
+      name: 'David Toutenbois',
+      followers: '1.2M',
+      avatar: '👨‍🍳',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Le meilleur BBQ coréen de Paris selon plusieurs influenceurs culinaires. Viandes marinées, kimchi maison et ambiance de Seoul.',
+  },
+  {
+    id: '6',
+    name: 'Souk & Spices',
+    cuisine: 'Libanaise',
+    city: 'Bordeaux',
+    address: '15 cours de l\'Intendance, 33000',
+    priceRange: '€€',
+    rating: 4.7,
+    cover: '#FDF8F4',
+    coverEmoji: '🧆',
+    tags: ['Mezze', 'Végétarien friendly', 'Épices'],
+    recommendedBy: {
+      handle: '@bordeauxmaville',
+      name: 'Bordeaux Ma Ville',
+      followers: '98K',
+      avatar: '🍷',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Un voyage au Liban sans quitter Bordeaux. Les mezze sont généreux, les épices authentiques et le personnel aux petits soins.',
+  },
+  {
+    id: '7',
+    name: 'Nostra',
+    cuisine: 'Péruvienne',
+    city: 'Paris',
+    address: '8 rue de Bretagne, 75003',
+    priceRange: '€€€',
+    rating: 4.8,
+    cover: '#FDF0FD',
+    coverEmoji: '🫐',
+    tags: ['Ceviche', 'Bistronomique', 'Trending'],
+    recommendedBy: {
+      handle: '@lafourchette_paris',
+      name: 'La Fourchette Paris',
+      followers: '567K',
+      avatar: '🍴',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'La cuisine péruvienne fusion qui fait parler toute la scène parisienne. Ceviche au lait de tigre, tiradito et pisco sour d\'anthologie.',
+  },
+  {
+    id: '8',
+    name: 'La Petite Fabrique',
+    cuisine: 'Végétarienne',
+    city: 'Toulouse',
+    address: '11 rue Saint-Rome, 31000',
+    priceRange: '€',
+    rating: 4.6,
+    cover: '#F5FBF7',
+    coverEmoji: '🥗',
+    tags: ['Bio', 'Local', 'Zéro déchet'],
+    recommendedBy: {
+      handle: '@greenlifetlse',
+      name: 'Green Life Toulouse',
+      followers: '72K',
+      avatar: '🌿',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'La table végétarienne de référence à Toulouse. Produits issus de fermes locales, menu qui change chaque jour selon les arrivages.',
+  },
+  {
+    id: '9',
+    name: 'Milos',
+    cuisine: 'Grecque',
+    city: 'Nice',
+    address: '22 cours Saleya, 06300',
+    priceRange: '€€',
+    rating: 4.7,
+    cover: '#ECF8F6',
+    coverEmoji: '🫒',
+    tags: ['Terrasse', 'Mer', 'Grillades'],
+    recommendedBy: {
+      handle: '@nicelifestyle',
+      name: 'Nice Lifestyle',
+      followers: '188K',
+      avatar: '☀️',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Face au marché du Cours Saleya, ce restaurant grec propose des grillades de poissons et viandes dans une ambiance méditerranéenne parfaite.',
+  },
+  {
+    id: '10',
+    name: 'Yūgen',
+    cuisine: 'Japonaise',
+    city: 'Lyon',
+    address: '5 place des Jacobins, 69002',
+    priceRange: '€€€€',
+    rating: 5.0,
+    cover: '#FDF0FD',
+    coverEmoji: '🌸',
+    tags: ['Gastronomique', 'Étoilé', 'Expérience'],
+    recommendedBy: {
+      handle: '@chefstable_france',
+      name: "Chef's Table France",
+      followers: '2.1M',
+      avatar: '⭐',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Une expérience gastronomique fusion franco-japonaise. Le chef Kenji Mori propose un menu dégustation 8 services d\'une précision absolue.',
+  },
+  {
+    id: '11',
+    name: 'Tannat',
+    cuisine: 'Française',
+    city: 'Bordeaux',
+    address: '31 rue du Palais Gallien, 33000',
+    priceRange: '€€€',
+    rating: 4.8,
+    cover: '#EBE9FA',
+    coverEmoji: '🍷',
+    tags: ['Bistronomique', 'Cave exceptionnelle', 'Saisonnier'],
+    recommendedBy: {
+      handle: '@winelover_fr',
+      name: 'Wine Lover France',
+      followers: '445K',
+      avatar: '🍾',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Le bistrot gastronomique bordelais qui fait l\'unanimité. Carte des vins de 600 références et cuisine du marché portée par un chef audacieux.',
+  },
+  {
+    id: '12',
+    name: 'Ôma',
+    cuisine: 'Coréenne',
+    city: 'Marseille',
+    address: '9 rue Paradis, 13001',
+    priceRange: '€€',
+    rating: 4.6,
+    cover: '#FDF8F4',
+    coverEmoji: '🍜',
+    tags: ['Ramen', 'Street food', 'Fusion'],
+    recommendedBy: {
+      handle: '@food_marseille',
+      name: 'Food Marseille',
+      followers: '127K',
+      avatar: '🌊',
+    },
+    instagramPost: 'https://instagram.com',
+    description: 'Les meilleurs ramens de Marseille, préparés avec un bouillon mijoté 24h. Le bowl Ôma signature avec œuf mollet et porc effiloché est légendaire.',
+  },
+]

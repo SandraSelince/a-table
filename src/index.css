@@ -1,43 +1,110 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
 
-/* ── Tokens Sillage ─────────────────────────────────────────────────────────── */
-:root, [data-theme="sillage"] {
-  --color-magenta-700: #AE0FAE;
-  --color-magenta-600: #DD22DD;
-  --color-magenta-400: #F09AF0;
-  --color-magenta-300: #F7CDF7;
-  --color-magenta-100: #FDF0FD;
-  --color-navy-800:  #140B5A;
-  --color-navy-700:  #20128A;
-  --color-navy-100:  #EBE9FA;
-  --color-teal-400:  #A2E0D6;
-  --color-teal-100:  #ECF8F6;
-  --color-dark-900:  #2D2D2D;
-  --color-dark-800:  #4A4A4A;
-  --color-dark-700:  #666666;
-  --color-dark-600:  #808080;
-  --color-dark-400:  #AAAAAA;
-  --color-dark-200:  #D4D4D4;
-  --color-dark-150:  #E8ECEB;
-  --color-dark-100:  #F5F5F5;
-  --color-white:     #FFFFFF;
-  --color-success-600: #3BA75B;
-  --color-success-100: #F5FBF7;
-  --font-family-base: 'Inter', -apple-system, sans-serif;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-pill: 9999px;
+/* ═══════════════════════════════════════════════════════════════════════════
+   Material Design 3 — System tokens (Light theme)
+   Source color: #9B27AF
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+
+  /* ── Color roles ─────────────────────────────────────────────────────── */
+  --md-sys-color-primary:                  #8B1EA8;
+  --md-sys-color-on-primary:               #FFFFFF;
+  --md-sys-color-primary-container:        #F4D5FF;
+  --md-sys-color-on-primary-container:     #2C003D;
+
+  --md-sys-color-secondary:                #6D5577;
+  --md-sys-color-on-secondary:             #FFFFFF;
+  --md-sys-color-secondary-container:      #F5D9FF;
+  --md-sys-color-on-secondary-container:   #271139;
+
+  --md-sys-color-tertiary:                 #80525A;
+  --md-sys-color-on-tertiary:              #FFFFFF;
+  --md-sys-color-tertiary-container:       #FFD9DE;
+  --md-sys-color-on-tertiary-container:    #321018;
+
+  --md-sys-color-error:                    #BA1A1A;
+  --md-sys-color-on-error:                 #FFFFFF;
+  --md-sys-color-error-container:          #FFDAD6;
+  --md-sys-color-on-error-container:       #410002;
+
+  --md-sys-color-background:               #FFFBFF;
+  --md-sys-color-on-background:            #1D1B20;
+
+  --md-sys-color-surface:                  #FFFBFF;
+  --md-sys-color-on-surface:               #1D1B20;
+  --md-sys-color-surface-variant:          #EBDFF2;
+  --md-sys-color-on-surface-variant:       #4D4453;
+
+  --md-sys-color-surface-container-lowest:  #FFFFFF;
+  --md-sys-color-surface-container-low:     #F9F2FF;
+  --md-sys-color-surface-container:         #F3EBF9;
+  --md-sys-color-surface-container-high:    #EDE5F3;
+  --md-sys-color-surface-container-highest: #E7DFEE;
+
+  --md-sys-color-inverse-surface:          #322F35;
+  --md-sys-color-inverse-on-surface:       #F6EEF8;
+  --md-sys-color-inverse-primary:          #E4B0FF;
+
+  --md-sys-color-outline:                  #7E7385;
+  --md-sys-color-outline-variant:          #CFB9D7;
+
+  --md-sys-color-scrim:                    rgba(0, 0, 0, 0.32);
+
+  /* ── Shape ───────────────────────────────────────────────────────────── */
+  --md-sys-shape-corner-none:          0px;
+  --md-sys-shape-corner-extra-small:   4px;
+  --md-sys-shape-corner-small:         8px;
+  --md-sys-shape-corner-medium:        12px;
+  --md-sys-shape-corner-large:         16px;
+  --md-sys-shape-corner-extra-large:   28px;
+  --md-sys-shape-corner-full:          9999px;
+
+  /* ── Elevation (box-shadow) ──────────────────────────────────────────── */
+  --md-sys-elevation-level0: none;
+  --md-sys-elevation-level1: 0px 1px 2px rgba(0,0,0,0.30), 0px 1px 3px 1px rgba(0,0,0,0.15);
+  --md-sys-elevation-level2: 0px 1px 2px rgba(0,0,0,0.30), 0px 2px 6px 2px rgba(0,0,0,0.15);
+  --md-sys-elevation-level3: 0px 1px 3px rgba(0,0,0,0.30), 0px 4px 8px 3px rgba(0,0,0,0.15);
+  --md-sys-elevation-level4: 0px 2px 3px rgba(0,0,0,0.30), 0px 6px 10px 4px rgba(0,0,0,0.15);
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --md-sys-typescale-display-large-size:      57px;
+  --md-sys-typescale-display-large-line:      64px;
+  --md-sys-typescale-headline-large-size:     32px;
+  --md-sys-typescale-headline-large-line:     40px;
+  --md-sys-typescale-headline-medium-size:    28px;
+  --md-sys-typescale-headline-medium-line:    36px;
+  --md-sys-typescale-title-large-size:        22px;
+  --md-sys-typescale-title-large-line:        28px;
+  --md-sys-typescale-title-medium-size:       16px;
+  --md-sys-typescale-title-medium-line:       24px;
+  --md-sys-typescale-title-small-size:        14px;
+  --md-sys-typescale-title-small-line:        20px;
+  --md-sys-typescale-body-large-size:         16px;
+  --md-sys-typescale-body-large-line:         24px;
+  --md-sys-typescale-body-medium-size:        14px;
+  --md-sys-typescale-body-medium-line:        20px;
+  --md-sys-typescale-body-small-size:         12px;
+  --md-sys-typescale-body-small-line:         16px;
+  --md-sys-typescale-label-large-size:        14px;
+  --md-sys-typescale-label-large-line:        20px;
+  --md-sys-typescale-label-medium-size:       12px;
+  --md-sys-typescale-label-medium-line:       16px;
+  --md-sys-typescale-label-small-size:        11px;
+  --md-sys-typescale-label-small-line:        16px;
+
+  /* ── Font family ─────────────────────────────────────────────────────── */
+  --md-sys-typescale-font:  'Roboto', -apple-system, sans-serif;
 }
 
-/* ── Reset ──────────────────────────────────────────────────────────────────── */
+/* ── Reset ──────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: var(--font-family-base);
-  color: var(--color-dark-900);
-  background: var(--color-white);
+  font-family: var(--md-sys-typescale-font);
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line);
+  color: var(--md-sys-color-on-background);
+  background: var(--md-sys-color-background);
   -webkit-font-smoothing: antialiased;
 }
 

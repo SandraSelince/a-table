@@ -1,0 +1,302 @@
+/* ── Map page layout ─────────────────────────────────────────────────────── */
+.map-page {
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--md-sys-shape-corner-medium);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  height: calc(100dvh - 200px);
+  min-height: 400px;
+}
+
+.map-canvas {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ── Pin marker ──────────────────────────────────────────────────────────── */
+.map-pin {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--md-sys-elevation-level2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.map-pin--active {
+  transform: scale(1.25);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent);
+}
+
+/* ── Detail panel — MD3 Side Sheet (desktop) ─────────────────────────────── */
+.map-detail {
+  width: 360px;
+  flex-shrink: 0;
+  background: var(--md-sys-color-surface-container-low);
+  border-left: 1px solid var(--md-sys-color-outline-variant);
+  overflow-y: auto;
+  position: relative;
+  animation: slide-in-right 0.25s cubic-bezier(0.2, 0, 0, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.map-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: rgba(0, 0, 0, 0.20);
+  color: #fff;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s ease;
+}
+
+.map-detail-close:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.map-detail-cover {
+  height: 110px;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px 20px;
+  flex-shrink: 0;
+}
+
+.map-detail-body {
+  padding: 16px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.map-detail-name {
+  font-size: var(--md-sys-typescale-title-large-size);
+  line-height: var(--md-sys-typescale-title-large-line);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.map-detail-address {
+  font-size: var(--md-sys-typescale-body-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* MD3 Chips */
+.map-detail-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.map-chip {
+  font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--md-sys-shape-corner-small);
+  border: 1px solid transparent;
+}
+
+.map-chip--cuisine {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.map-chip--price {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+/* Rating block */
+.map-detail-row {
+  padding: 12px 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.map-detail-label {
+  font-size: var(--md-sys-typescale-label-small-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 6px;
+}
+
+.map-detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-rating-stars {
+  color: #F59E0B;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.map-rating-value {
+  font-size: var(--md-sys-typescale-title-medium-size);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.map-rating-source {
+  font-size: var(--md-sys-typescale-label-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 500;
+}
+
+/* Influencer block — MD3 tonal surface */
+.map-detail-influencer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.map-influencer-avatar {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.map-influencer-label {
+  font-size: var(--md-sys-typescale-label-small-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 2px;
+}
+
+.map-influencer-name {
+  font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.map-influencer-handle {
+  font-size: var(--md-sys-typescale-label-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 2px;
+}
+
+.map-detail-desc {
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* CTA — MD3 Filled Button */
+.map-detail-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 24px;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: var(--md-sys-shape-corner-full);
+  font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-family: var(--md-sys-typescale-font);
+  margin-top: 4px;
+  transition: box-shadow 0.2s ease;
+}
+
+.map-detail-cta:hover {
+  box-shadow: var(--md-sys-elevation-level1);
+  background: color-mix(in srgb, var(--md-sys-color-primary) 92%, var(--md-sys-color-on-primary));
+}
+
+/* ── Mobile — MD3 Bottom Sheet ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .map-page {
+    flex-direction: column;
+    height: calc(100dvh - 160px);
+  }
+
+  .map-canvas {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .map-detail {
+    width: 100%;
+    height: 46%;
+    flex-shrink: 0;
+    border-left: none;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
+    animation: slide-up-sheet 0.25s cubic-bezier(0.2, 0, 0, 1);
+    overflow-x: hidden;
+  }
+
+  @keyframes slide-up-sheet {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .map-detail-cover {
+    display: none;
+  }
+
+  .map-detail-body {
+    padding: 14px 16px 24px;
+    gap: 10px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .map-detail-name {
+    font-size: var(--md-sys-typescale-title-medium-size);
+    padding-right: 36px;
+  }
+
+  /* Drag handle */
+  .map-detail::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 4px;
+    background: var(--md-sys-color-on-surface-variant);
+    opacity: 0.4;
+    border-radius: var(--md-sys-shape-corner-full);
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .map-detail-close {
+    top: 10px;
+    right: 10px;
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+}

@@ -78,7 +78,7 @@
 }
 
 .map-detail-cover {
-  height: 110px;
+  height: 220px;
   display: flex;
   align-items: flex-end;
   padding: 14px 20px;
@@ -112,21 +112,25 @@
 }
 
 .map-chip {
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   padding: 4px 12px;
-  border-radius: var(--md-sys-shape-corner-small);
-  border: 1px solid transparent;
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1.5px solid transparent;
 }
 
 .map-chip--cuisine {
   background: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
+  border-color: var(--md-sys-color-secondary);
 }
 
 .map-chip--price {
   background: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
+  border-color: var(--md-sys-color-primary);
 }
 
 /* Rating block */

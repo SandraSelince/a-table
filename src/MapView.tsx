@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import type { Restaurant } from './data'
+import { fetchPlacePhoto } from './services/places'
 import 'leaflet/dist/leaflet.css'
 import './MapView.css'
 
@@ -39,13 +40,24 @@ function MapClickHandler({ onClose }: { onClose: () => void }) {
 }
 
 function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
+  useEffect(() => {
+    fetchPlacePhoto(restaurant.name, restaurant.address).then(setPhotoUrl)
+  }, [restaurant.id])
+
   return (
     <div className="map-detail">
-      <button className="map-detail-close" onClick={onClose}>✕</button>
-      <div className="map-detail-cover" style={{ background: restaurant.cover }} />
+      <button className="map-detail-close" onClick={onClose}><span className="mi">close</span></button>
+      <div
+        className="map-detail-cover"
+        style={photoUrl
+          ? { backgroundImage: `url(${photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+          : { background: restaurant.cover }
+        }
+      />
       <div className="map-detail-body">
         <h2 className="map-detail-name">{restaurant.name}</h2>
-        <p className="map-detail-address">📍 {restaurant.address}</p>
+        <p className="map-detail-address"><span className="mi">location_on</span> {restaurant.address}</p>
 
         <div className="map-detail-chips">
           <span className="map-chip map-chip--cuisine">{restaurant.cuisine}</span>
@@ -66,9 +78,8 @@ function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose:
         <div className="map-detail-influencer">
           <span className="map-influencer-avatar">{restaurant.recommendedBy.avatar}</span>
           <div>
-            <p className="map-influencer-label">Recommandé par</p>
-            <p className="map-influencer-name">{restaurant.recommendedBy.name}</p>
-            <p className="map-influencer-handle">{restaurant.recommendedBy.handle} · {restaurant.recommendedBy.followers} abonnés</p>
+            <p className="map-influencer-name">Recommandé par {restaurant.recommendedBy.handle}</p>
+            <p className="map-influencer-handle">{restaurant.recommendedBy.followers} abonnés</p>
           </div>
         </div>
 
@@ -93,7 +104,7 @@ interface MapViewProps {
 
 export function MapView({ restaurants }: MapViewProps) {
   const [selected, setSelected] = useState<Restaurant | null>(null)
-  const center: [number, number] = [46.8, 2.3]
+  const center: [number, number] = [48.8566, 2.3522]
 
   function handleSelect(r: Restaurant) {
     setSelected(prev => prev?.id === r.id ? null : r)
@@ -107,7 +118,7 @@ export function MapView({ restaurants }: MapViewProps) {
     <div className={`map-page ${selected ? 'map-page--open' : ''}`}>
       <MapContainer
         center={center}
-        zoom={6}
+        zoom={13}
         className="map-canvas"
         scrollWheelZoom
         touchZoom

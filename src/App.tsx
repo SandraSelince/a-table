@@ -14,7 +14,7 @@ function usePlacePhoto(restaurant: Restaurant | null) {
   return photoUrl
 }
 
-const ALL_INFLUENCERS = 'Tous les influenceurs'
+
 
 const INFLUENCERS: Influencer[] = [
   ...new Map(
@@ -153,7 +153,7 @@ interface FilterDropdownProps {
   children: React.ReactNode
 }
 
-function FilterDropdown({ label, value, children }: FilterDropdownProps) {
+function FilterDropdown({ value, children }: FilterDropdownProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 

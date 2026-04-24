@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import type { Restaurant } from './data'
-import { fetchPlacePhoto } from './services/places'
+
 import 'leaflet/dist/leaflet.css'
 import './MapView.css'
 
@@ -39,65 +39,6 @@ function MapClickHandler({ onClose }: { onClose: () => void }) {
   return null
 }
 
-function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
-  useEffect(() => {
-    fetchPlacePhoto(restaurant.name, restaurant.address).then(setPhotoUrl)
-  }, [restaurant.id])
-
-  return (
-    <div className="map-detail">
-      <div
-        className="map-detail-cover"
-        style={photoUrl
-          ? { backgroundImage: `url(${photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-          : { background: restaurant.cover }
-        }
-      />
-      <button className="map-detail-close" onClick={onClose}><span className="mi">close</span></button>
-
-      <div className="map-detail-body">
-        <div className="map-detail-header">
-          <h2 className="map-detail-name">{restaurant.name}</h2>
-          <span className="map-detail-rating">
-            {'★'.repeat(Math.floor(restaurant.rating))}{restaurant.rating % 1 >= 0.5 ? '½' : ''}
-            <span className="map-rating-value">{restaurant.rating.toFixed(1)}</span>
-          </span>
-        </div>
-
-        <p className="map-detail-meta">
-          <span>{restaurant.cuisine}</span>
-          <span className="map-meta-dot">·</span>
-          <span>{restaurant.priceRange}</span>
-          <span className="map-meta-dot">·</span>
-          <span>{restaurant.city}</span>
-        </p>
-
-        <div className="map-detail-tags">
-          {restaurant.tags.map(tag => (
-            <span key={tag} className="tag">{tag}</span>
-          ))}
-        </div>
-
-        <p className="map-detail-desc">{restaurant.description}</p>
-
-        <div className="map-detail-influencer">
-          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
-          <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
-        </div>
-
-        <a
-          href={restaurant.instagramPost}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="map-detail-cta"
-        >
-          Voir sur Instagram
-        </a>
-      </div>
-    </div>
-  )
-}
 
 interface MapViewProps {
   restaurants: Restaurant[]

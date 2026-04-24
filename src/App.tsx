@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { RESTAURANTS, CITIES, CUISINES, type Influencer, type Restaurant } from './data'
 import { MapView } from './MapView'
 import { fetchPlacePhoto } from './services/places'
@@ -35,7 +36,7 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onClick: () => void }) {
+function RestaurantCard({ restaurant, onClick, active }: { restaurant: Restaurant; onClick: () => void; active?: boolean }) {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const ref = useRef<HTMLElement>(null)
 
@@ -55,89 +56,94 @@ function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onCli
     return () => observer.disconnect()
   }, [restaurant.id])
 
+  useEffect(() => {
+    if (active && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [active])
+
   return (
-    <article className="card" onClick={onClick} ref={ref}>
+    <article className={`card ${active ? 'card--active' : ''}`} onClick={onClick} ref={ref}>
       <div
         className="card-cover"
         style={photoUrl
           ? { backgroundImage: `url(${photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
           : { background: restaurant.cover }
         }
-      >
-        <div className="card-cover-overlay">
-          <span className="card-cuisine-badge">{restaurant.cuisine}</span>
-          <div className="card-cover-rating">
-            <span className="card-cover-star">★</span>
-            <span className="card-cover-score">{restaurant.rating}</span>
-          </div>
-        </div>
-        <span className="card-price">{restaurant.priceRange}</span>
-      </div>
+      />
       <div className="card-body">
-        <h3 className="card-name">{restaurant.name}</h3>
-        <p className="card-meta"><span className="mi" style={{fontSize:'14px',marginRight:'2px'}}>location_on</span>{restaurant.city}</p>
+        <div className="card-header">
+          <h3 className="card-name">{restaurant.name}</h3>
+          <StarRating rating={restaurant.rating} />
+        </div>
+        <p className="card-meta">
+          <span>{restaurant.cuisine}</span>
+          <span className="card-meta-dot">·</span>
+          <span>{restaurant.priceRange}</span>
+          <span className="card-meta-dot">·</span>
+          <span>{restaurant.city}</span>
+        </p>
         <div className="card-tags">
           {restaurant.tags.map(tag => (
             <span key={tag} className="tag">{tag}</span>
           ))}
         </div>
         <div className="card-influencer">
-          <div>
-            <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
-            <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
-          </div>
+          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
+          <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
         </div>
+        {active && (
+          <div className="card-expanded">
+            <p className="card-description">{restaurant.description}</p>
+            <a
+              href={restaurant.instagramPost}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-cta"
+              onClick={e => e.stopPropagation()}
+            >
+              Voir sur Instagram
+            </a>
+          </div>
+        )}
       </div>
     </article>
   )
 }
 
-function Modal({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
+function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
   const photoUrl = usePlacePhoto(restaurant)
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}><span className="mi">close</span></button>
+    <>
+      <div className="rsheet-backdrop" onClick={onClose} />
+      <div className="rsheet">
+        <div className="rsheet-handle" />
+        <button className="rsheet-close" onClick={onClose}><span className="mi">close</span></button>
         <div
-          className="modal-cover"
+          className="rsheet-cover"
           style={photoUrl
             ? { backgroundImage: `url(${photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
             : { background: restaurant.cover }
           }
         />
-        <div className="modal-body">
-          <div className="modal-top">
-            <div>
-              <h2 className="modal-name">{restaurant.name}</h2>
-              <p className="modal-meta">{restaurant.cuisine} · {restaurant.city} · {restaurant.priceRange}</p>
-            </div>
+        <div className="rsheet-body">
+          <div className="rsheet-header">
+            <h2 className="rsheet-name">{restaurant.name}</h2>
             <StarRating rating={restaurant.rating} />
           </div>
-          <p className="modal-address"><span className="mi">location_on</span> {restaurant.address}</p>
-          <p className="modal-description">{restaurant.description}</p>
-          <div className="modal-tags">
-            {restaurant.tags.map(tag => (
-              <span key={tag} className="tag">{tag}</span>
-            ))}
+          <p className="rsheet-meta">{restaurant.cuisine} · {restaurant.priceRange} · {restaurant.city}</p>
+          <div className="rsheet-tags">
+            {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
           </div>
-          <div className="modal-influencer">
-            <span className="influencer-avatar">{restaurant.recommendedBy.avatar}</span>
-            <div>
-              <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
-              <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
-            </div>
-          </div>
-          <a
-            href={restaurant.instagramPost}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="modal-cta"
-          >
+          <p className="rsheet-description">{restaurant.description}</p>
+          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
+          <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
+          <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta">
             Voir sur Instagram
           </a>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -165,7 +171,6 @@ function FilterDropdown({ label, value, children }: FilterDropdownProps) {
   return (
     <div className={`filter-dropdown ${open ? 'filter-dropdown--open' : ''}`} ref={ref}>
       <button className="filter-dropdown-btn" onClick={() => setOpen(v => !v)}>
-        <span className="filter-dropdown-label">{label}</span>
         <span className="filter-dropdown-value">{value}</span>
         <span className="mi filter-dropdown-arrow">{open ? 'expand_less' : 'expand_more'}</span>
       </button>
@@ -211,51 +216,54 @@ function FilterSheet({ open, onClose, onApply, pendingCount, children }: FilterS
 
 type ViewMode = 'grid' | 'map'
 
+function toggle(arr: string[], value: string): string[] {
+  return arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]
+}
+
 export function App() {
-  const [selectedCity, setSelectedCity] = useState('Toutes les villes')
-  const [selectedCuisine, setSelectedCuisine] = useState('Toutes les cuisines')
-  const [selectedInfluencer, setSelectedInfluencer] = useState(ALL_INFLUENCERS)
+  const [selectedCities, setSelectedCities] = useState<string[]>([])
+  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([])
+  const [selectedInfluencers, setSelectedInfluencers] = useState<string[]>([])
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<Restaurant | null>(null)
+  const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
 
-  // Pending state — utilisé uniquement dans le sheet mobile, appliqué au clic sur "Appliquer"
-  const [pendingCity, setPendingCity] = useState('Toutes les villes')
-  const [pendingCuisine, setPendingCuisine] = useState('Toutes les cuisines')
-  const [pendingInfluencer, setPendingInfluencer] = useState(ALL_INFLUENCERS)
+  // Pending state — mobile sheet uniquement
+  const [pendingCities, setPendingCities] = useState<string[]>([])
+  const [pendingCuisines, setPendingCuisines] = useState<string[]>([])
+  const [pendingInfluencers, setPendingInfluencers] = useState<string[]>([])
 
   function openFilterSheet() {
-    setPendingCity(selectedCity)
-    setPendingCuisine(selectedCuisine)
-    setPendingInfluencer(selectedInfluencer)
+    setPendingCities(selectedCities)
+    setPendingCuisines(selectedCuisines)
+    setPendingInfluencers(selectedInfluencers)
     setFilterSheetOpen(true)
   }
 
   function applyFilters() {
-    setSelectedCity(pendingCity)
-    setSelectedCuisine(pendingCuisine)
-    setSelectedInfluencer(pendingInfluencer)
+    setSelectedCities(pendingCities)
+    setSelectedCuisines(pendingCuisines)
+    setSelectedInfluencers(pendingInfluencers)
     setFilterSheetOpen(false)
   }
 
   function resetPending() {
-    setPendingCity('Toutes les villes')
-    setPendingCuisine('Toutes les cuisines')
-    setPendingInfluencer(ALL_INFLUENCERS)
+    setPendingCities([])
+    setPendingCuisines([])
+    setPendingInfluencers([])
   }
 
-  const activeFilterCount = [
-    selectedCity !== 'Toutes les villes',
-    selectedCuisine !== 'Toutes les cuisines',
-    selectedInfluencer !== ALL_INFLUENCERS,
-  ].filter(Boolean).length
+  const activeFilterCount = selectedCities.length + selectedCuisines.length + selectedInfluencers.length
 
-  const pendingFilterCount = [
-    pendingCity !== 'Toutes les villes',
-    pendingCuisine !== 'Toutes les cuisines',
-    pendingInfluencer !== ALL_INFLUENCERS,
-  ].filter(Boolean).length
+  const pendingFilterCount = pendingCities.length + pendingCuisines.length + pendingInfluencers.length
+
+  function filterLabel(selected: string[], defaultLabel: string): string {
+    if (selected.length === 0) return defaultLabel
+    if (selected.length === 1) return selected[0]
+    return `${selected[0]} +${selected.length - 1}`
+  }
 
   const filtered = useMemo(() => {
     const normalize = (s: string) =>
@@ -263,9 +271,9 @@ export function App() {
     const q = normalize(search.trim())
 
     return RESTAURANTS.filter(r => {
-      const matchCity = selectedCity === 'Toutes les villes' || r.city === selectedCity
-      const matchCuisine = selectedCuisine === 'Toutes les cuisines' || r.cuisine === selectedCuisine
-      const matchInfluencer = selectedInfluencer === ALL_INFLUENCERS || r.recommendedBy.handle === selectedInfluencer
+      const matchCity = selectedCities.length === 0 || selectedCities.includes(r.city)
+      const matchCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(r.cuisine)
+      const matchInfluencer = selectedInfluencers.length === 0 || selectedInfluencers.includes(r.recommendedBy.handle)
       const matchSearch = q === '' || [
         r.name,
         r.cuisine,
@@ -279,12 +287,23 @@ export function App() {
       ].some(field => normalize(field).includes(q))
       return matchCity && matchCuisine && matchInfluencer && matchSearch
     })
-  }, [selectedCity, selectedCuisine, selectedInfluencer, search])
+  }, [selectedCities, selectedCuisines, selectedInfluencers, search])
+
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth >= 1024 && selected) {
+        setMapSelected(selected)
+        setSelected(null)
+      }
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [selected])
 
   function resetFilters() {
-    setSelectedCity('Toutes les villes')
-    setSelectedCuisine('Toutes les cuisines')
-    setSelectedInfluencer(ALL_INFLUENCERS)
+    setSelectedCities([])
+    setSelectedCuisines([])
+    setSelectedInfluencers([])
     setSearch('')
   }
 
@@ -314,6 +333,33 @@ export function App() {
               </button>
             )}
           </div>
+          <div className="filters filters--desktop">
+            <FilterDropdown label="Ville" value={filterLabel(selectedCities, 'Toutes les villes')}>
+              <div className="pills">
+                {CITIES.slice(1).map(city => (
+                  <button key={city} className={`pill ${selectedCities.includes(city) ? 'pill--active' : ''}`} onClick={() => setSelectedCities(toggle(selectedCities, city))}>{city}</button>
+                ))}
+              </div>
+            </FilterDropdown>
+            <FilterDropdown label="Cuisine" value={filterLabel(selectedCuisines, 'Toutes les cuisines')}>
+              <div className="pills">
+                {CUISINES.slice(1).map(cuisine => (
+                  <button key={cuisine} className={`pill ${selectedCuisines.includes(cuisine) ? 'pill--active' : ''}`} onClick={() => setSelectedCuisines(toggle(selectedCuisines, cuisine))}>{cuisine}</button>
+                ))}
+              </div>
+            </FilterDropdown>
+            <FilterDropdown label="Influenceur" value={filterLabel(selectedInfluencers.map(h => INFLUENCERS.find(i => i.handle === h)?.name ?? h), 'Tous les influenceurs')}>
+              <div className="pills">
+                {INFLUENCERS.map(inf => (
+                  <button key={inf.handle} className={`pill pill--influencer ${selectedInfluencers.includes(inf.handle) ? 'pill--active' : ''}`} onClick={() => setSelectedInfluencers(toggle(selectedInfluencers, inf.handle))}>
+                    {inf.name}<span className="pill-followers">{inf.followers}</span>
+                  </button>
+                ))}
+              </div>
+            </FilterDropdown>
+            {activeFilterCount > 0 && <button className="filter-reset" onClick={resetFilters}>Réinitialiser</button>}
+          </div>
+
           <div className="view-toggle">
             <button
               className={`view-btn ${view === 'grid' ? 'view-btn--active' : ''}`}
@@ -333,80 +379,7 @@ export function App() {
         </div>
       </header>
 
-      <main className={`main ${view === 'map' ? 'main--map' : ''}`}>
-        {view === 'grid' && (
-          <section className="hero">
-            <p className="hero-count">
-              <strong>{filtered.length}</strong> adresse{filtered.length !== 1 ? 's' : ''} sélectionnée{filtered.length !== 1 ? 's' : ''} par les meilleurs influenceurs
-            </p>
-          </section>
-        )}
-
-        {/* Desktop dropdowns */}
-        <div className="filters filters--desktop">
-          <FilterDropdown label="Ville" value={selectedCity}>
-            <div className="pills">
-              {CITIES.map(city => (
-                <button
-                  key={city}
-                  className={`pill ${selectedCity === city ? 'pill--active' : ''}`}
-                  onClick={() => setSelectedCity(city)}
-                >
-                  {city}
-                </button>
-              ))}
-            </div>
-          </FilterDropdown>
-
-          <FilterDropdown label="Cuisine" value={selectedCuisine}>
-            <div className="pills">
-              {CUISINES.map(cuisine => (
-                <button
-                  key={cuisine}
-                  className={`pill ${selectedCuisine === cuisine ? 'pill--active' : ''}`}
-                  onClick={() => setSelectedCuisine(cuisine)}
-                >
-                  {cuisine}
-                </button>
-              ))}
-            </div>
-          </FilterDropdown>
-
-          <FilterDropdown
-            label="Influenceur"
-            value={selectedInfluencer === ALL_INFLUENCERS ? 'Tous' : INFLUENCERS.find(i => i.handle === selectedInfluencer)?.name ?? 'Tous'}
-          >
-            <div className="pills">
-              <button
-                className={`pill ${selectedInfluencer === ALL_INFLUENCERS ? 'pill--active' : ''}`}
-                onClick={() => setSelectedInfluencer(ALL_INFLUENCERS)}
-              >
-                Tous
-              </button>
-              {INFLUENCERS.map(inf => (
-                <button
-                  key={inf.handle}
-                  className={`pill pill--influencer ${selectedInfluencer === inf.handle ? 'pill--active' : ''}`}
-                  onClick={() => setSelectedInfluencer(inf.handle)}
-                >
-                  <span className="pill-avatar">{inf.avatar}</span>
-                  {inf.name}
-                  <span className="pill-followers">{inf.followers}</span>
-                </button>
-              ))}
-            </div>
-          </FilterDropdown>
-
-          {activeFilterCount > 0 && (
-            <button className="filter-reset" onClick={resetFilters}>
-              Réinitialiser
-            </button>
-          )}
-
-          <p className="hero-count filters-count--desktop">
-            <strong>{filtered.length}</strong> adresse{filtered.length !== 1 ? 's' : ''} sélectionnée{filtered.length !== 1 ? 's' : ''}
-          </p>
-        </div>
+      <main className={`main${view === 'map' ? ' main--map' : ''}`}>
 
         {/* Mobile filter button */}
         <div className="filters--mobile">
@@ -437,11 +410,11 @@ export function App() {
           <div className="filter-sheet-group">
             <p className="filter-sheet-group-label">Ville</p>
             <div className="pills">
-              {CITIES.map(city => (
+              {CITIES.slice(1).map(city => (
                 <button
                   key={city}
-                  className={`pill ${pendingCity === city ? 'pill--active' : ''}`}
-                  onClick={() => setPendingCity(city)}
+                  className={`pill ${pendingCities.includes(city) ? 'pill--active' : ''}`}
+                  onClick={() => setPendingCities(toggle(pendingCities, city))}
                 >
                   {city}
                 </button>
@@ -451,11 +424,11 @@ export function App() {
           <div className="filter-sheet-group">
             <p className="filter-sheet-group-label">Cuisine</p>
             <div className="pills">
-              {CUISINES.map(cuisine => (
+              {CUISINES.slice(1).map(cuisine => (
                 <button
                   key={cuisine}
-                  className={`pill ${pendingCuisine === cuisine ? 'pill--active' : ''}`}
-                  onClick={() => setPendingCuisine(cuisine)}
+                  className={`pill ${pendingCuisines.includes(cuisine) ? 'pill--active' : ''}`}
+                  onClick={() => setPendingCuisines(toggle(pendingCuisines, cuisine))}
                 >
                   {cuisine}
                 </button>
@@ -465,19 +438,12 @@ export function App() {
           <div className="filter-sheet-group">
             <p className="filter-sheet-group-label">Influenceur</p>
             <div className="pills">
-              <button
-                className={`pill ${pendingInfluencer === ALL_INFLUENCERS ? 'pill--active' : ''}`}
-                onClick={() => setPendingInfluencer(ALL_INFLUENCERS)}
-              >
-                Tous
-              </button>
               {INFLUENCERS.map(inf => (
                 <button
                   key={inf.handle}
-                  className={`pill pill--influencer ${pendingInfluencer === inf.handle ? 'pill--active' : ''}`}
-                  onClick={() => setPendingInfluencer(inf.handle)}
+                  className={`pill pill--influencer ${pendingInfluencers.includes(inf.handle) ? 'pill--active' : ''}`}
+                  onClick={() => setPendingInfluencers(toggle(pendingInfluencers, inf.handle))}
                 >
-                  <span className="pill-avatar">{inf.avatar}</span>
                   {inf.name}
                   <span className="pill-followers">{inf.followers}</span>
                 </button>
@@ -491,28 +457,43 @@ export function App() {
           )}
         </FilterSheet>
 
-        {view === 'map' ? (
-          <MapView restaurants={filtered} />
-        ) : filtered.length === 0 ? (
-          <div className="empty">
-            <p>Aucun restaurant trouvé pour ces critères.</p>
-            <button className="pill pill--active" onClick={resetFilters}>Réinitialiser les filtres</button>
+        <div className="content-area">
+          <div className={`content-list ${view === 'map' ? 'content-list--mobile-hidden' : ''}`}>
+            {filtered.length === 0 ? (
+              <div className="empty">
+                <p>Aucun restaurant trouvé pour ces critères.</p>
+                <button className="pill pill--active" onClick={resetFilters}>Réinitialiser les filtres</button>
+              </div>
+            ) : (
+              <div className="grid">
+                {filtered.map(r => (
+                  <RestaurantCard key={r.id} restaurant={r} active={mapSelected?.id === r.id} onClick={() => {
+                    if (window.innerWidth >= 1024) setMapSelected(r)
+                    else setSelected(r)
+                  }} />
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="grid">
-            {filtered.map(r => (
-              <RestaurantCard key={r.id} restaurant={r} onClick={() => setSelected(r)} />
-            ))}
+          <div className={`content-map ${view !== 'map' ? 'content-map--mobile-hidden' : ''}`}>
+            <MapView
+              restaurants={filtered}
+              externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
+              onExternalClose={() => setMapSelected(null)}
+              onSelect={r => {
+                setMapSelected(r)
+                if (window.innerWidth < 1024) setSelected(r)
+              }}
+            />
           </div>
-        )}
+        </div>
       </main>
 
-      <footer className="footer">
-        <p>© 2025 La Table · Les adresses vérifiées par les influenceurs</p>
-      </footer>
 
-      {selected && (
-        <Modal restaurant={selected} onClose={() => setSelected(null)} />
+
+      {selected && createPortal(
+        <RestaurantSheet restaurant={selected} onClose={() => setSelected(null)} />,
+        document.body
       )}
     </div>
   )

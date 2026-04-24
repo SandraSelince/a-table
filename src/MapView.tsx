@@ -13,13 +13,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-function createEmojiIcon(emoji: string, color: string, active: boolean) {
+function createPin(active: boolean) {
   return L.divIcon({
-    html: `<div class="map-pin ${active ? 'map-pin--active' : ''}" style="background:${color}">${emoji}</div>`,
+    html: `<div class="map-pin ${active ? 'map-pin--active' : ''}"><div class="map-pin-dot"></div></div>`,
     className: '',
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
-    popupAnchor: [0, -48],
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -14],
   })
 }
 
@@ -47,7 +47,6 @@ function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose:
 
   return (
     <div className="map-detail">
-      <button className="map-detail-close" onClick={onClose}><span className="mi">close</span></button>
       <div
         className="map-detail-cover"
         style={photoUrl
@@ -55,35 +54,37 @@ function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose:
           : { background: restaurant.cover }
         }
       />
+      <button className="map-detail-close" onClick={onClose}><span className="mi">close</span></button>
+
       <div className="map-detail-body">
-        <h2 className="map-detail-name">{restaurant.name}</h2>
-        <p className="map-detail-address"><span className="mi">location_on</span> {restaurant.address}</p>
-
-        <div className="map-detail-chips">
-          <span className="map-chip map-chip--cuisine">{restaurant.cuisine}</span>
-          <span className="map-chip map-chip--price">{restaurant.priceRange}</span>
+        <div className="map-detail-header">
+          <h2 className="map-detail-name">{restaurant.name}</h2>
+          <span className="map-detail-rating">
+            {'★'.repeat(Math.floor(restaurant.rating))}{restaurant.rating % 1 >= 0.5 ? '½' : ''}
+            <span className="map-rating-value">{restaurant.rating.toFixed(1)}</span>
+          </span>
         </div>
 
-        <div className="map-detail-row">
-          <div className="map-detail-block">
-            <p className="map-detail-label">Note</p>
-            <div className="map-detail-rating">
-              <span className="map-rating-stars">{'★'.repeat(Math.floor(restaurant.rating))}{restaurant.rating % 1 >= 0.5 ? '½' : ''}</span>
-              <span className="map-rating-value">{restaurant.rating.toFixed(1)}</span>
-              <span className="map-rating-source">Google</span>
-            </div>
-          </div>
-        </div>
+        <p className="map-detail-meta">
+          <span>{restaurant.cuisine}</span>
+          <span className="map-meta-dot">·</span>
+          <span>{restaurant.priceRange}</span>
+          <span className="map-meta-dot">·</span>
+          <span>{restaurant.city}</span>
+        </p>
 
-        <div className="map-detail-influencer">
-          <span className="map-influencer-avatar">{restaurant.recommendedBy.avatar}</span>
-          <div>
-            <p className="map-influencer-name">Recommandé par {restaurant.recommendedBy.handle}</p>
-            <p className="map-influencer-handle">{restaurant.recommendedBy.followers} abonnés</p>
-          </div>
+        <div className="map-detail-tags">
+          {restaurant.tags.map(tag => (
+            <span key={tag} className="tag">{tag}</span>
+          ))}
         </div>
 
         <p className="map-detail-desc">{restaurant.description}</p>
+
+        <div className="map-detail-influencer">
+          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
+          <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
+        </div>
 
         <a
           href={restaurant.instagramPost}
@@ -100,18 +101,31 @@ function DetailPanel({ restaurant, onClose }: { restaurant: Restaurant; onClose:
 
 interface MapViewProps {
   restaurants: Restaurant[]
+  externalSelected?: Restaurant | null
+  onExternalClose?: () => void
+  onSelect?: (r: Restaurant | null) => void
 }
 
-export function MapView({ restaurants }: MapViewProps) {
-  const [selected, setSelected] = useState<Restaurant | null>(null)
+export function MapView({ restaurants, externalSelected, onExternalClose, onSelect }: MapViewProps) {
+  const [internalSelected, setInternalSelected] = useState<Restaurant | null>(null)
   const center: [number, number] = [48.8566, 2.3522]
 
+  const selected = externalSelected !== undefined ? externalSelected : internalSelected
+
   function handleSelect(r: Restaurant) {
-    setSelected(prev => prev?.id === r.id ? null : r)
+    const next = selected?.id === r.id ? null : r
+    if (externalSelected !== undefined) {
+      onSelect?.(next)
+    } else {
+      setInternalSelected(next)
+      onSelect?.(next)
+    }
   }
 
   function handleClose() {
-    setSelected(null)
+    if (onExternalClose) onExternalClose()
+    else setInternalSelected(null)
+    onSelect?.(null)
   }
 
   return (
@@ -126,8 +140,8 @@ export function MapView({ restaurants }: MapViewProps) {
         zoomControl
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='Tiles &copy; <a href="https://www.esri.com/">Esri</a>'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
         />
         <FlyTo restaurant={selected} />
         <MapClickHandler onClose={handleClose} />
@@ -135,7 +149,7 @@ export function MapView({ restaurants }: MapViewProps) {
           <Marker
             key={r.id}
             position={[r.lat, r.lng]}
-            icon={createEmojiIcon(r.coverEmoji, r.cover, selected?.id === r.id)}
+            icon={createPin(selected?.id === r.id)}
             eventHandlers={{
               click: (e) => {
                 e.originalEvent.stopPropagation()
@@ -146,9 +160,6 @@ export function MapView({ restaurants }: MapViewProps) {
         ))}
       </MapContainer>
 
-      {selected && (
-        <DetailPanel restaurant={selected} onClose={handleClose} />
-      )}
     </div>
   )
 }

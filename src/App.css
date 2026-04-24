@@ -1,6 +1,6 @@
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 .app {
-  min-height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--md-sys-color-background);
@@ -9,16 +9,13 @@
 /* ── Top App Bar ─────────────────────────────────────────────────────────── */
 .header {
   background: var(--md-sys-color-surface);
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
   position: sticky;
   top: 0;
   z-index: 210;
 }
 
 .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 12px 24px;
+  padding: 12px 48px 12px 28px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -41,7 +38,7 @@
 
 .header-title {
   font-family: 'Jaro', sans-serif;
-  font-size: 42px;
+  font-size: 56px;
   line-height: 1;
   font-weight: 400;
   color: var(--md-sys-color-on-surface);
@@ -61,7 +58,7 @@
   align-items: center;
   gap: 8px;
   background: #FFFFFF;
-  border: 1.5px solid var(--md-sys-color-on-surface);
+  border: 1.5px solid rgba(0,0,0,0.12);
   border-radius: var(--md-sys-shape-corner-full);
   padding: 8px 16px;
   flex: 0 1 320px;
@@ -115,7 +112,7 @@
 /* ── View toggle — MD3 Segmented Button ─────────────────────────────────── */
 .view-toggle {
   display: flex;
-  border: 1px solid var(--md-sys-color-outline);
+  border: 1px solid rgba(0,0,0,0.12);
   border-radius: var(--md-sys-shape-corner-full);
   overflow: hidden;
   flex-shrink: 0;
@@ -136,7 +133,7 @@
 }
 
 .view-btn + .view-btn {
-  border-left: 1px solid var(--md-sys-color-outline);
+  border-left: 1px solid rgba(0,0,0,0.12);
 }
 
 .view-btn:hover {
@@ -144,8 +141,8 @@
 }
 
 .view-btn--active {
-  background: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
   font-weight: 600;
 }
 
@@ -156,6 +153,7 @@
   margin: 0 auto;
   padding: 28px 24px;
   width: 100%;
+  overflow-y: auto;
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
@@ -180,10 +178,8 @@
 /* ── Filters — MD3 Filter Chips ─────────────────────────────────────────── */
 .filters--desktop {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
 }
 
 .filters--mobile {
@@ -202,25 +198,25 @@
   height: 36px;
   padding: 0 16px;
   border-radius: var(--md-sys-shape-corner-full);
-  border: 1.5px solid var(--md-sys-color-primary);
+  border: 1.5px solid #1A1110;
   background: transparent;
   cursor: pointer;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: var(--md-sys-color-primary);
+  color: #1A1110;
   transition: background 0.2s ease;
   white-space: nowrap;
   font-family: var(--md-sys-typescale-font);
 }
 
 .filter-dropdown-btn:hover {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  background: rgba(0,0,0,0.05);
 }
 
 .filter-dropdown--open .filter-dropdown-btn {
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
+  background: #FFFFFF;
+  color: #1A1110;
 }
 
 .filter-dropdown-label {
@@ -251,9 +247,9 @@
   top: calc(100% + 4px);
   left: 0;
   z-index: 50;
-  background: var(--md-sys-color-surface-container);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  padding: 8px 12px 12px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 16px;
   box-shadow: var(--md-sys-elevation-level2);
   min-width: 280px;
   max-width: 440px;
@@ -272,7 +268,7 @@
   border-radius: var(--md-sys-shape-corner-full);
   border: none;
   background: none;
-  font-size: var(--md-sys-typescale-label-large-size);
+  font-size: 12px;
   font-weight: 500;
   color: var(--md-sys-color-primary);
   cursor: pointer;
@@ -330,7 +326,7 @@
   left: 0;
   right: 0;
   z-index: 151;
-  background: var(--md-sys-color-surface-container-low);
+  background: #FFFFFF;
   border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
   max-height: 85dvh;
   display: flex;
@@ -496,6 +492,7 @@
   text-transform: none;
   letter-spacing: 0;
   font-size: var(--md-sys-typescale-label-large-size);
+  white-space: nowrap;
 }
 
 .pill-avatar {
@@ -523,102 +520,71 @@
 
 /* ── Card ────────────────────────────────────────────────────────────────── */
 .card {
-  border-radius: 16px;
+  border-radius: 24px;
   overflow: hidden;
   cursor: pointer;
   background: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: none;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.06);
+.card:hover,
+.card--active {
   transform: translateY(-2px);
+}
+
+.card:hover .card-name,
+.card--active .card-name {
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+  text-underline-offset: 3px;
 }
 
 .card-cover {
   height: 200px;
   position: relative;
-  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.card-cover-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 12px 14px;
-}
-
-.card-cuisine-badge {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 999px;
-  padding: 3px 10px;
-}
-
-.card-cover-rating {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.card-cover-star {
-  color: #F59E0B;
-  font-size: 14px;
-  line-height: 1;
-}
-
-.card-cover-score {
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.card-price {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--md-sys-color-on-surface);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 999px;
-  padding: 3px 10px;
-  letter-spacing: 0.04em;
-}
 
 .card-body {
-  padding: 16px 16px 16px;
+  padding: 14px 0 16px 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .card-name {
   font-size: 17px;
-  line-height: 1.3;
+  line-height: 1.2;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
-  margin-bottom: 4px;
 }
 
 .card-meta {
   font-size: 12px;
   line-height: 1.4;
   color: var(--md-sys-color-on-surface-variant);
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.card-meta-dot {
+  opacity: 0.4;
 }
 
 .card-tags {
@@ -635,19 +601,52 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 4px;
-  background: #FFFFFF;
+  border-radius: 999px;
+  background: #F2F2F2;
   color: #1A1110;
-  border: 1px solid rgba(0,0,0,0.18);
+  border: none;
 }
 
 .card-influencer {
   display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  padding: 0;
+}
+
+.card-expanded {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  margin-top: 12px;
+}
+
+.card-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.card-cta {
+  display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: var(--md-sys-color-surface-container-low);
-  border-radius: 10px;
+  justify-content: center;
+  height: 40px;
+  padding: 0 24px;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--md-sys-typescale-font);
+  transition: opacity 0.2s ease;
+}
+
+.card-cta:hover {
+  opacity: 0.9;
 }
 
 .influencer-avatar {
@@ -662,11 +661,11 @@
 }
 
 .influencer-handle strong {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .influencer-followers {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--md-sys-color-on-surface-variant);
   margin-top: 1px;
 }
@@ -677,7 +676,7 @@
   align-items: center;
   gap: 4px;
   font-size: var(--md-sys-typescale-label-large-size);
-  color: #F59E0B;
+  color: #1A1110;
   flex-shrink: 0;
 }
 
@@ -685,6 +684,117 @@
   font-size: var(--md-sys-typescale-label-large-size);
   font-weight: 600;
   color: var(--md-sys-color-on-surface);
+}
+
+/* ── Restaurant Sheet (mobile bottom sheet) ─────────────────────────────── */
+.rsheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--md-sys-color-scrim);
+  z-index: 140;
+}
+
+.rsheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 141;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  max-height: 85dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slide-up 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.rsheet-handle {
+  width: 32px;
+  height: 4px;
+  background: var(--md-sys-color-on-surface-variant);
+  opacity: 0.4;
+  border-radius: 999px;
+  margin: 10px auto 0;
+  flex-shrink: 0;
+}
+
+.rsheet-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.08);
+  color: var(--md-sys-color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.rsheet-cover {
+  height: 180px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+  margin-top: 8px;
+}
+
+.rsheet-body {
+  overflow-y: auto;
+  padding: 16px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rsheet-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rsheet-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.2;
+}
+
+.rsheet-meta {
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.rsheet-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rsheet-description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 4px;
+}
+
+.rsheet-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--md-sys-typescale-font);
+  margin-top: 8px;
 }
 
 /* ── Modal — MD3 Dialog ──────────────────────────────────────────────────── */
@@ -707,7 +817,7 @@
 }
 
 .modal {
-  background: var(--md-sys-color-surface-container-high);
+  background: #FFFFFF;
   border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
   width: 100%;
   max-width: 560px;
@@ -762,7 +872,7 @@
 }
 
 .modal-body {
-  padding: 20px 24px 32px;
+  padding: 20px 24px 48px;
 }
 
 .modal-top {
@@ -859,13 +969,79 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* ── Map view ────────────────────────────────────────────────────────────── */
-.main--map {
-  padding: 16px 24px 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+/* ── Split layout (desktop) ──────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .view-toggle {
+    display: none;
+  }
+
+  .main {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content-area {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .content-list {
+    width: 480px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  .content-map {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .content-map .map-page {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+/* ── Mobile layout ───────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .content-list--mobile-hidden { display: none; }
+  .content-map--mobile-hidden  { display: none; }
+
+  .main--map {
+    padding: 0;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main--map .filters--mobile {
+    flex-shrink: 0;
+  }
+
+  .main--map .content-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+
+  .main--map .content-map {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .content-map .map-page {
+    height: 100%;
+  }
 }
 
 /* ── Mobile ──────────────────────────────────────────────────────────────── */

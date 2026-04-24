@@ -2,9 +2,8 @@
 .map-page {
   display: flex;
   overflow: hidden;
-  border-radius: var(--md-sys-shape-corner-medium);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  height: calc(100dvh - 200px);
+  width: 100%;
+  height: 100%;
   min-height: 400px;
 }
 
@@ -17,41 +16,60 @@
 
 /* ── Pin marker ──────────────────────────────────────────────────────────── */
 .map-pin {
-  width: 44px;
-  height: 44px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
+  background: #FFFFFF;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  border: 3px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--md-sys-elevation-level2);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.15s ease;
   cursor: pointer;
 }
 
-.map-pin--active {
-  transform: scale(1.25);
-  border-color: var(--md-sys-color-primary);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent);
+.map-pin-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1A1110;
 }
 
-/* ── Detail panel — MD3 Side Sheet (desktop) ─────────────────────────────── */
+.map-pin--active {
+  transform: scale(1.4);
+  border-color: var(--md-sys-color-primary);
+}
+
+.map-pin--active .map-pin-dot {
+  background: var(--md-sys-color-primary);
+}
+
+/* ── Detail panel ────────────────────────────────────────────────────────── */
 .map-detail {
   width: 360px;
   flex-shrink: 0;
-  background: var(--md-sys-color-surface-container-low);
-  border-left: 1px solid var(--md-sys-color-outline-variant);
+  background: #FFFFFF;
+  border-left: 1px solid rgba(0,0,0,0.08);
   overflow-y: auto;
   position: relative;
   animation: slide-in-right 0.25s cubic-bezier(0.2, 0, 0, 1);
   display: flex;
   flex-direction: column;
+  border-radius: 0 24px 24px 0;
 }
 
 @keyframes slide-in-right {
   from { transform: translateX(100%); opacity: 0; }
   to   { transform: translateX(0);    opacity: 1; }
+}
+
+.map-detail-cover {
+  height: 200px;
+  flex-shrink: 0;
+  border-radius: 0 24px 0 0;
+  background-size: cover;
+  background-position: center;
 }
 
 .map-detail-close {
@@ -60,8 +78,8 @@
   right: 12px;
   width: 32px;
   height: 32px;
-  border-radius: var(--md-sys-shape-corner-full);
-  background: rgba(0, 0, 0, 0.20);
+  border-radius: 999px;
+  background: rgba(0,0,0,0.20);
   color: #fff;
   font-size: 13px;
   display: flex;
@@ -74,148 +92,80 @@
 }
 
 .map-detail-close:hover {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.map-detail-cover {
-  height: 220px;
-  display: flex;
-  align-items: flex-end;
-  padding: 14px 20px;
-  flex-shrink: 0;
+  background: rgba(0,0,0,0.35);
 }
 
 .map-detail-body {
-  padding: 16px 20px 32px;
+  padding: 16px 16px 56px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  flex: 1;
+}
+
+.map-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .map-detail-name {
-  font-size: var(--md-sys-typescale-title-large-size);
-  line-height: var(--md-sys-typescale-title-large-line);
+  font-size: 24px;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
-}
-
-.map-detail-address {
-  font-size: var(--md-sys-typescale-body-small-size);
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-/* MD3 Chips */
-.map-detail-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.map-chip {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: var(--md-sys-shape-corner-full);
-  border: 1.5px solid transparent;
-}
-
-.map-chip--cuisine {
-  background: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  border-color: var(--md-sys-color-secondary);
-}
-
-.map-chip--price {
-  background: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
-  border-color: var(--md-sys-color-primary);
-}
-
-/* Rating block */
-.map-detail-row {
-  padding: 12px 0;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.map-detail-label {
-  font-size: var(--md-sys-typescale-label-small-size);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--md-sys-color-on-surface-variant);
-  margin-bottom: 6px;
+  line-height: 1.2;
 }
 
 .map-detail-rating {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.map-rating-stars {
-  color: #F59E0B;
-  font-size: 16px;
-  letter-spacing: 1px;
-}
-
-.map-rating-value {
-  font-size: var(--md-sys-typescale-title-medium-size);
-  font-weight: 700;
-  color: var(--md-sys-color-on-surface);
-}
-
-.map-rating-source {
-  font-size: var(--md-sys-typescale-label-small-size);
-  color: var(--md-sys-color-on-surface-variant);
-  font-weight: 500;
-}
-
-/* Influencer block — MD3 tonal surface */
-.map-detail-influencer {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 14px;
-  background: var(--md-sys-color-surface-container);
-  border-radius: var(--md-sys-shape-corner-medium);
-}
-
-.map-influencer-avatar {
-  font-size: 28px;
+  gap: 3px;
+  font-size: 14px;
+  color: #1A1110;
   flex-shrink: 0;
 }
 
-.map-influencer-label {
-  font-size: var(--md-sys-typescale-label-small-size);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--md-sys-color-on-surface-variant);
-  margin-bottom: 2px;
-}
-
-.map-influencer-name {
-  font-size: var(--md-sys-typescale-label-large-size);
+.map-rating-value {
+  font-size: 13px;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
 }
 
-.map-influencer-handle {
-  font-size: var(--md-sys-typescale-label-small-size);
+.map-detail-meta {
+  font-size: 12px;
   color: var(--md-sys-color-on-surface-variant);
-  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.map-meta-dot {
+  opacity: 0.4;
+}
+
+.map-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.map-detail-influencer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 10px;
 }
 
 .map-detail-desc {
-  font-size: var(--md-sys-typescale-body-small-size);
+  font-size: 12px;
   line-height: 1.6;
   color: var(--md-sys-color-on-surface-variant);
+  margin-top: 16px;
 }
 
-/* CTA — MD3 Filled Button */
 .map-detail-cta {
   display: flex;
   align-items: center;
@@ -224,21 +174,18 @@
   padding: 0 24px;
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  border-radius: var(--md-sys-shape-corner-full);
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
   font-family: var(--md-sys-typescale-font);
-  margin-top: 4px;
-  transition: box-shadow 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .map-detail-cta:hover {
-  box-shadow: var(--md-sys-elevation-level1);
-  background: color-mix(in srgb, var(--md-sys-color-primary) 92%, var(--md-sys-color-on-primary));
+  opacity: 0.9;
 }
 
-/* ── Mobile — MD3 Bottom Sheet ───────────────────────────────────────────── */
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .map-page {
     flex-direction: column;
@@ -255,8 +202,8 @@
     height: 46%;
     flex-shrink: 0;
     border-left: none;
-    border-top: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid rgba(0,0,0,0.08);
     animation: slide-up-sheet 0.25s cubic-bezier(0.2, 0, 0, 1);
     overflow-x: hidden;
   }
@@ -272,17 +219,10 @@
 
   .map-detail-body {
     padding: 14px 16px 24px;
-    gap: 10px;
     overflow-y: auto;
     flex: 1;
   }
 
-  .map-detail-name {
-    font-size: var(--md-sys-typescale-title-medium-size);
-    padding-right: 36px;
-  }
-
-  /* Drag handle */
   .map-detail::before {
     content: '';
     display: block;
@@ -290,7 +230,7 @@
     height: 4px;
     background: var(--md-sys-color-on-surface-variant);
     opacity: 0.4;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: 999px;
     position: absolute;
     top: 10px;
     left: 50%;

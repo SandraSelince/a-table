@@ -48,7 +48,7 @@
 .header-sub {
   font-size: var(--md-sys-typescale-body-small-size);
   line-height: var(--md-sys-typescale-body-small-line);
-  color: var(--md-sys-color-on-surface-variant);
+  color: #000000;
   margin-top: 1px;
 }
 
@@ -67,7 +67,7 @@
 
 .header-search:focus-within {
   background: #FFFFFF;
-  border-color: var(--md-sys-color-primary);
+  border-color: #A86E6B;
   outline: none;
 }
 
@@ -167,7 +167,7 @@
 
 .hero-count {
   font-size: 14px;
-  color: var(--md-sys-color-on-surface-variant);
+  color: #000000;
 }
 
 .hero-count strong {
@@ -267,14 +267,18 @@
   padding: 0 16px;
   border-radius: var(--md-sys-shape-corner-full);
   border: none;
+  outline: none;
   background: none;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--md-sys-color-primary);
   cursor: pointer;
   transition: background 0.2s ease;
   margin-left: auto;
   font-family: var(--md-sys-typescale-font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-reset:hover {
@@ -427,16 +431,21 @@
 
 .filter-sheet-group-label {
   font-size: var(--md-sys-typescale-label-small-size);
-  font-weight: 700;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--md-sys-color-on-surface-variant);
+  color: #787878;
 }
 
 .filter-sheet-reset {
   margin-top: 4px;
-  align-self: stretch;
-  text-align: center;
+  margin-left: 0;
+  align-self: center;
+}
+
+.filter-sheet .filter-reset {
+  margin-left: 0;
+  align-self: center;
 }
 
 /* ── Pills / Chips ───────────────────────────────────────────────────────── */
@@ -453,13 +462,13 @@
   height: 32px;
   padding: 0 14px;
   border-radius: var(--md-sys-shape-corner-full);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--md-sys-color-primary);
   background: transparent;
-  border: 1.5px solid var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-primary);
   transition: background 0.2s ease, color 0.2s ease;
   cursor: pointer;
   font-family: var(--md-sys-typescale-font);
@@ -604,7 +613,7 @@
   border-radius: 999px;
   background: #F2F2F2;
   color: #1A1110;
-  border: none;
+  border: 1px solid rgba(0,0,0,0.12);
 }
 
 .card-influencer {
@@ -686,6 +695,87 @@
   color: var(--md-sys-color-on-surface);
 }
 
+/* ── Map Card Preview (overlay sur la map mobile) ───────────────────────── */
+.map-card-preview {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .map-card-preview {
+    display: flex;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 50;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    overflow: hidden;
+    cursor: pointer;
+    animation: slide-up 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .map-card-preview-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.15);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+  }
+
+  .map-card-preview-cover {
+    width: 100px;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .map-card-preview-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .map-card-preview-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .map-card-preview-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.2;
+  }
+
+  .map-card-preview-meta {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .map-card-preview-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 2px;
+  }
+}
+
 /* ── Restaurant Sheet (mobile bottom sheet) ─────────────────────────────── */
 .rsheet-backdrop {
   position: fixed;
@@ -712,11 +802,12 @@
 .rsheet-handle {
   width: 32px;
   height: 4px;
-  background: var(--md-sys-color-on-surface-variant);
-  opacity: 0.4;
+  background: rgba(255,255,255,0.7);
   border-radius: 999px;
-  margin: 10px auto 0;
-  flex-shrink: 0;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .rsheet-close {
@@ -726,8 +817,8 @@
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  background: rgba(0,0,0,0.08);
-  color: var(--md-sys-color-on-surface-variant);
+  background: rgba(0,0,0,0.25);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -736,11 +827,12 @@
 }
 
 .rsheet-cover {
-  height: 180px;
+  height: 200px;
   flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  margin-top: 8px;
+  border-radius: 24px 24px 0 0;
+  position: relative;
 }
 
 .rsheet-body {
@@ -1016,6 +1108,11 @@
   .content-list--mobile-hidden { display: none; }
   .content-map--mobile-hidden  { display: none; }
 
+  /* Toujours carte sur mobile — cacher la liste et le toggle */
+  .content-list { display: none; }
+  .view-toggle  { display: none; }
+  .content-map  { flex: 1; min-height: 0; position: relative; }
+
   .main--map {
     padding: 0;
     flex: 1;
@@ -1093,7 +1190,7 @@
 
   .hero-count--mobile {
     font-size: 14px;
-    color: var(--md-sys-color-on-surface-variant);
+    color: #000000;
     text-align: right;
   }
 }

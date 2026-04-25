@@ -117,15 +117,16 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
     <>
       <div className="rsheet-backdrop" onClick={onClose} />
       <div className="rsheet">
-        <div className="rsheet-handle" />
-        <button className="rsheet-close" onClick={onClose}><span className="mi">close</span></button>
         <div
           className="rsheet-cover"
           style={photoUrl
             ? { backgroundImage: `url(${photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
             : { background: restaurant.cover }
           }
-        />
+        >
+          <div className="rsheet-handle" />
+          <button className="rsheet-close" onClick={onClose}><span className="mi">close</span></button>
+        </div>
         <div className="rsheet-body">
           <div className="rsheet-header">
             <h2 className="rsheet-name">{restaurant.name}</h2>
@@ -144,6 +145,31 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
         </div>
       </div>
     </>
+  )
+}
+
+function MapCardPreview({ restaurant, onClose, onOpen }: { restaurant: Restaurant; onClose: () => void; onOpen: () => void }) {
+  const photoUrl = usePlacePhoto(restaurant)
+  return (
+    <div className="map-card-preview" onClick={onOpen}>
+      <button className="map-card-preview-close" onClick={e => { e.stopPropagation(); onClose() }}>
+        <span className="mi">close</span>
+      </button>
+      <div className="map-card-preview-cover" style={photoUrl
+        ? { backgroundImage: `url(${photoUrl})` }
+        : { background: restaurant.cover }
+      } />
+      <div className="map-card-preview-body">
+        <div className="map-card-preview-header">
+          <h3 className="map-card-preview-name">{restaurant.name}</h3>
+          <StarRating rating={restaurant.rating} />
+        </div>
+        <p className="map-card-preview-meta">{restaurant.cuisine} · {restaurant.priceRange} · {restaurant.city}</p>
+        <div className="map-card-preview-tags">
+          {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -379,7 +405,7 @@ export function App() {
         </div>
       </header>
 
-      <main className={`main${view === 'map' ? ' main--map' : ''}`}>
+      <main className="main main--map">
 
         {/* Mobile filter button */}
         <div className="filters--mobile">
@@ -451,7 +477,7 @@ export function App() {
             </div>
           </div>
           {pendingFilterCount > 0 && (
-            <button className="pill filter-sheet-reset" onClick={resetPending}>
+            <button className="filter-reset" onClick={resetPending}>
               Réinitialiser
             </button>
           )}
@@ -475,16 +501,20 @@ export function App() {
               </div>
             )}
           </div>
-          <div className={`content-map ${view !== 'map' ? 'content-map--mobile-hidden' : ''}`}>
+          <div className="content-map">
             <MapView
               restaurants={filtered}
               externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
               onExternalClose={() => setMapSelected(null)}
-              onSelect={r => {
-                setMapSelected(r)
-                if (window.innerWidth < 1024) setSelected(r)
-              }}
+              onSelect={r => setMapSelected(r)}
             />
+            {mapSelected && (
+              <MapCardPreview
+                restaurant={mapSelected}
+                onClose={() => setMapSelected(null)}
+                onOpen={() => setSelected(mapSelected)}
+              />
+            )}
           </div>
         </div>
       </main>

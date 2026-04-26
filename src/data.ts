@@ -41,7 +41,7 @@ export const RESTAURANTS: Restaurant[] = [
     recommendedBy: {
       handle: '@philoudarblay',
       name: 'Philou d\'Arblay',
-      followers: '310K',
+      followers: '153K',
       avatar: '👩‍🍳',
     },
     instagramPost: 'https://www.instagram.com/philoudarblay',
@@ -63,7 +63,7 @@ export const RESTAURANTS: Restaurant[] = [
     recommendedBy: {
       handle: '@philoudarblay',
       name: 'Philou d\'Arblay',
-      followers: '310K',
+      followers: '153K',
       avatar: '👩‍🍳',
     },
     instagramPost: 'https://www.instagram.com/philoudarblay',
@@ -85,7 +85,7 @@ export const RESTAURANTS: Restaurant[] = [
     recommendedBy: {
       handle: '@philoudarblay',
       name: 'Philou d\'Arblay',
-      followers: '310K',
+      followers: '153K',
       avatar: '👩‍🍳',
     },
     instagramPost: 'https://www.instagram.com/philoudarblay',
@@ -1340,5 +1340,21 @@ export const RESTAURANTS: Restaurant[] = [
     instagramPost: 'https://www.instagram.com/leparisdalexis',
     description: 'L\'un des bistronomiques en vue du Faubourg Saint-Denis. Cuisine créative et accessible dans l\'un des couloirs les plus animés de Paris, avec une sélection de vins bien pensée.',
     lat: 48.8713, lng: 2.3555,
+  },
+  {
+    id: '93',
+    name: 'Le Quincy',
+    cuisine: 'Française',
+    city: 'Paris',
+    address: '28 Avenue Ledru-Rollin, 75012',
+    priceRange: '€€',
+    rating: 4.5,
+    cover: '#FDF5E6',
+    coverEmoji: '🍷',
+    tags: ['Bistrot', 'Rustique', 'Réservation obligatoire'],
+    recommendedBy: { handle: '@philoudarblay', name: 'Philou d\'Arblay', followers: '153K', avatar: '👩‍🍳' },
+    instagramPost: 'https://www.instagram.com/p/DPvuYzAjPUK/',
+    description: 'Spécialités régionales françaises et ambiance décontractée dans un décor rustique avec nappes en vichy rose.',
+    lat: 48.8508, lng: 2.3697,
   },
 ]

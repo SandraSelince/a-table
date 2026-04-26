@@ -242,6 +242,45 @@ function FilterSheet({ open, onClose, onApply, pendingCount, children }: FilterS
 
 type ViewMode = 'grid' | 'map'
 
+interface Suggestion {
+  label: string
+  type: 'restaurant' | 'cuisine' | 'ville' | 'influenceur' | 'tag'
+}
+
+function useSearchSuggestions(query: string): Suggestion[] {
+  return useMemo(() => {
+    if (query.trim().length < 2) return []
+    const normalize = (s: string) =>
+      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const q = normalize(query.trim())
+    const seen = new Set<string>()
+    const suggestions: Suggestion[] = []
+    const add = (label: string, type: Suggestion['type']) => {
+      const key = `${type}:${label}`
+      if (!seen.has(key)) { seen.add(key); suggestions.push({ label, type }) }
+    }
+    for (const r of RESTAURANTS) {
+      if (normalize(r.name).includes(q)) add(r.name, 'restaurant')
+      if (normalize(r.cuisine).includes(q)) add(r.cuisine, 'cuisine')
+      if (normalize(r.city).includes(q)) add(r.city, 'ville')
+      if (normalize(r.recommendedBy.name).includes(q)) add(r.recommendedBy.name, 'influenceur')
+      if (normalize(r.recommendedBy.handle).includes(q)) add(r.recommendedBy.handle, 'influenceur')
+      for (const tag of r.tags) {
+        if (normalize(tag).includes(q)) add(tag, 'tag')
+      }
+    }
+    return suggestions.slice(0, 8)
+  }, [query])
+}
+
+const SUGGESTION_ICON: Record<Suggestion['type'], string> = {
+  restaurant: 'restaurant',
+  cuisine: 'skillet',
+  ville: 'location_on',
+  influenceur: 'person',
+  tag: 'label',
+}
+
 function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]
 }
@@ -251,10 +290,13 @@ export function App() {
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([])
   const [selectedInfluencers, setSelectedInfluencers] = useState<string[]>([])
   const [search, setSearch] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchWrapRef = useRef<HTMLDivElement>(null)
   const [selected, setSelected] = useState<Restaurant | null>(null)
   const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const suggestions = useSearchSuggestions(search)
 
   // Pending state — mobile sheet uniquement
   const [pendingCities, setPendingCities] = useState<string[]>([])
@@ -343,20 +385,38 @@ export function App() {
               <p className="header-sub">Les restos des influenceurs</p>
             </div>
           </div>
-          <div className="header-search">
-            <span className="mi search-icon">search</span>
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Restaurant, cuisine, ville…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              onFocus={() => setSelected(null)}
-            />
-            {search && (
-              <button className="search-clear" onClick={() => setSearch('')}>
-                <span className="mi">close</span>
-              </button>
+          <div className="header-search-wrap" ref={searchWrapRef}>
+            <div className="header-search">
+              <span className="mi search-icon">search</span>
+              <input
+                className="search-input"
+                type="text"
+                placeholder="Restaurant, cuisine, ville…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onFocus={() => { setSelected(null); setSearchFocused(true) }}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+              />
+              {search && (
+                <button className="search-clear" onClick={() => setSearch('')}>
+                  <span className="mi">close</span>
+                </button>
+              )}
+            </div>
+            {searchFocused && suggestions.length > 0 && (
+              <div className="search-suggestions">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    className="search-suggestion-item"
+                    onMouseDown={() => { setSearch(s.label); setSearchFocused(false) }}
+                  >
+                    <span className="mi search-suggestion-icon">{SUGGESTION_ICON[s.type]}</span>
+                    <span className="search-suggestion-label">{s.label}</span>
+                    <span className="search-suggestion-type">{s.type}</span>
+                  </button>
+                ))}
+              </div>
             )}
           </div>
           <div className="filters filters--desktop">

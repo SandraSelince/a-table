@@ -57,12 +57,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #FFFFFF;
-  border: 1.5px solid rgba(0,0,0,0.12);
+  background: #F2F2F2;
+  border: 1.5px solid transparent;
   border-radius: var(--md-sys-shape-corner-full);
   padding: 8px 16px;
   flex: 0 1 320px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.header-search:hover {
+  border-color: rgba(0,0,0,0.12);
 }
 
 .header-search:focus-within {
@@ -87,7 +91,7 @@
 }
 
 .search-input::placeholder {
-  color: var(--md-sys-color-on-surface-variant);
+  color: #534241;
 }
 
 .search-clear {
@@ -107,6 +111,64 @@
 
 .search-clear .mi {
   font-size: 16px;
+}
+
+/* ── Search autocomplete ─────────────────────────────────────────────────── */
+.header-search-wrap {
+  position: relative;
+  flex: 0 1 320px;
+}
+
+.header-search-wrap .header-search {
+  flex: unset;
+  width: 100%;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: var(--md-sys-elevation-level2);
+  overflow: hidden;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  text-align: left;
+  font-family: var(--md-sys-typescale-font);
+  font-size: 14px;
+  color: #1A1110;
+  transition: background 0.15s ease;
+  border-radius: 0;
+}
+
+.search-suggestion-item:hover {
+  background: #F6E7DE;
+}
+
+.search-suggestion-icon {
+  font-size: 16px;
+  color: #A86E6B;
+  flex-shrink: 0;
+}
+
+.search-suggestion-label {
+  flex: 1;
+}
+
+.search-suggestion-type {
+  font-size: 11px;
+  color: #787878;
+  text-transform: capitalize;
 }
 
 /* ── View toggle — MD3 Segmented Button ─────────────────────────────────── */
@@ -201,9 +263,9 @@
   border: 1.5px solid #1A1110;
   background: transparent;
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
   color: #1A1110;
   transition: background 0.2s ease;
   white-space: nowrap;
@@ -217,6 +279,7 @@
 .filter-dropdown--open .filter-dropdown-btn {
   background: #FFFFFF;
   color: #1A1110;
+  border-color: #A86E6B;
 }
 
 .filter-dropdown-label {
@@ -227,7 +290,7 @@
 }
 
 .filter-dropdown-value {
-  font-weight: 600;
+  font-weight: 400;
   color: inherit;
   max-width: 160px;
   overflow: hidden;
@@ -246,6 +309,7 @@
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
+  right: auto;
   z-index: 50;
   background: #FFFFFF;
   border-radius: 24px;
@@ -254,6 +318,11 @@
   min-width: 280px;
   max-width: 440px;
   animation: dropdown-in 0.15s ease;
+}
+
+.filters--desktop .filter-dropdown:last-of-type .filter-dropdown-panel {
+  left: auto;
+  right: 0;
 }
 
 @keyframes dropdown-in {
@@ -271,7 +340,7 @@
   background: none;
   font-size: 12px;
   font-weight: 700;
-  color: var(--md-sys-color-primary);
+  color: #534241;
   cursor: pointer;
   transition: background 0.2s ease;
   margin-left: auto;
@@ -462,25 +531,26 @@
   height: 32px;
   padding: 0 14px;
   border-radius: var(--md-sys-shape-corner-full);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--md-sys-color-primary);
+  color: #1A1110;
   background: transparent;
-  border: 1px solid var(--md-sys-color-primary);
+  border: 1.5px solid #1A1110;
   transition: background 0.2s ease, color 0.2s ease;
   cursor: pointer;
   font-family: var(--md-sys-typescale-font);
 }
 
 .pill:hover {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  background: #F6E7DE;
+  border-color: #A86E6B;
 }
 
 .pill--active:hover {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-  color: var(--md-sys-color-primary);
+  background: #F6E7DE;
+  color: var(--md-sys-color-on-primary);
   border-color: var(--md-sys-color-primary);
 }
 
@@ -612,7 +682,7 @@
   padding: 3px 9px;
   border-radius: 999px;
   background: #FDF8F5;
-  color: #1A1110;
+  color: #534241;
   border: 1px solid #F1E9E3;
 }
 

@@ -81,8 +81,8 @@ export function MapView({ restaurants, externalSelected, onExternalClose, onSele
         zoomControl
       >
         <TileLayer
-          attribution='Tiles &copy; <a href="https://www.esri.com/">Esri</a>'
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> &copy; <a href="https://carto.com/">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         <FlyTo restaurant={selected} />
         <MapClickHandler onClose={handleClose} />

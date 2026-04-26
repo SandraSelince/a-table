@@ -43,6 +43,7 @@
   font-weight: 400;
   color: var(--md-sys-color-on-surface);
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .header-sub {
@@ -233,7 +234,7 @@
 }
 
 .hero-count strong {
-  color: var(--md-sys-color-primary);
+  color: #000000;
   font-weight: 600;
 }
 
@@ -366,7 +367,7 @@
   background: transparent;
   font-size: var(--md-sys-typescale-label-large-size);
   font-weight: 500;
-  color: var(--md-sys-color-on-surface-variant);
+  color: #000000;
   cursor: pointer;
   font-family: var(--md-sys-typescale-font);
 }
@@ -388,8 +389,8 @@
 .filter-sheet-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--md-sys-color-scrim);
-  z-index: 150;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 220;
 }
 
 /* Filter sheet — MD3 Bottom Sheet */
@@ -398,7 +399,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 151;
+  z-index: 221;
   background: #FFFFFF;
   border-radius: var(--md-sys-shape-corner-extra-large) var(--md-sys-shape-corner-extra-large) 0 0;
   max-height: 85dvh;
@@ -850,8 +851,8 @@
 .rsheet-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--md-sys-color-scrim);
-  z-index: 140;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 220;
 }
 
 .rsheet {
@@ -859,7 +860,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 141;
+  z-index: 221;
   background: #FFFFFF;
   border-radius: 24px 24px 0 0;
   max-height: 85dvh;
@@ -957,6 +958,95 @@
   font-weight: 600;
   font-family: var(--md-sys-typescale-font);
   margin-top: 8px;
+}
+
+/* ── Influencer page ─────────────────────────────────────────────────────── */
+.influencer-page {
+  position: fixed;
+  inset: 0;
+  z-index: 230;
+  background: var(--md-sys-color-background);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.influencer-page-header {
+  background: var(--md-sys-color-surface);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  flex-shrink: 0;
+}
+
+.influencer-page-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--md-sys-color-on-surface);
+  flex-shrink: 0;
+}
+
+.influencer-page-back:hover {
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.influencer-page-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.influencer-page-avatar {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.influencer-page-name {
+  font-size: var(--md-sys-typescale-title-medium-size);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.influencer-page-handle {
+  font-size: var(--md-sys-typescale-body-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.influencer-page-count {
+  font-size: var(--md-sys-typescale-body-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.influencer-page-count strong {
+  color: #000000;
+  font-weight: 600;
+}
+
+.influencer-page-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+}
+
+.influencer-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ── Modal — MD3 Dialog ──────────────────────────────────────────────────── */
@@ -1219,8 +1309,18 @@
     min-height: auto;
   }
 
+  .header-brand {
+    flex: 0 0 auto;
+  }
+
+  .header-search-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .header-search {
-    flex: 1 1 100%;
+    flex: unset;
+    width: 100%;
   }
 
   .view-toggle {
@@ -1260,11 +1360,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    padding-left: 16px;
   }
 
   .hero-count--mobile {
     font-size: 14px;
     color: #000000;
     text-align: right;
+    padding-right: 16px;
   }
 }

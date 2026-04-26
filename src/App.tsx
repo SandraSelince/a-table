@@ -35,7 +35,39 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function RestaurantCard({ restaurant, onClick, active }: { restaurant: Restaurant; onClick: () => void; active?: boolean }) {
+function InfluencerPage({ influencer, onClose, onSelectRestaurant }: { influencer: Influencer; onClose: () => void; onSelectRestaurant: (r: Restaurant) => void }) {
+  const restaurants = useMemo(() =>
+    RESTAURANTS.filter(r =>
+      r.recommendedBy.handle === influencer.handle ||
+      r.coRecommendedBy?.some(i => i.handle === influencer.handle)
+    ), [influencer.handle])
+
+  return (
+    <div className="influencer-page">
+      <div className="influencer-page-header">
+        <button className="influencer-page-back" onClick={onClose}>
+          <span className="mi">arrow_back</span>
+        </button>
+        <div className="influencer-page-info">
+          <div>
+            <h2 className="influencer-page-name">{influencer.name}</h2>
+            <p className="influencer-page-handle">{influencer.handle} · {influencer.followers} abonnés</p>
+          </div>
+        </div>
+        <p className="influencer-page-count"><strong>{restaurants.length}</strong> adresse{restaurants.length !== 1 ? 's' : ''}</p>
+      </div>
+      <div className="influencer-page-body">
+        <div className="grid">
+          {restaurants.map(r => (
+            <RestaurantCard key={r.id} restaurant={r} onClick={() => onSelectRestaurant(r)} />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { restaurant: Restaurant; onClick: () => void; active?: boolean; onInfluencerClick?: (inf: Influencer) => void }) {
   const [placeData, setPlaceData] = useState<PlaceData | null>(null)
   const ref = useRef<HTMLElement>(null)
 
@@ -80,7 +112,7 @@ function RestaurantCard({ restaurant, onClick, active }: { restaurant: Restauran
           <span className="card-meta-dot">·</span>
           <span>{placeData?.priceRange ?? restaurant.priceRange}</span>
           <span className="card-meta-dot">·</span>
-          <span>{restaurant.city}</span>
+          <span>{formatCity(restaurant.city, restaurant.address)}</span>
         </p>
         <div className="card-tags">
           {restaurant.tags.map(tag => (
@@ -88,7 +120,16 @@ function RestaurantCard({ restaurant, onClick, active }: { restaurant: Restauran
           ))}
         </div>
         <div className="card-influencer">
-          <p className="influencer-handle">Recommandé par <strong>{[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map(i => i.handle).join(', ')}</strong></p>
+          <p className="influencer-handle">Recommandé par{' '}
+            {[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map((inf, i, arr) => (
+              <span key={inf.handle}>
+                <strong
+                  className={onInfluencerClick ? 'influencer-link' : ''}
+                  onClick={onInfluencerClick ? (e) => { e.stopPropagation(); onInfluencerClick(inf) } : undefined}
+                >{inf.handle}</strong>{i < arr.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
         </div>
         {active && (
@@ -131,7 +172,7 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
             <h2 className="rsheet-name">{restaurant.name}</h2>
             <StarRating rating={placeData?.rating ?? restaurant.rating} />
           </div>
-          <p className="rsheet-meta">{placeData?.cuisine ?? restaurant.cuisine} · {placeData?.priceRange ?? restaurant.priceRange} · {restaurant.city}</p>
+          <p className="rsheet-meta">{placeData?.cuisine ?? restaurant.cuisine} · {placeData?.priceRange ?? restaurant.priceRange} · {formatCity(restaurant.city, restaurant.address)}</p>
           <div className="rsheet-tags">
             {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
           </div>
@@ -163,7 +204,7 @@ function MapCardPreview({ restaurant, onClose, onOpen }: { restaurant: Restauran
           <h3 className="map-card-preview-name">{restaurant.name}</h3>
           <StarRating rating={placeData?.rating ?? restaurant.rating} />
         </div>
-        <p className="map-card-preview-meta">{placeData?.cuisine ?? restaurant.cuisine} · {placeData?.priceRange ?? restaurant.priceRange} · {restaurant.city}</p>
+        <p className="map-card-preview-meta">{placeData?.cuisine ?? restaurant.cuisine} · {placeData?.priceRange ?? restaurant.priceRange} · {formatCity(restaurant.city, restaurant.address)}</p>
         <div className="map-card-preview-tags">
           {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
         </div>
@@ -282,6 +323,14 @@ const SUGGESTION_ICON: Record<Suggestion['type'], string> = {
   tag: 'label',
 }
 
+function formatCity(city: string, address: string): string {
+  if (city !== 'Paris') return city
+  const match = address.match(/750(\d{2})/)
+  if (!match) return city
+  const arr = parseInt(match[1], 10)
+  return arr > 0 ? `Paris ${arr}` : city
+}
+
 function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]
 }
@@ -297,6 +346,7 @@ export function App() {
   const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const [influencerPage, setInfluencerPage] = useState<Influencer | null>(null)
   const suggestions = useSearchSuggestions(search)
 
   // Pending state — mobile sheet uniquement
@@ -337,14 +387,16 @@ export function App() {
   const filtered = useMemo(() => {
     const normalize = (s: string) =>
       s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const compact = (s: string) => normalize(s).replace(/\s+/g, '')
     const q = normalize(search.trim())
+    const qCompact = compact(search.trim())
 
     return RESTAURANTS.filter(r => {
       const matchCity = selectedCities.length === 0 || selectedCities.includes(r.city)
       const matchCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(r.cuisine)
       const allInfluencers = [r.recommendedBy, ...(r.coRecommendedBy ?? [])]
       const matchInfluencer = selectedInfluencers.length === 0 || allInfluencers.some(i => selectedInfluencers.includes(i.handle))
-      const matchSearch = q === '' || [
+      const fields = [
         r.name,
         r.cuisine,
         r.city,
@@ -353,7 +405,8 @@ export function App() {
         r.priceRange,
         ...allInfluencers.flatMap(i => [i.name, i.handle]),
         ...r.tags,
-      ].some(field => normalize(field).includes(q))
+      ]
+      const matchSearch = q === '' || fields.some(field => normalize(field).includes(q) || compact(field).includes(qCompact))
       return matchCity && matchCuisine && matchInfluencer && matchSearch
     })
   }, [selectedCities, selectedCuisines, selectedInfluencers, search])
@@ -557,7 +610,7 @@ export function App() {
                   <RestaurantCard key={r.id} restaurant={r} active={mapSelected?.id === r.id} onClick={() => {
                     if (window.innerWidth >= 1024) setMapSelected(r)
                     else setSelected(r)
-                  }} />
+                  }} onInfluencerClick={setInfluencerPage} />
                 ))}
               </div>
             )}
@@ -580,10 +633,20 @@ export function App() {
         </div>
       </main>
 
-
-
       {selected && createPortal(
         <RestaurantSheet restaurant={selected} onClose={() => setSelected(null)} />,
+        document.body
+      )}
+      {influencerPage && createPortal(
+        <InfluencerPage
+          influencer={influencerPage}
+          onClose={() => setInfluencerPage(null)}
+          onSelectRestaurant={r => {
+            setInfluencerPage(null)
+            setView('map')
+            setMapSelected(r)
+          }}
+        />,
         document.body
       )}
     </div>

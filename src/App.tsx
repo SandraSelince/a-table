@@ -18,10 +18,9 @@ function usePlaceDetails(restaurant: Restaurant | null) {
 
 const INFLUENCERS: Influencer[] = [
   ...new Map(
-    RESTAURANTS.map(r => [r.recommendedBy.handle, r.recommendedBy])
+    RESTAURANTS.flatMap(r => [r.recommendedBy, ...(r.coRecommendedBy ?? [])]).map(i => [i.handle, i])
   ).values()
 ].sort((a, b) => {
-  // sort by follower count descending (parse "1.4M" → 1400, "310K" → 310)
   const parse = (s: string) => parseFloat(s) * (s.endsWith('M') ? 1000 : 1)
   return parse(b.followers) - parse(a.followers)
 })
@@ -89,7 +88,7 @@ function RestaurantCard({ restaurant, onClick, active }: { restaurant: Restauran
           ))}
         </div>
         <div className="card-influencer">
-          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
+          <p className="influencer-handle">Recommandé par <strong>{[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map(i => i.handle).join(', ')}</strong></p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
         </div>
         {active && (
@@ -137,7 +136,7 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
             {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
           </div>
           <p className="rsheet-description">{placeData?.description ?? restaurant.description}</p>
-          <p className="influencer-handle">Recommandé par <strong>{restaurant.recommendedBy.handle}</strong></p>
+          <p className="influencer-handle">Recommandé par <strong>{[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map(i => i.handle).join(', ')}</strong></p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
           <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta">
             Voir sur Instagram
@@ -263,8 +262,10 @@ function useSearchSuggestions(query: string): Suggestion[] {
       if (normalize(r.name).includes(q)) add(r.name, 'restaurant')
       if (normalize(r.cuisine).includes(q)) add(r.cuisine, 'cuisine')
       if (normalize(r.city).includes(q)) add(r.city, 'ville')
-      if (normalize(r.recommendedBy.name).includes(q)) add(r.recommendedBy.name, 'influenceur')
-      if (normalize(r.recommendedBy.handle).includes(q)) add(r.recommendedBy.handle, 'influenceur')
+      for (const inf of [r.recommendedBy, ...(r.coRecommendedBy ?? [])]) {
+        if (normalize(inf.name).includes(q)) add(inf.name, 'influenceur')
+        if (normalize(inf.handle).includes(q)) add(inf.handle, 'influenceur')
+      }
       for (const tag of r.tags) {
         if (normalize(tag).includes(q)) add(tag, 'tag')
       }
@@ -341,7 +342,8 @@ export function App() {
     return RESTAURANTS.filter(r => {
       const matchCity = selectedCities.length === 0 || selectedCities.includes(r.city)
       const matchCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(r.cuisine)
-      const matchInfluencer = selectedInfluencers.length === 0 || selectedInfluencers.includes(r.recommendedBy.handle)
+      const allInfluencers = [r.recommendedBy, ...(r.coRecommendedBy ?? [])]
+      const matchInfluencer = selectedInfluencers.length === 0 || allInfluencers.some(i => selectedInfluencers.includes(i.handle))
       const matchSearch = q === '' || [
         r.name,
         r.cuisine,
@@ -349,8 +351,7 @@ export function App() {
         r.address,
         r.description,
         r.priceRange,
-        r.recommendedBy.name,
-        r.recommendedBy.handle,
+        ...allInfluencers.flatMap(i => [i.name, i.handle]),
         ...r.tags,
       ].some(field => normalize(field).includes(q))
       return matchCity && matchCuisine && matchInfluencer && matchSearch

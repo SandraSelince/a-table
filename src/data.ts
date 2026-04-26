@@ -607,7 +607,7 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: '47',
-    name: 'Pastasuta Poissonière',
+    name: 'Pastasuta',
     cuisine: 'Italienne',
     city: 'Paris',
     address: '9 Rue du Faubourg Poissonnière, 75009',
@@ -623,7 +623,7 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: '48',
-    name: 'Tuan Paris',
+    name: 'Tuan',
     cuisine: 'Vietnamienne',
     city: 'Paris',
     address: '24 Rue de Babylone, 75007',
@@ -639,7 +639,7 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: '49',
-    name: 'Restaurant Irwin',
+    name: 'Irwin',
     cuisine: 'Française',
     city: 'Paris',
     address: '22 Rue Cambacérès, 75008',
@@ -655,7 +655,7 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: '50',
-    name: 'Restaurant Alliance',
+    name: 'Alliance',
     cuisine: 'Française',
     city: 'Paris',
     address: '5 Rue de Poissy, 75005',

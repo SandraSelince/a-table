@@ -1,17 +1,35 @@
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY as string
 
-// Cache en mémoire pour éviter de refetcher le même restaurant
-const cache = new Map<string, string | null>()
+export interface PlaceData {
+  photoUrl: string | null
+  rating: number | null
+  priceRange: string | null
+  description: string | null
+  cuisine: string | null
+}
 
-export async function fetchPlacePhoto(
+const cache = new Map<string, PlaceData>()
+
+function mapPriceLevel(level: string): string | null {
+  const map: Record<string, string> = {
+    PRICE_LEVEL_INEXPENSIVE: '€',
+    PRICE_LEVEL_MODERATE: '€€',
+    PRICE_LEVEL_EXPENSIVE: '€€€',
+    PRICE_LEVEL_VERY_EXPENSIVE: '€€€€',
+  }
+  return map[level] ?? null
+}
+
+export async function fetchPlaceDetails(
   name: string,
   address: string
-): Promise<string | null> {
+): Promise<PlaceData> {
   const cacheKey = `${name}__${address}`
   if (cache.has(cacheKey)) return cache.get(cacheKey)!
 
+  const empty: PlaceData = { photoUrl: null, rating: null, priceRange: null, description: null, cuisine: null }
+
   try {
-    // 1. Text Search pour trouver le place_id et les photos
     const searchRes = await fetch(
       'https://places.googleapis.com/v1/places:searchText',
       {
@@ -19,7 +37,7 @@ export async function fetchPlacePhoto(
         headers: {
           'Content-Type': 'application/json',
           'X-Goog-Api-Key': API_KEY,
-          'X-Goog-FieldMask': 'places.photos',
+          'X-Goog-FieldMask': 'places.photos,places.rating,places.priceLevel,places.editorialSummary,places.primaryTypeDisplayName',
         },
         body: JSON.stringify({
           textQuery: `${name} ${address}`,
@@ -29,22 +47,35 @@ export async function fetchPlacePhoto(
     )
 
     const data = await searchRes.json()
-    const photoName = data.places?.[0]?.photos?.[0]?.name
+    const place = data.places?.[0]
 
-    if (!photoName) {
-      cache.set(cacheKey, null)
-      return null
+    if (!place) {
+      cache.set(cacheKey, empty)
+      return empty
     }
 
-    // 2. URL de la photo (redirige directement vers l'image)
-    const photoUrl =
-      `https://places.googleapis.com/v1/${photoName}/media` +
-      `?maxHeightPx=480&maxWidthPx=800&key=${API_KEY}`
+    const photoName = place.photos?.[0]?.name
+    const photoUrl = photoName
+      ? `https://places.googleapis.com/v1/${photoName}/media?maxHeightPx=480&maxWidthPx=800&key=${API_KEY}`
+      : null
 
-    cache.set(cacheKey, photoUrl)
-    return photoUrl
+    const result: PlaceData = {
+      photoUrl,
+      rating: place.rating ?? null,
+      priceRange: place.priceLevel ? mapPriceLevel(place.priceLevel) : null,
+      description: place.editorialSummary?.text ?? null,
+      cuisine: place.primaryTypeDisplayName?.text ?? null,
+    }
+
+    cache.set(cacheKey, result)
+    return result
   } catch {
-    cache.set(cacheKey, null)
-    return null
+    cache.set(cacheKey, empty)
+    return empty
   }
+}
+
+// Backward compat
+export async function fetchPlacePhoto(name: string, address: string): Promise<string | null> {
+  return (await fetchPlaceDetails(name, address)).photoUrl
 }

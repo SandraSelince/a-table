@@ -8,9 +8,9 @@
 :root {
 
   /* ── Color roles ─────────────────────────────────────────────────────── */
-  /* Primary — Rouge vif */
-  --md-sys-color-primary:                  #6D2622;
-  --md-sys-color-on-primary:               #FFFFFF;
+  /* Primary — Beige rosé */
+  --md-sys-color-primary:                  #EBC4AD;
+  --md-sys-color-on-primary:               #3B1F12;
   --md-sys-color-primary-container:        #FFDAD6;
   --md-sys-color-on-primary-container:     #410002;
 

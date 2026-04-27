@@ -567,9 +567,9 @@
 }
 
 .pill--active:hover {
-  background: #F6E7DE;
+  background: #B8602F;
   color: var(--md-sys-color-on-primary);
-  border-color: var(--md-sys-color-primary);
+  border-color: #B8602F;
 }
 
 .pill--active {

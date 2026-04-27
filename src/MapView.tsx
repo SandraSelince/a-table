@@ -33,6 +33,20 @@ function FlyTo({ restaurant }: { restaurant: Restaurant | null }) {
   return null
 }
 
+function FitBounds({ restaurants, active }: { restaurants: Restaurant[], active: boolean }) {
+  const map = useMap()
+  useEffect(() => {
+    if (!active || restaurants.length === 0) return
+    if (restaurants.length === 1) {
+      map.flyTo([restaurants[0].lat, restaurants[0].lng], 15, { duration: 0.5 })
+      return
+    }
+    const bounds = L.latLngBounds(restaurants.map(r => [r.lat, r.lng] as [number, number]))
+    map.flyToBounds(bounds, { padding: [50, 50], maxZoom: 15, duration: 0.5 })
+  }, [restaurants, active, map])
+  return null
+}
+
 // Close panel when clicking on map background
 function MapClickHandler({ onClose }: { onClose: () => void }) {
   useMapEvents({ click: onClose })
@@ -42,12 +56,13 @@ function MapClickHandler({ onClose }: { onClose: () => void }) {
 
 interface MapViewProps {
   restaurants: Restaurant[]
+  searchActive?: boolean
   externalSelected?: Restaurant | null
   onExternalClose?: () => void
   onSelect?: (r: Restaurant | null) => void
 }
 
-export function MapView({ restaurants, externalSelected, onExternalClose, onSelect }: MapViewProps) {
+export function MapView({ restaurants, searchActive, externalSelected, onExternalClose, onSelect }: MapViewProps) {
   const [internalSelected, setInternalSelected] = useState<Restaurant | null>(null)
   const center: [number, number] = [48.8566, 2.3522]
 
@@ -85,6 +100,7 @@ export function MapView({ restaurants, externalSelected, onExternalClose, onSele
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         <FlyTo restaurant={selected} />
+        <FitBounds restaurants={restaurants} active={!!searchActive && !selected} />
         <MapClickHandler onClose={handleClose} />
         {restaurants.map(r => (
           <Marker

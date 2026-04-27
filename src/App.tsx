@@ -489,7 +489,7 @@ export function App() {
         r.cuisine,
         r.city,
         r.address,
-        r.description,
+        r.description ?? '',
         r.priceRange,
         ...allInfluencers.flatMap(i => [i.name, i.handle]),
         ...r.tags,
@@ -708,6 +708,7 @@ export function App() {
               <Suspense fallback={null}>
                 <MapView
                   restaurants={filtered}
+                  searchActive={search.trim().length > 0}
                   externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
                   onExternalClose={() => setMapSelected(null)}
                   onSelect={r => setMapSelected(r)}

@@ -549,7 +549,7 @@ export function App() {
                   <button
                     key={i}
                     className="search-suggestion-item"
-                    onMouseDown={() => { setSearch(s.label); setSearchFocused(false) }}
+                    onPointerDown={e => { e.preventDefault(); setSearch(s.label); setSearchFocused(false) }}
                   >
                     <span className="mi search-suggestion-icon">{SUGGESTION_ICON[s.type]}</span>
                     <span className="search-suggestion-label">{s.label}</span>
@@ -718,6 +718,23 @@ export function App() {
                 onClose={() => setMapSelected(null)}
                 onOpen={() => setSelected(mapSelected)}
               />
+            )}
+            {search.trim() && (
+              <div className="mobile-search-results">
+                {filtered.length === 0 ? (
+                  <p className="mobile-search-empty">Aucun résultat</p>
+                ) : (
+                  filtered.map(r => (
+                    <button key={r.id} className="mobile-search-result-item" onClick={() => { setSelected(r); setSearch('') }}>
+                      <span className="mobile-search-result-emoji">{r.coverEmoji}</span>
+                      <span className="mobile-search-result-info">
+                        <span className="mobile-search-result-name">{r.name}</span>
+                        <span className="mobile-search-result-meta">{r.cuisine} · {r.address}</span>
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
             )}
           </div>
         </div>

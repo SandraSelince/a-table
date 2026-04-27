@@ -721,23 +721,6 @@ export function App() {
                 onOpen={() => setSelected(mapSelected)}
               />
             )}
-            {search.trim() && searchFocused && !selected && !influencerPage && (
-              <div className="mobile-search-results">
-                {filtered.length === 0 ? (
-                  <p className="mobile-search-empty">Aucun résultat</p>
-                ) : (
-                  filtered.map(r => (
-                    <button key={r.id} className="mobile-search-result-item" onClick={() => { setSelected(r); setSearch('') }}>
-                      <span className="mobile-search-result-emoji">{r.coverEmoji}</span>
-                      <span className="mobile-search-result-info">
-                        <span className="mobile-search-result-name">{r.name}</span>
-                        <span className="mobile-search-result-meta">{r.cuisine} · {r.address}</span>
-                      </span>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
           </div>
         </div>
       </main>

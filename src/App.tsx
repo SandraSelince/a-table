@@ -427,7 +427,7 @@ export function App() {
   const [selected, setSelected] = useState<Restaurant | null>(null)
   const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
-  const [mapMounted, setMapMounted] = useState(() => window.innerWidth >= 1024)
+  const [mapMounted, setMapMounted] = useState(true)
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const [influencerPage, setInfluencerPage] = useState<Influencer | null>(null)
   const suggestions = useSearchSuggestions(search)

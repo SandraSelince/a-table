@@ -484,17 +484,12 @@ export function App() {
       const matchCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(r.cuisine)
       const allInfluencers = [r.recommendedBy, ...(r.coRecommendedBy ?? [])]
       const matchInfluencer = selectedInfluencers.length === 0 || allInfluencers.some(i => selectedInfluencers.includes(i.handle))
-      const fields = [
-        r.name,
-        r.cuisine,
-        r.city,
-        r.address,
-        r.description ?? '',
-        r.priceRange,
-        ...allInfluencers.flatMap(i => [i.name, i.handle]),
-        ...r.tags,
-      ]
-      const matchSearch = q === '' || fields.some(field => normalize(field).includes(q) || fuzzyMatch(field, q))
+      // Fuzzy uniquement sur les champs courts, substring sur les champs longs
+      const shortFields = [r.name, r.cuisine, r.city, r.priceRange, ...allInfluencers.flatMap(i => [i.name, i.handle]), ...r.tags]
+      const longFields = [r.address, r.description ?? '']
+      const matchSearch = q === '' ||
+        shortFields.some(field => normalize(field).includes(q) || fuzzyMatch(field, q)) ||
+        longFields.some(field => normalize(field).includes(q))
       return matchCity && matchCuisine && matchInfluencer && matchSearch
     })
   }, [selectedCities, selectedCuisines, selectedInfluencers, search])

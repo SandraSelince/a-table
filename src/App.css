@@ -283,6 +283,23 @@
   border-color: #A86E6B;
 }
 
+.filter-dropdown-btn--active {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.filter-dropdown-btn--active:hover {
+  background: #B8612E;
+  border-color: #B8612E;
+}
+
+.filter-dropdown--open .filter-dropdown-btn--active {
+  background: #FFFFFF;
+  color: #1A1110;
+  border-color: #A86E6B;
+}
+
 .filter-dropdown-label {
   font-size: var(--md-sys-typescale-label-medium-size);
   font-weight: 500;

@@ -306,10 +306,11 @@ function MapCardPreview({ restaurant, onClose, onOpen }: { restaurant: Restauran
 interface FilterDropdownProps {
   label: string
   value: string
+  active?: boolean
   children: React.ReactNode
 }
 
-function FilterDropdown({ value, children }: FilterDropdownProps) {
+function FilterDropdown({ value, active, children }: FilterDropdownProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -326,7 +327,7 @@ function FilterDropdown({ value, children }: FilterDropdownProps) {
 
   return (
     <div className={`filter-dropdown ${open ? 'filter-dropdown--open' : ''}`} ref={ref}>
-      <button className="filter-dropdown-btn" onClick={() => setOpen(v => !v)}>
+      <button className={`filter-dropdown-btn ${active ? 'filter-dropdown-btn--active' : ''}`} onClick={() => setOpen(v => !v)}>
         <span className="filter-dropdown-value">{value}</span>
         <span className="mi filter-dropdown-arrow">{open ? 'expand_less' : 'expand_more'}</span>
       </button>
@@ -560,21 +561,21 @@ export function App() {
             )}
           </div>
           <div className="filters filters--desktop">
-            <FilterDropdown label="Ville" value={filterLabel(selectedCities, 'Toutes les villes')}>
+            <FilterDropdown label="Ville" value={filterLabel(selectedCities, 'Toutes les villes')} active={selectedCities.length > 0}>
               <div className="pills">
                 {CITIES.slice(1).map(city => (
                   <button key={city} className={`pill ${selectedCities.includes(city) ? 'pill--active' : ''}`} onClick={() => setSelectedCities(toggle(selectedCities, city))}>{city}</button>
                 ))}
               </div>
             </FilterDropdown>
-            <FilterDropdown label="Cuisine" value={filterLabel(selectedCuisines, 'Toutes les cuisines')}>
+            <FilterDropdown label="Cuisine" value={filterLabel(selectedCuisines, 'Toutes les cuisines')} active={selectedCuisines.length > 0}>
               <div className="pills">
                 {CUISINES.slice(1).map(cuisine => (
                   <button key={cuisine} className={`pill ${selectedCuisines.includes(cuisine) ? 'pill--active' : ''}`} onClick={() => setSelectedCuisines(toggle(selectedCuisines, cuisine))}>{cuisine}</button>
                 ))}
               </div>
             </FilterDropdown>
-            <FilterDropdown label="Influenceur" value={filterLabel(selectedInfluencers.map(h => INFLUENCERS.find(i => i.handle === h)?.name ?? h), 'Tous les influenceurs')}>
+            <FilterDropdown label="Influenceur" value={filterLabel(selectedInfluencers.map(h => INFLUENCERS.find(i => i.handle === h)?.name ?? h), 'Tous les influenceurs')} active={selectedInfluencers.length > 0}>
               <div className="pills">
                 {INFLUENCERS.map(inf => (
                   <button key={inf.handle} className={`pill pill--influencer ${selectedInfluencers.includes(inf.handle) ? 'pill--active' : ''}`} onClick={() => setSelectedInfluencers(toggle(selectedInfluencers, inf.handle))}>

@@ -212,7 +212,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
   )
 }
 
-function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
+function RestaurantSheet({ restaurant, onClose, onInfluencerClick }: { restaurant: Restaurant; onClose: () => void; onInfluencerClick?: (inf: Influencer) => void }) {
   const placeData = usePlaceDetails(restaurant)
   return (
     <>
@@ -238,7 +238,14 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
             {restaurant.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
           </div>
           <p className="rsheet-description">{placeData?.description ?? restaurant.description}</p>
-          <p className="influencer-handle">Recommandé par <strong>{[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map(i => i.handle).join(', ')}</strong></p>
+          <p className="influencer-handle">Recommandé par {[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map((inf, i, arr) => (
+            <span key={inf.handle}>
+              <strong
+                className={onInfluencerClick ? 'influencer-link' : ''}
+                onClick={onInfluencerClick ? () => { onClose(); onInfluencerClick(inf) } : undefined}
+              >{inf.handle}</strong>{i < arr.length - 1 ? ', ' : ''}
+            </span>
+          ))}</p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
           <div className="rsheet-actions">
             <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary">
@@ -717,7 +724,7 @@ export function App() {
       </main>
 
       {selected && createPortal(
-        <RestaurantSheet restaurant={selected} onClose={() => setSelected(null)} />,
+        <RestaurantSheet restaurant={selected} onClose={() => setSelected(null)} onInfluencerClick={inf => { setSelected(null); setInfluencerPage(inf) }} />,
         document.body
       )}
       {influencerPage && createPortal(

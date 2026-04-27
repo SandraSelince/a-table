@@ -719,7 +719,7 @@ export function App() {
                 onOpen={() => setSelected(mapSelected)}
               />
             )}
-            {search.trim() && !selected && !influencerPage && (
+            {search.trim() && searchFocused && !selected && !influencerPage && (
               <div className="mobile-search-results">
                 {filtered.length === 0 ? (
                   <p className="mobile-search-empty">Aucun résultat</p>

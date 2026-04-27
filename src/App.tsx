@@ -456,6 +456,7 @@ export function App() {
     setSelectedCities(pendingCities)
     setSelectedCuisines(pendingCuisines)
     setSelectedInfluencers(pendingInfluencers)
+    setSearch('')
     setFilterSheetOpen(false)
   }
 
@@ -534,7 +535,7 @@ export function App() {
                 type="text"
                 placeholder="Restaurant, cuisine, ville…"
                 value={search}
-                onChange={e => setSearch(e.target.value)}
+                onChange={e => { setSearch(e.target.value); if (activeFilterCount > 0) { setSelectedCities([]); setSelectedCuisines([]); setSelectedInfluencers([]) } }}
                 onFocus={() => { setSelected(null); setSearchFocused(true) }}
                 onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
               />
@@ -564,21 +565,21 @@ export function App() {
             <FilterDropdown label="Ville" value={filterLabel(selectedCities, 'Toutes les villes')} active={selectedCities.length > 0}>
               <div className="pills">
                 {CITIES.slice(1).map(city => (
-                  <button key={city} className={`pill ${selectedCities.includes(city) ? 'pill--active' : ''}`} onClick={() => setSelectedCities(toggle(selectedCities, city))}>{city}</button>
+                  <button key={city} className={`pill ${selectedCities.includes(city) ? 'pill--active' : ''}`} onClick={() => { setSelectedCities(toggle(selectedCities, city)); setSearch('') }}>{city}</button>
                 ))}
               </div>
             </FilterDropdown>
             <FilterDropdown label="Cuisine" value={filterLabel(selectedCuisines, 'Toutes les cuisines')} active={selectedCuisines.length > 0}>
               <div className="pills">
                 {CUISINES.slice(1).map(cuisine => (
-                  <button key={cuisine} className={`pill ${selectedCuisines.includes(cuisine) ? 'pill--active' : ''}`} onClick={() => setSelectedCuisines(toggle(selectedCuisines, cuisine))}>{cuisine}</button>
+                  <button key={cuisine} className={`pill ${selectedCuisines.includes(cuisine) ? 'pill--active' : ''}`} onClick={() => { setSelectedCuisines(toggle(selectedCuisines, cuisine)); setSearch('') }}>{cuisine}</button>
                 ))}
               </div>
             </FilterDropdown>
             <FilterDropdown label="Influenceur" value={filterLabel(selectedInfluencers.map(h => INFLUENCERS.find(i => i.handle === h)?.name ?? h), 'Tous les influenceurs')} active={selectedInfluencers.length > 0}>
               <div className="pills">
                 {INFLUENCERS.map(inf => (
-                  <button key={inf.handle} className={`pill pill--influencer ${selectedInfluencers.includes(inf.handle) ? 'pill--active' : ''}`} onClick={() => setSelectedInfluencers(toggle(selectedInfluencers, inf.handle))}>
+                  <button key={inf.handle} className={`pill pill--influencer ${selectedInfluencers.includes(inf.handle) ? 'pill--active' : ''}`} onClick={() => { setSelectedInfluencers(toggle(selectedInfluencers, inf.handle)); setSearch('') }}>
                     {inf.name}<span className="pill-followers">{inf.followers}</span>
                   </button>
                 ))}

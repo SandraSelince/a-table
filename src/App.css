@@ -561,6 +561,11 @@
   font-family: var(--md-sys-typescale-font);
 }
 
+.pill:hover {
+  background: #FDDCBD;
+  border-color: #B8602F;
+}
+
 .pill--active {
   background: #FDDCBD;
   color: #1A1110;

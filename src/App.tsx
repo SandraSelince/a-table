@@ -158,7 +158,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                 target="_blank"
                 rel="noopener noreferrer"
                 className="card-cta card-cta--secondary"
-                onClick={e => e.stopPropagation()}
+                onClick={e => { e.stopPropagation(); gtag('event', 'cta_instagram', { restaurant: restaurant.name }) }}
               >
                 Voir sur Instagram
               </a>
@@ -168,7 +168,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--primary"
-                  onClick={e => e.stopPropagation()}
+                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_reserver', { restaurant: restaurant.name }) }}
                 >
                   Réserver
                 </a>
@@ -177,7 +177,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                 <a
                   href={`tel:${restaurant.phoneNumber}`}
                   className="card-cta card-cta--outline"
-                  onClick={e => e.stopPropagation()}
+                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_appeler', { restaurant: restaurant.name }) }}
                 >
                   Appeler
                 </a>
@@ -188,7 +188,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--outline"
-                  onClick={e => e.stopPropagation()}
+                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_commander', { restaurant: restaurant.name }) }}
                 >
                   Commander en ligne
                 </a>
@@ -199,7 +199,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--outline"
-                  onClick={e => e.stopPropagation()}
+                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_livraison', { restaurant: restaurant.name }) }}
                 >
                   Se faire livrer
                 </a>
@@ -248,26 +248,26 @@ function RestaurantSheet({ restaurant, onClose, onInfluencerClick }: { restauran
           ))}</p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
           <div className="rsheet-actions">
-            <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary">
+            <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary" onClick={() => gtag('event', 'cta_instagram', { restaurant: restaurant.name })}>
               Voir sur Instagram
             </a>
             {restaurant.reservationUrl && (
-              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary">
+              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary" onClick={() => gtag('event', 'cta_reserver', { restaurant: restaurant.name })}>
                 Réserver
               </a>
             )}
             {restaurant.phoneNumber && (
-              <a href={`tel:${restaurant.phoneNumber}`} className="rsheet-cta rsheet-cta--outline">
+              <a href={`tel:${restaurant.phoneNumber}`} className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_appeler', { restaurant: restaurant.name })}>
                 Appeler
               </a>
             )}
             {restaurant.orderUrl && (
-              <a href={restaurant.orderUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline">
+              <a href={restaurant.orderUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_commander', { restaurant: restaurant.name })}>
                 Commander en ligne
               </a>
             )}
             {restaurant.deliveryUrl && (
-              <a href={restaurant.deliveryUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline">
+              <a href={restaurant.deliveryUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_livraison', { restaurant: restaurant.name })}>
                 Se faire livrer
               </a>
             )}

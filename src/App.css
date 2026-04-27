@@ -710,6 +710,13 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 .card-cta {
   display: flex;
   align-items: center;
@@ -723,6 +730,22 @@
   font-weight: 600;
   font-family: var(--md-sys-typescale-font);
   transition: opacity 0.2s ease;
+}
+
+.card-cta--primary {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.card-cta--secondary {
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+.card-cta--outline {
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1.5px solid var(--md-sys-color-outline-variant);
 }
 
 .card-cta:hover {
@@ -946,18 +969,38 @@
   margin-top: 4px;
 }
 
+.rsheet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 .rsheet-cta {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 44px;
   border-radius: 999px;
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
   font-size: 14px;
   font-weight: 600;
   font-family: var(--md-sys-typescale-font);
-  margin-top: 8px;
+}
+
+.rsheet-cta--primary {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.rsheet-cta--secondary {
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+.rsheet-cta--outline {
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1.5px solid var(--md-sys-color-outline-variant);
 }
 
 /* ── Influencer page ─────────────────────────────────────────────────────── */

@@ -8,17 +8,17 @@
 :root {
 
   /* ── Color roles ─────────────────────────────────────────────────────── */
-  /* Primary — Beige rosé */
-  --md-sys-color-primary:                  #EBC4AD;
-  --md-sys-color-on-primary:               #3B1F12;
+  /* Primary — Terracotta */
+  --md-sys-color-primary:                  #CC7039;
+  --md-sys-color-on-primary:               #FFFFFF;
   --md-sys-color-primary-container:        #FFDAD6;
   --md-sys-color-on-primary-container:     #410002;
 
-  /* Secondary — Vert émeraude */
-  --md-sys-color-secondary:                #28875A;
-  --md-sys-color-on-secondary:             #FFFFFF;
-  --md-sys-color-secondary-container:      #C0EDD4;
-  --md-sys-color-on-secondary-container:   #002114;
+  /* Secondary — Beige rosé */
+  --md-sys-color-secondary:                #EBC4AD;
+  --md-sys-color-on-secondary:             #3B1F12;
+  --md-sys-color-secondary-container:      #FFDAD6;
+  --md-sys-color-on-secondary-container:   #3B1F12;
 
   /* Tertiary — Bleu ciel */
   --md-sys-color-tertiary:                 #0083A8;

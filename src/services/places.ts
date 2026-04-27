@@ -8,7 +8,24 @@ export interface PlaceData {
   cuisine: string | null
 }
 
-const cache = new Map<string, PlaceData>()
+const CACHE_PREFIX = 'places_v1__'
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 jours
+
+const memCache = new Map<string, PlaceData>()
+
+function lsGet(key: string): PlaceData | null {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key)
+    if (!raw) return null
+    const { data, ts } = JSON.parse(raw)
+    if (Date.now() - ts > CACHE_TTL_MS) { localStorage.removeItem(CACHE_PREFIX + key); return null }
+    return data as PlaceData
+  } catch { return null }
+}
+
+function lsSet(key: string, data: PlaceData) {
+  try { localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ data, ts: Date.now() })) } catch {}
+}
 
 function mapPriceLevel(level: string): string | null {
   const map: Record<string, string> = {
@@ -25,7 +42,9 @@ export async function fetchPlaceDetails(
   address: string
 ): Promise<PlaceData> {
   const cacheKey = `${name}__${address}`
-  if (cache.has(cacheKey)) return cache.get(cacheKey)!
+  if (memCache.has(cacheKey)) return memCache.get(cacheKey)!
+  const cached = lsGet(cacheKey)
+  if (cached) { memCache.set(cacheKey, cached); return cached }
 
   const empty: PlaceData = { photoUrl: null, rating: null, priceRange: null, description: null, cuisine: null }
 
@@ -50,7 +69,8 @@ export async function fetchPlaceDetails(
     const place = data.places?.[0]
 
     if (!place) {
-      cache.set(cacheKey, empty)
+      memCache.set(cacheKey, empty)
+      lsSet(cacheKey, empty)
       return empty
     }
 
@@ -67,10 +87,11 @@ export async function fetchPlaceDetails(
       cuisine: place.primaryTypeDisplayName?.text ?? null,
     }
 
-    cache.set(cacheKey, result)
+    memCache.set(cacheKey, result)
+    lsSet(cacheKey, result)
     return result
   } catch {
-    cache.set(cacheKey, empty)
+    memCache.set(cacheKey, empty)
     return empty
   }
 }

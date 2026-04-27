@@ -1,9 +1,26 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { RESTAURANTS, CITIES, CUISINES, type Influencer, type Restaurant } from './data'
-import { MapView } from './MapView'
 import { fetchPlaceDetails, type PlaceData } from './services/places'
+
+const MapView = lazy(() => import('./MapView').then(m => ({ default: m.MapView })))
 import './App.css'
+
+const normalize = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+const compact = (s: string) => normalize(s).replace(/\s+/g, '')
+
+function fuzzyMatch(field: string, query: string): boolean {
+  const f = compact(field)
+  const q = compact(query)
+  if (q.length === 0) return true
+  let qi = 0
+  for (let i = 0; i < f.length && qi < q.length; i++) {
+    if (f[i] === q[qi]) qi++
+  }
+  return qi === q.length
+}
 
 function usePlaceDetails(restaurant: Restaurant | null) {
   const [placeData, setPlaceData] = useState<PlaceData | null>(null)
@@ -135,15 +152,59 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
         {active && (
           <div className="card-expanded">
             <p className="card-description">{placeData?.description ?? restaurant.description}</p>
-            <a
-              href={restaurant.instagramPost}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-cta"
-              onClick={e => e.stopPropagation()}
-            >
-              Voir sur Instagram
-            </a>
+            <div className="card-actions">
+              <a
+                href={restaurant.instagramPost}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-cta card-cta--secondary"
+                onClick={e => e.stopPropagation()}
+              >
+                Voir sur Instagram
+              </a>
+              {restaurant.reservationUrl && (
+                <a
+                  href={restaurant.reservationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-cta card-cta--primary"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Réserver
+                </a>
+              )}
+              {restaurant.phoneNumber && (
+                <a
+                  href={`tel:${restaurant.phoneNumber}`}
+                  className="card-cta card-cta--outline"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Appeler
+                </a>
+              )}
+              {restaurant.orderUrl && (
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-cta card-cta--outline"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Commander en ligne
+                </a>
+              )}
+              {restaurant.deliveryUrl && (
+                <a
+                  href={restaurant.deliveryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-cta card-cta--outline"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Se faire livrer
+                </a>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -179,9 +240,31 @@ function RestaurantSheet({ restaurant, onClose }: { restaurant: Restaurant; onCl
           <p className="rsheet-description">{placeData?.description ?? restaurant.description}</p>
           <p className="influencer-handle">Recommandé par <strong>{[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map(i => i.handle).join(', ')}</strong></p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
-          <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta">
-            Voir sur Instagram
-          </a>
+          <div className="rsheet-actions">
+            <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary">
+              Voir sur Instagram
+            </a>
+            {restaurant.reservationUrl && (
+              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary">
+                Réserver
+              </a>
+            )}
+            {restaurant.phoneNumber && (
+              <a href={`tel:${restaurant.phoneNumber}`} className="rsheet-cta rsheet-cta--outline">
+                Appeler
+              </a>
+            )}
+            {restaurant.orderUrl && (
+              <a href={restaurant.orderUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline">
+                Commander en ligne
+              </a>
+            )}
+            {restaurant.deliveryUrl && (
+              <a href={restaurant.deliveryUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline">
+                Se faire livrer
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -290,8 +373,6 @@ interface Suggestion {
 function useSearchSuggestions(query: string): Suggestion[] {
   return useMemo(() => {
     if (query.trim().length < 2) return []
-    const normalize = (s: string) =>
-      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     const q = normalize(query.trim())
     const seen = new Set<string>()
     const suggestions: Suggestion[] = []
@@ -299,16 +380,17 @@ function useSearchSuggestions(query: string): Suggestion[] {
       const key = `${type}:${label}`
       if (!seen.has(key)) { seen.add(key); suggestions.push({ label, type }) }
     }
+    const match = (field: string) => normalize(field).includes(q) || fuzzyMatch(field, q)
     for (const r of RESTAURANTS) {
-      if (normalize(r.name).includes(q)) add(r.name, 'restaurant')
-      if (normalize(r.cuisine).includes(q)) add(r.cuisine, 'cuisine')
-      if (normalize(r.city).includes(q)) add(r.city, 'ville')
+      if (match(r.name)) add(r.name, 'restaurant')
+      if (match(r.cuisine)) add(r.cuisine, 'cuisine')
+      if (match(r.city)) add(r.city, 'ville')
       for (const inf of [r.recommendedBy, ...(r.coRecommendedBy ?? [])]) {
-        if (normalize(inf.name).includes(q)) add(inf.name, 'influenceur')
-        if (normalize(inf.handle).includes(q)) add(inf.handle, 'influenceur')
+        if (match(inf.name)) add(inf.name, 'influenceur')
+        if (match(inf.handle)) add(inf.handle, 'influenceur')
       }
       for (const tag of r.tags) {
-        if (normalize(tag).includes(q)) add(tag, 'tag')
+        if (match(tag)) add(tag, 'tag')
       }
     }
     return suggestions.slice(0, 8)
@@ -345,6 +427,7 @@ export function App() {
   const [selected, setSelected] = useState<Restaurant | null>(null)
   const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
+  const [mapMounted, setMapMounted] = useState(() => window.innerWidth >= 1024)
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const [influencerPage, setInfluencerPage] = useState<Influencer | null>(null)
   const suggestions = useSearchSuggestions(search)
@@ -385,11 +468,7 @@ export function App() {
   }
 
   const filtered = useMemo(() => {
-    const normalize = (s: string) =>
-      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    const compact = (s: string) => normalize(s).replace(/\s+/g, '')
     const q = normalize(search.trim())
-    const qCompact = compact(search.trim())
 
     return RESTAURANTS.filter(r => {
       const matchCity = selectedCities.length === 0 || selectedCities.includes(r.city)
@@ -406,7 +485,7 @@ export function App() {
         ...allInfluencers.flatMap(i => [i.name, i.handle]),
         ...r.tags,
       ]
-      const matchSearch = q === '' || fields.some(field => normalize(field).includes(q) || compact(field).includes(qCompact))
+      const matchSearch = q === '' || fields.some(field => normalize(field).includes(q) || fuzzyMatch(field, q))
       return matchCity && matchCuisine && matchInfluencer && matchSearch
     })
   }, [selectedCities, selectedCuisines, selectedInfluencers, search])
@@ -510,7 +589,7 @@ export function App() {
             </button>
             <button
               className={`view-btn ${view === 'map' ? 'view-btn--active' : ''}`}
-              onClick={() => setView('map')}
+              onClick={() => { setMapMounted(true); setView('map') }}
               title="Vue carte"
             >
               <span className="mi">map</span> Carte
@@ -616,12 +695,16 @@ export function App() {
             )}
           </div>
           <div className="content-map">
-            <MapView
-              restaurants={filtered}
-              externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
-              onExternalClose={() => setMapSelected(null)}
-              onSelect={r => setMapSelected(r)}
-            />
+            {mapMounted && (
+              <Suspense fallback={null}>
+                <MapView
+                  restaurants={filtered}
+                  externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
+                  onExternalClose={() => setMapSelected(null)}
+                  onSelect={r => setMapSelected(r)}
+                />
+              </Suspense>
+            )}
             {mapSelected && (
               <MapCardPreview
                 restaurant={mapSelected}
@@ -643,6 +726,7 @@ export function App() {
           onClose={() => setInfluencerPage(null)}
           onSelectRestaurant={r => {
             setInfluencerPage(null)
+            setMapMounted(true)
             setView('map')
             setMapSelected(r)
           }}

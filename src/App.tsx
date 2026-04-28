@@ -440,6 +440,15 @@ export function App() {
   const [influencerPage, setInfluencerPage] = useState<Influencer | null>(null)
   const suggestions = useSearchSuggestions(search)
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const handle = params.get('influencer')
+    if (handle) {
+      const inf = INFLUENCERS.find(i => i.handle === handle)
+      if (inf) setInfluencerPage(inf)
+    }
+  }, [])
+
   // Pending state — mobile sheet uniquement
   const [pendingCities, setPendingCities] = useState<string[]>([])
   const [pendingCuisines, setPendingCuisines] = useState<string[]>([])

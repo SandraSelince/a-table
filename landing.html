@@ -4,139 +4,249 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La Table — Les restos des influenceurs</title>
-  <meta name="description" content="Accédez aux restaurants de confiance recommandés par les influenceurs que vous suivez. Retrouvez-les sur la carte et réservez en un clic." />
+  <meta name="description" content="Accédez aux restaurants de confiance recommandés par les curateurs que vous suivez. Retrouvez-les sur la carte et réservez en un clic." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --primary:        #CC7039;
-      --primary-dark:   #B8602F;
-      --primary-light:  #F5E6D8;
-      --on-primary:     #FFFFFF;
-      --secondary:      #EBC4AD;
-      --surface:        #FFFFFF;
-      --bg:             #FDFAF8;
-      --on-bg:          #1A1110;
-      --muted:          #7A5C52;
-      --border:         #E8D5CC;
-      --font:           'Sora', -apple-system, sans-serif;
-      --radius-sm:      8px;
-      --radius-md:      16px;
-      --radius-lg:      28px;
-      --radius-full:    9999px;
+      --primary:       #CC7039;
+      --primary-dark:  #B8602F;
+      --primary-light: #F5E6D8;
+      --secondary:     #EBC4AD;
+      --bg:            #FDFAF8;
+      --dark:          #111010;
+      --dark-2:        #1C1A18;
+      --border-light:  #E8D5CC;
+      --border-dark:   rgba(255,255,255,0.1);
+      --muted:         #7A5C52;
+      --muted-dark:    rgba(255,255,255,0.55);
+      --font:          'Sora', -apple-system, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--on-bg);
-      -webkit-font-smoothing: antialiased;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
     img { display: block; max-width: 100%; }
 
-    /* ── NAV ── */
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
     .nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(253, 250, 248, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(17,16,16,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-dark);
     }
     .nav-inner {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
+      padding: 0 32px;
+      height: 60px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 24px;
     }
     .nav-logo {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
-      color: var(--on-bg);
+      color: #fff;
       letter-spacing: -0.5px;
+      flex-shrink: 0;
+      margin-right: 8px;
     }
-    .nav-logo span { color: var(--primary); }
+    .nav-logo span { color: var(--secondary); }
+
+    .nav-search {
+      flex: 1;
+      max-width: 340px;
+      position: relative;
+    }
+    .nav-search input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9999px;
+      padding: 8px 16px 8px 38px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .nav-search input::placeholder { color: rgba(255,255,255,0.4); }
+    .nav-search input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); }
+    .nav-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.4);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 8px;
-      list-style: none;
+      gap: 4px;
+      margin-left: auto;
     }
-    .nav-links a {
-      padding: 8px 14px;
-      border-radius: var(--radius-full);
-      font-size: 14px;
+    .nav-links a, .nav-links button {
+      padding: 7px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
       font-weight: 500;
-      color: var(--muted);
+      color: var(--muted-dark);
       transition: background 0.15s, color 0.15s;
     }
-    .nav-links a:hover { background: var(--primary-light); color: var(--on-bg); }
-    .nav-cta {
-      background: var(--primary);
-      color: var(--on-primary) !important;
-      padding: 9px 20px !important;
+    .nav-links a:hover, .nav-links button:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-btn-login {
+      color: rgba(255,255,255,0.75) !important;
     }
-    .nav-cta:hover { background: var(--primary-dark) !important; }
+    .nav-btn-signup {
+      background: var(--primary) !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+    }
+    .nav-btn-signup:hover { background: var(--primary-dark) !important; }
 
-    /* ── HERO ── */
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 96px 24px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
+    .nav-menu-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      color: rgba(255,255,255,0.75);
+      transition: background 0.15s;
+      flex-shrink: 0;
     }
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      border: 1px solid #B87878;
-      border-radius: var(--radius-full);
-      padding: 6px 14px;
+    .nav-menu-btn:hover { background: rgba(255,255,255,0.1); }
+    .nav-menu-btn span { display: block; width: 16px; height: 1.5px; background: currentColor; }
+
+    /* ── Overlay menu ── */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+    .menu-panel {
+      position: fixed;
+      top: 0; right: 0;
+      width: 320px;
+      height: 100%;
+      background: var(--dark-2);
+      z-index: 400;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+      padding: 32px;
+    }
+    .menu-panel.open { transform: translateX(0); }
+    .menu-close {
+      align-self: flex-end;
+      color: rgba(255,255,255,0.5);
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 40px;
+    }
+    .menu-close:hover { color: #fff; }
+    .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .menu-nav a {
+      display: block;
+      padding: 14px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.15s;
+      letter-spacing: -0.3px;
+    }
+    .menu-nav a:hover { color: var(--secondary); }
+    .menu-bottom {
+      margin-top: auto;
+      display: flex;
+      gap: 12px;
+    }
+    .menu-bottom a {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border-radius: 9999px;
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 24px;
+      transition: all 0.15s;
     }
-    .hero-eyebrow-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--primary);
+    .menu-login { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
+    .menu-login:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .menu-signup { background: var(--primary); color: #fff; }
+    .menu-signup:hover { background: var(--primary-dark); }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      background: var(--dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
     }
-    .hero h1 {
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(204,112,57,0.18) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 40% at 20% 80%, rgba(235,196,173,0.1) 0%, transparent 50%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .hero-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
       margin-bottom: 20px;
     }
+    .hero h1 {
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -3px;
+      color: #fff;
+      margin-bottom: 24px;
+      max-width: 820px;
+    }
     .hero h1 em {
-      font-style: normal;
-      color: var(--primary);
+      font-style: italic;
+      color: var(--secondary);
+      font-weight: 300;
     }
     .hero-sub {
-      font-size: 18px;
-      color: var(--muted);
+      font-size: 17px;
+      color: var(--muted-dark);
+      max-width: 480px;
       line-height: 1.7;
       margin-bottom: 40px;
-      max-width: 480px;
     }
     .hero-actions {
       display: flex;
@@ -147,408 +257,345 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 14px 28px;
-      border-radius: var(--radius-full);
-      font-size: 15px;
+      padding: 13px 28px;
+      border-radius: 9999px;
+      font-size: 14px;
       font-weight: 600;
       transition: all 0.15s;
       cursor: pointer;
     }
-    .btn-primary {
-      background: var(--primary);
-      color: var(--on-primary);
-      border: 2px solid var(--primary);
-    }
+    .btn-primary { background: var(--primary); color: #fff; border: 2px solid var(--primary); }
     .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
-    .btn-outline {
-      background: transparent;
-      color: var(--on-bg);
-      border: 2px solid var(--border);
-    }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-    .hero-visual {
-      position: relative;
-    }
-    .hero-map-mock {
-      background: #E8EFE8;
-      border-radius: var(--radius-lg);
-      height: 420px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 24px 64px rgba(0,0,0,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .hero-map-mock-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-    }
-    .hero-card-float {
-      position: absolute;
-      bottom: -20px;
-      left: -24px;
-      background: white;
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
-      border: 1px solid var(--border);
-      min-width: 220px;
-    }
-    .hero-card-float-name {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .hero-card-float-meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-    .hero-card-float-btn {
-      display: block;
-      background: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 8px 16px;
-      border-radius: var(--radius-full);
-      font-size: 13px;
-      font-weight: 600;
-    }
+    .btn-ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.25); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.6); }
+    .btn-dark { background: var(--dark); color: #fff; border: 2px solid var(--dark); }
+    .btn-outline-dark { background: transparent; color: var(--dark); border: 2px solid var(--border-light); }
+    .btn-outline-dark:hover { border-color: var(--primary); color: var(--primary); }
 
-    /* ── STATS ── */
-    .stats {
-      background: var(--primary);
-      padding: 48px 24px;
-    }
-    .stats-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 42px;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -1px;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label {
-      font-size: 14px;
-      color: rgba(255,255,255,0.75);
-      font-weight: 500;
-    }
-
-    /* ── SECTION COMMON ── */
-    section { padding: 96px 24px; }
-    .section-inner { max-width: 1200px; margin: 0 auto; }
-    .section-eyebrow {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .section-title {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1.15;
-      margin-bottom: 16px;
-    }
-    .section-sub {
-      font-size: 17px;
-      color: var(--muted);
-      max-width: 560px;
-      line-height: 1.7;
-      margin-bottom: 48px;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .how-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      margin-top: 56px;
-    }
-    .step {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 32px;
-    }
-    .step-number {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-full);
-      background: var(--primary-light);
-      border: 2px solid #B87878;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin-bottom: 20px;
-    }
-    .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-    /* ── APP CTAs ── */
-    .app-cta-section {
-      background: white;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .app-cta-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 96px 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-    .app-cta-title {
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 16px;
-    }
-    .app-cta-sub {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 32px;
-    }
-    .app-btns {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .app-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--on-bg);
-      color: white;
-      padding: 14px 24px;
-      border-radius: var(--radius-md);
-      transition: opacity 0.15s;
-    }
-    .app-btn:hover { opacity: 0.85; }
-    .app-btn-icon { font-size: 28px; line-height: 1; }
-    .app-btn-text { display: flex; flex-direction: column; }
-    .app-btn-small { font-size: 11px; opacity: 0.7; }
-    .app-btn-large { font-size: 16px; font-weight: 700; }
-    .app-preview {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    .phone-mock {
-      width: 160px;
-      height: 320px;
-      background: var(--on-bg);
-      border-radius: 28px;
-      border: 6px solid #333;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .phone-mock-screen {
-      flex: 1;
-      background: var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.3px;
-    }
-    .phone-mock:last-child { margin-top: 40px; }
-
-    /* ── AUDIENCE CARDS ── */
-    .audience-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 56px;
-    }
-    .audience-card {
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
-      display: flex;
-      flex-direction: column;
-    }
-    .audience-card--user { background: var(--primary-light); border: 1.5px solid #B87878; }
-    .audience-card--influencer { background: #EFF6FF; border: 1.5px solid #93C5FD; }
-    .audience-card--restaurant { background: #F0FDF4; border: 1.5px solid #86EFAC; }
-    .audience-icon {
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    .audience-card h3 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      letter-spacing: -0.3px;
-    }
-    .audience-card > p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 24px;
-      flex: 1;
-    }
-    .audience-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 32px;
-    }
-    .audience-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .feature-check {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .audience-card--influencer .feature-check { background: #3B82F6; }
-    .audience-card--restaurant .feature-check { background: #22C55E; }
-    .audience-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 22px;
-      border-radius: var(--radius-full);
-      font-size: 14px;
-      font-weight: 700;
-      background: var(--on-bg);
-      color: white;
-      transition: opacity 0.15s;
-      align-self: flex-start;
-    }
-    .audience-cta:hover { opacity: 0.8; }
-
-    /* ── REVIEWS ── */
-    .reviews-section { background: white; border-top: 1px solid var(--border); }
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 48px;
-    }
-    .review-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-    }
-    .review-stars {
-      color: var(--primary);
-      font-size: 18px;
-      letter-spacing: 2px;
-      margin-bottom: 14px;
-    }
-    .review-text {
-      font-size: 15px;
-      line-height: 1.65;
-      color: var(--on-bg);
-      margin-bottom: 20px;
-    }
-    .review-author {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .review-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-    .review-name { font-weight: 700; font-size: 13px; }
-    .review-handle { font-size: 12px; color: var(--muted); }
-    .review-cta-wrap {
-      margin-top: 56px;
-      text-align: center;
-    }
-    .review-cta-wrap p {
-      font-size: 15px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      background: var(--on-bg);
-      color: rgba(255,255,255,0.5);
-      padding: 48px 24px;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* ─────────────────────────────────────────
+       APP BANNER
+    ───────────────────────────────────────── */
+    .app-banner {
+      background: var(--dark-2);
+      border-top: 1px solid var(--border-dark);
+      padding: 16px 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      gap: 24px;
     }
-    .footer-logo {
+    .app-banner-text {
+      font-size: 13px;
+      color: var(--muted-dark);
+    }
+    .app-banner-text strong { color: #fff; font-weight: 600; }
+    .app-banner-btns { display: flex; gap: 10px; align-items: center; }
+    .app-store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+
+    /* ─────────────────────────────────────────
+       SECTION HEADERS
+    ───────────────────────────────────────── */
+    .section-wrap { padding: 80px 0; }
+    .section-wrap--dark { background: var(--dark); }
+    .section-inner { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      gap: 24px;
+    }
+    .section-header-left .section-by {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .section-header-left .section-by--dark { color: var(--muted-dark); }
+    .section-title {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -2.5px;
+      line-height: 1;
+      color: var(--dark);
+    }
+    .section-title--dark { color: #fff; }
+    .section-header-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .section-header-right p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 280px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .section-header-right p--dark { color: var(--muted-dark); }
+
+    /* ─────────────────────────────────────────
+       CURATORS GRID
+    ───────────────────────────────────────── */
+    .curators-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 280px 200px;
+      gap: 4px;
+    }
+    .curator-tile {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: #2a2520;
+    }
+    .curator-tile--large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .curator-tile-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #2a2520 0%, #1a1510 100%);
+      transition: transform 0.5s ease;
+    }
+    .curator-tile:hover .curator-tile-bg { transform: scale(1.04); }
+    .curator-tile-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+    }
+    .curator-tile-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 20px;
+    }
+    .curator-tile-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--secondary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .curator-tile-name {
       font-size: 20px;
       font-weight: 800;
-      color: white;
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
     }
-    .footer-logo span { color: var(--secondary); }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      list-style: none;
-      font-size: 13px;
+    .curator-tile--large .curator-tile-name { font-size: 32px; }
+    .curator-tile-followers {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 4px;
     }
-    .footer-links a:hover { color: white; }
+    /* Placeholder colors per tile */
+    .curator-tile:nth-child(1) .curator-tile-bg { background: linear-gradient(135deg, #3D2B1F 0%, #1F1208 100%); }
+    .curator-tile:nth-child(2) .curator-tile-bg { background: linear-gradient(135deg, #1F2B2A 0%, #101A19 100%); }
+    .curator-tile:nth-child(3) .curator-tile-bg { background: linear-gradient(135deg, #2B1F1A 0%, #180F08 100%); }
+    .curator-tile:nth-child(4) .curator-tile-bg { background: linear-gradient(135deg, #26211E 0%, #141010 100%); }
+    .curator-tile:nth-child(5) .curator-tile-bg { background: linear-gradient(135deg, #1A2024 0%, #0D1318 100%); }
+    .curator-tile:nth-child(6) .curator-tile-bg { background: linear-gradient(135deg, #201A24 0%, #110D18 100%); }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; gap: 48px; }
-      .hero-visual { display: none; }
-      .how-steps { grid-template-columns: 1fr; }
-      .app-cta-inner { grid-template-columns: 1fr; gap: 40px; }
-      .app-preview { display: none; }
-      .audience-grid { grid-template-columns: 1fr; }
-      .reviews-grid { grid-template-columns: 1fr; }
-      .stats-inner { grid-template-columns: 1fr; gap: 24px; }
-      .nav-links { display: none; }
+    /* ─────────────────────────────────────────
+       MID CTA BANNER
+    ───────────────────────────────────────── */
+    .mid-cta {
+      background: var(--primary-light);
+      border-top: 1px solid #B87878;
+      border-bottom: 1px solid #B87878;
+      padding: 80px 48px;
+      text-align: center;
+    }
+    .mid-cta h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 32px;
+      color: var(--dark);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .mid-cta h2 em { font-style: italic; color: var(--primary-dark); font-weight: 300; }
+    .mid-cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    /* ─────────────────────────────────────────
+       CATEGORIES GRID
+    ───────────────────────────────────────── */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .category-tile {
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      aspect-ratio: 3/4;
+      background: #f0e8e0;
+      transition: transform 0.2s;
+      border: 1px solid var(--border-light);
+    }
+    .category-tile:hover { transform: translateY(-4px); }
+    .category-tile-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.4s ease;
+    }
+    .category-tile:hover .category-tile-bg { transform: scale(1.05); }
+    .category-tile-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(17,16,16,0.65) 0%, transparent 55%);
+    }
+    .category-tile-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--secondary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .category-tile-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .category-tile-count {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 3px;
+    }
+    /* Category background colors */
+    .cat--fr .category-tile-bg { background: linear-gradient(160deg, #C8A97A 0%, #7A4A28 100%); }
+    .cat--it .category-tile-bg { background: linear-gradient(160deg, #D4796A 0%, #8A2A20 100%); }
+    .cat--as .category-tile-bg { background: linear-gradient(160deg, #7A9CA8 0%, #2A4A58 100%); }
+    .cat--bi .category-tile-bg { background: linear-gradient(160deg, #A89C7A 0%, #5A4A28 100%); }
+    .cat--ga .category-tile-bg { background: linear-gradient(160deg, #8A7AC8 0%, #2A2070 100%); }
+    .cat--am .category-tile-bg { background: linear-gradient(160deg, #C8A07A 0%, #8A4A20 100%); }
+    .cat--me .category-tile-bg { background: linear-gradient(160deg, #7AC88A 0%, #205A30 100%); }
+    .cat--br .category-tile-bg { background: linear-gradient(160deg, #C8B87A 0%, #7A5A20 100%); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    .footer {
+      background: #0D0B0A;
+      padding: 64px 48px 40px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+    .footer-brand .footer-logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .footer-brand .footer-logo span { color: var(--secondary); }
+    .footer-brand p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      max-width: 240px;
+      margin-bottom: 20px;
+    }
+    .footer-col h4 {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.15s;
+    }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+    .footer-bottom-links a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      transition: color 0.15s;
+    }
+    .footer-bottom-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .curators-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: 240px 200px; }
+      .curator-tile--large { grid-column: span 2; }
+      .categories-grid { grid-template-columns: repeat(4, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 768px) {
+      .nav-search { display: none; }
+      .nav-links .nav-btn-login { display: none; }
+      .nav-links .nav-btn-signup { display: none; }
+      .section-inner { padding: 0 20px; }
+      .hero-content { padding: 0 20px 60px; }
+      .app-banner { padding: 14px 20px; flex-wrap: wrap; gap: 12px; }
+      .mid-cta { padding: 56px 20px; }
+      .curators-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; }
+      .curator-tile--large { grid-column: span 2; grid-row: span 1; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer { padding: 48px 20px 32px; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+      .section-header-right { text-align: left; }
     }
   </style>
 </head>
@@ -558,270 +605,236 @@
   <nav class="nav">
     <div class="nav-inner">
       <a class="nav-logo" href="#">La <span>Table</span></a>
-      <ul class="nav-links">
-        <li><a href="#comment">Comment ça marche</a></li>
-        <li><a href="#app">Télécharger</a></li>
-        <li><a href="#rejoindre">Rejoindre</a></li>
-        <li><a href="/index.html" class="nav-cta btn">Voir la carte</a></li>
-      </ul>
+
+      <div class="nav-search">
+        <span class="nav-search-icon">⌕</span>
+        <input type="text" placeholder="Rechercher un restaurant, une cuisine…" />
+      </div>
+
+      <div class="nav-links">
+        <a href="/index.html" class="nav-btn-login">Voir la carte</a>
+        <a href="#" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
+        <button class="nav-menu-btn" onclick="openMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section style="padding: 0;">
-    <div class="hero">
-      <div class="hero-content">
-        <div class="hero-eyebrow">
-          <div class="hero-eyebrow-dot"></div>
-          Les restos recommandés par les influenceurs que vous suivez
-        </div>
-        <h1>Mangez là où vos <em>influenceurs</em> ont adoré</h1>
-        <p class="hero-sub">
-          Accédez aux restaurants de confiance recommandés par les influenceurs que vous suivez.
-          Retrouvez-les directement sur la carte et réservez en un clic.
-        </p>
-        <div class="hero-actions">
-          <a href="/index.html" class="btn btn-primary">Voir la carte</a>
-          <a href="/index.html#influenceurs" class="btn btn-outline">Voir les influenceurs</a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-map-mock">
-          <span class="hero-map-mock-label">Carte interactive</span>
-        </div>
-        <div class="hero-card-float">
-          <div class="hero-card-float-name">Le Baratin</div>
-          <div class="hero-card-float-meta">Française · €€ · Paris 20e</div>
-          <a href="#" class="hero-card-float-btn">Réserver</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stats-inner">
-      <div>
-        <div class="stat-value">150+</div>
-        <div class="stat-label">Restaurants sélectionnés</div>
-      </div>
-      <div>
-        <div class="stat-value">10+</div>
-        <div class="stat-label">Influenceurs partenaires</div>
-      </div>
-      <div>
-        <div class="stat-value">1 clic</div>
-        <div class="stat-label">Pour réserver</div>
-      </div>
+  <!-- SLIDE-OUT MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu-panel" id="menuPanel">
+    <button class="menu-close" onclick="closeMenu()">✕</button>
+    <ul class="menu-nav">
+      <li><a href="#">À propos — About Us</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Curateurs — How to</a></li>
+      <li><a href="/index.html">Voir la carte</a></li>
+      <li><a href="#curateurs">Les curateurs</a></li>
+      <li><a href="#categories">Par catégorie</a></li>
+    </ul>
+    <div class="menu-bottom">
+      <a href="#" class="menu-login">Connexion</a>
+      <a href="#" class="menu-signup">S'inscrire</a>
     </div>
   </div>
 
-  <!-- HOW IT WORKS -->
-  <section id="comment">
-    <div class="section-inner">
-      <div class="section-eyebrow">Comment ça marche</div>
-      <h2 class="section-title">Du feed Instagram<br>à la table en 3 étapes</h2>
-      <p class="section-sub">
-        Fini de noter des adresses dans vos notes. Vos influenceurs préférés ont déjà fait la sélection pour vous.
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-label">La Table</p>
+      <h1>Recommandé par les <em>passionnés</em>,<br>pas par l'algorithme.</h1>
+      <p class="hero-sub">
+        Accédez aux restaurants de confiance recommandés par les curateurs que vous suivez.
+        Retrouvez-les sur la carte et réservez en un clic.
       </p>
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Suivez vos influenceurs</h3>
-          <p>Choisissez les influenceurs gastronomiques que vous faites confiance. Leurs recommandations apparaissent sur la carte.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Explorez la carte</h3>
-          <p>Chaque restaurant est épinglé sur une carte interactive. Filtrez par ville, cuisine ou influenceur, cherchez par nom.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Réservez en un clic</h3>
-          <p>Directement depuis la fiche du restaurant : réservez, appelez ou commandez sans quitter l'application.</p>
-        </div>
+      <div class="hero-actions">
+        <a href="/index.html" class="btn btn-primary">Voir la carte</a>
+        <a href="#curateurs" class="btn btn-ghost">Les curateurs</a>
       </div>
     </div>
-  </section>
 
-  <!-- DOWNLOAD -->
-  <section id="app" class="app-cta-section" style="padding: 0;">
-    <div class="app-cta-inner">
-      <div>
-        <div class="section-eyebrow">Application mobile</div>
-        <h2 class="app-cta-title">Emportez La Table<br>partout avec vous</h2>
-        <p class="app-cta-sub">
-          Disponible sur iPhone et Android. La carte, les fiches restaurants, les réservations — tout dans votre poche.
-        </p>
-        <div class="app-btns">
-          <a href="#" class="app-btn">
-            <div class="app-btn-icon"></div>
-            <div class="app-btn-text">
-              <span class="app-btn-small">Télécharger sur</span>
-              <span class="app-btn-large">App Store</span>
-            </div>
-          </a>
-          <a href="#" class="app-btn">
-            <div class="app-btn-icon">▶</div>
-            <div class="app-btn-text">
-              <span class="app-btn-small">Disponible sur</span>
-              <span class="app-btn-large">Google Play</span>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="app-preview">
-        <div class="phone-mock">
-          <div class="phone-mock-screen">Carte</div>
-        </div>
-        <div class="phone-mock">
-          <div class="phone-mock-screen">Fiche</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- AUDIENCE -->
-  <section id="rejoindre">
-    <div class="section-inner">
-      <div class="section-eyebrow">Rejoignez La Table</div>
-      <h2 class="section-title">Une plateforme,<br>trois profils</h2>
-      <p class="section-sub">
-        Que vous soyez un utilisateur, un influenceur ou un restaurant, La Table a été pensée pour vous.
+    <!-- APP DOWNLOAD BANNER -->
+    <div class="app-banner">
+      <p class="app-banner-text">
+        <strong>C'est mieux sur mobile.</strong>
+        &nbsp;Disponible sur iPhone et Android — la carte, les fiches, les réservations dans votre poche.
       </p>
-      <div class="audience-grid">
-
-        <!-- UTILISATEUR -->
-        <div class="audience-card audience-card--user">
-          <div class="audience-icon">🍽️</div>
-          <h3>Utilisateur</h3>
-          <p>Créez votre compte et retrouvez en un endroit tous les restaurants que vos influenceurs recommandent.</p>
-          <ul class="audience-features">
-            <li>
-              <div class="feature-check">✓</div>
-              <span>Sauvegardez les restaurants à visiter</span>
-            </li>
-            <li>
-              <div class="feature-check">✓</div>
-              <span>Créez des listes : favoris, souhaits, visités</span>
-            </li>
-            <li>
-              <div class="feature-check">✓</div>
-              <span>Partagez une adresse à un ami</span>
-            </li>
-            <li>
-              <div class="feature-check">✓</div>
-              <span>Suivez vos influenceurs préférés</span>
-            </li>
-          </ul>
-          <a href="#" class="audience-cta">Créer mon compte →</a>
-        </div>
-
-        <!-- INFLUENCEUR -->
-        <div class="audience-card audience-card--influencer">
-          <div class="audience-icon">📸</div>
-          <h3>Influenceur</h3>
-          <p>Valorisez vos recommandations et donnez à votre communauté un accès direct à vos adresses favorites.</p>
-          <ul class="audience-features">
-            <li>
-              <div class="feature-check" style="background:#3B82F6;">✓</div>
-              <span>Créez votre profil influenceur</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#3B82F6;">✓</div>
-              <span>Ajoutez vos restaurants coups de cœur</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#3B82F6;">✓</div>
-              <span>Liez directement votre reel Instagram</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#3B82F6;">✓</div>
-              <span>Vos followers retrouvent vos adresses en un clic</span>
-            </li>
-          </ul>
-          <a href="#" class="audience-cta">Rejoindre en tant qu'influenceur →</a>
-        </div>
-
-        <!-- RESTAURANT -->
-        <div class="audience-card audience-card--restaurant">
-          <div class="audience-icon">🏪</div>
-          <h3>Restaurant</h3>
-          <p>Rejoignez la plateforme et suivez l'impact de votre présence auprès des communautés des influenceurs.</p>
-          <ul class="audience-features">
-            <li>
-              <div class="feature-check" style="background:#22C55E;">✓</div>
-              <span>Créez votre fiche restaurant</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#22C55E;">✓</div>
-              <span>Visualisez les réservations issues de la plateforme</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#22C55E;">✓</div>
-              <span>Suivez les bookmarks et partages de votre fiche</span>
-            </li>
-            <li>
-              <div class="feature-check" style="background:#22C55E;">✓</div>
-              <span>Mesurez votre visibilité par influenceur</span>
-            </li>
-          </ul>
-          <a href="#" class="audience-cta">Inscrire mon restaurant →</a>
-        </div>
-
+      <div class="app-banner-btns">
+        <a href="#" class="app-store-btn">
+          <span style="font-size:16px;"></span> App Store
+        </a>
+        <a href="#" class="app-store-btn">
+          <span style="font-size:14px;">▶</span> Google Play
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- REVIEWS -->
-  <section class="reviews-section">
+  <!-- CURATORS -->
+  <section class="section-wrap" id="curateurs">
     <div class="section-inner">
-      <div class="section-eyebrow">Avis</div>
-      <h2 class="section-title">Ce qu'ils en pensent</h2>
-      <div class="reviews-grid">
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">
-            "J'ai enfin arrêté de noter des adresses dans mes notes iPhone. Tout est là, directement recommandé par les gens que je suis."
-          </p>
-          <div class="review-author">
-            <div class="review-avatar">👩</div>
-            <div>
-              <div class="review-name">Marie L.</div>
-              <div class="review-handle">Utilisatrice</div>
-            </div>
+      <div class="section-header">
+        <div class="section-header-left">
+          <p class="section-by">Recommandé par les</p>
+          <h2 class="section-title">Curateurs</h2>
+        </div>
+        <div class="section-header-right">
+          <p>Accédez aux adresses préférées des curateurs gastronomiques les plus suivis.</p>
+          <a href="/index.html" class="btn btn-dark" style="font-size:12px;padding:9px 20px;">Voir tous les curateurs</a>
+        </div>
+      </div>
+
+      <div class="curators-grid">
+        <!-- Large tile -->
+        <div class="curator-tile curator-tile--large">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">Théo,<br>Voyageur Gourmand</h3>
+            <p class="curator-tile-followers">185K abonnés · 82 adresses</p>
           </div>
         </div>
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">
-            "En tant qu'influenceur, c'est exactement l'outil qu'il manquait. Mes abonnés peuvent accéder à toutes mes adresses en un endroit."
-          </p>
-          <div class="review-author">
-            <div class="review-avatar">👨‍🍳</div>
-            <div>
-              <div class="review-name">Thomas V.</div>
-              <div class="review-handle">Influenceur gastronomie</div>
-            </div>
+        <!-- Small tiles -->
+        <div class="curator-tile">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">Philou d'Arblay</h3>
+            <p class="curator-tile-followers">153K abonnés</p>
           </div>
         </div>
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">
-            "Depuis que notre restaurant est sur La Table, on voit clairement les réservations qui viennent des influenceurs. Très utile."
-          </p>
-          <div class="review-author">
-            <div class="review-avatar">🏪</div>
-            <div>
-              <div class="review-name">Sophie & Marc</div>
-              <div class="review-handle">Restaurateurs, Paris 11e</div>
-            </div>
+        <div class="curator-tile">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">Paris Food Club</h3>
+            <p class="curator-tile-followers">98K abonnés</p>
+          </div>
+        </div>
+        <div class="curator-tile">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">La Bonne Fourchette</h3>
+            <p class="curator-tile-followers">74K abonnés</p>
+          </div>
+        </div>
+        <div class="curator-tile">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">Paris Resto Guide</h3>
+            <p class="curator-tile-followers">61K abonnés</p>
+          </div>
+        </div>
+        <div class="curator-tile">
+          <div class="curator-tile-bg"></div>
+          <div class="curator-tile-overlay"></div>
+          <div class="curator-tile-content">
+            <p class="curator-tile-label">Recommandé par</p>
+            <h3 class="curator-tile-name">Le Gastronome</h3>
+            <p class="curator-tile-followers">42K abonnés</p>
           </div>
         </div>
       </div>
-      <div class="review-cta-wrap">
-        <p>Vous avez essayé La Table ? Partagez votre expérience.</p>
-        <a href="#" class="btn btn-outline">Laisser un avis</a>
+    </div>
+  </section>
+
+  <!-- MID CTA -->
+  <div class="mid-cta">
+    <h2>Les <em>meilleures</em> tables<br>méritent d'être partagées.</h2>
+    <div class="mid-cta-btns">
+      <a href="#" class="btn btn-primary">Créer un compte</a>
+      <a href="/index.html" class="btn btn-outline-dark">Voir la carte</a>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="section-wrap" id="categories">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-header-left">
+          <p class="section-by">Sélectionner par</p>
+          <h2 class="section-title">Catégorie</h2>
+        </div>
+        <div class="section-header-right">
+          <p>Explorez les meilleures adresses de chaque type de cuisine.</p>
+          <a href="/index.html" class="btn btn-dark" style="font-size:12px;padding:9px 20px;">Voir toutes les catégories</a>
+        </div>
+      </div>
+
+      <div class="categories-grid">
+        <div class="category-tile cat--fr">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Cuisine</p>
+            <h3 class="category-tile-name">Française</h3>
+            <p class="category-tile-count">48 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--it">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Cuisine</p>
+            <h3 class="category-tile-name">Italienne</h3>
+            <p class="category-tile-count">22 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--as">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Cuisine</p>
+            <h3 class="category-tile-name">Asiatique</h3>
+            <p class="category-tile-count">18 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--bi">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Style</p>
+            <h3 class="category-tile-name">Bistrot</h3>
+            <p class="category-tile-count">35 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--ga">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Style</p>
+            <h3 class="category-tile-name">Gastronomique</h3>
+            <p class="category-tile-count">14 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--am">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Cuisine</p>
+            <h3 class="category-tile-name">Américaine</h3>
+            <p class="category-tile-count">9 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--me">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Cuisine</p>
+            <h3 class="category-tile-name">Méditerranée</h3>
+            <p class="category-tile-count">11 restaurants</p>
+          </div>
+        </div>
+        <div class="category-tile cat--br">
+          <div class="category-tile-bg"></div>
+          <div class="category-tile-content">
+            <p class="category-tile-label">Moment</p>
+            <h3 class="category-tile-name">Brunch</h3>
+            <p class="category-tile-count">16 restaurants</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -829,15 +842,76 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
-      <div class="footer-logo">La <span>Table</span></div>
-      <ul class="footer-links">
-        <li><a href="#">Mentions légales</a></li>
-        <li><a href="#">Confidentialité</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-      <div style="font-size: 13px;">© 2026 La Table. Tous droits réservés.</div>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">La <span>Table</span></div>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="#">Comment ça marche</a></li>
+            <li><a href="#">Curateurs — How to</a></li>
+            <li><a href="#">Créer un profil</a></li>
+            <li><a href="#">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="#">Inscrire mon restaurant</a></li>
+            <li><a href="#">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="#curateurs">Les curateurs</a></li>
+            <li><a href="#categories">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support & Légal</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 La Table. Tous droits réservés.</p>
+        <ul class="footer-bottom-links">
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Curateurs — How to</a></li>
+        </ul>
+      </div>
     </div>
   </footer>
+
+  <script>
+    function openMenu() {
+      document.getElementById('menuOverlay').classList.add('open')
+      document.getElementById('menuPanel').classList.add('open')
+      document.body.style.overflow = 'hidden'
+    }
+    function closeMenu() {
+      document.getElementById('menuOverlay').classList.remove('open')
+      document.getElementById('menuPanel').classList.remove('open')
+      document.body.style.overflow = ''
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu() })
+  </script>
 
 </body>
 </html>

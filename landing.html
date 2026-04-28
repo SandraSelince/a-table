@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Table — Les restos des influenceurs</title>
+  <meta name="description" content="Accédez aux restaurants de confiance recommandés par les influenceurs que vous suivez. Retrouvez-les sur la carte et réservez en un clic." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:        #CC7039;
+      --primary-dark:   #B8602F;
+      --primary-light:  #F5E6D8;
+      --on-primary:     #FFFFFF;
+      --secondary:      #EBC4AD;
+      --surface:        #FFFFFF;
+      --bg:             #FDFAF8;
+      --on-bg:          #1A1110;
+      --muted:          #7A5C52;
+      --border:         #E8D5CC;
+      --font:           'Sora', -apple-system, sans-serif;
+      --radius-sm:      8px;
+      --radius-md:      16px;
+      --radius-lg:      28px;
+      --radius-full:    9999px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--on-bg);
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253, 250, 248, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--on-bg);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--primary); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover { background: var(--primary-light); color: var(--on-bg); }
+    .nav-cta {
+      background: var(--primary);
+      color: var(--on-primary) !important;
+      padding: 9px 20px !important;
+    }
+    .nav-cta:hover { background: var(--primary-dark) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid #B87878;
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--primary);
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-full);
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border: 2px solid var(--primary);
+    }
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+    .btn-outline {
+      background: transparent;
+      color: var(--on-bg);
+      border: 2px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .hero-visual {
+      position: relative;
+    }
+    .hero-map-mock {
+      background: #E8EFE8;
+      border-radius: var(--radius-lg);
+      height: 420px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .hero-map-mock-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+    .hero-card-float {
+      position: absolute;
+      bottom: -20px;
+      left: -24px;
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      border: 1px solid var(--border);
+      min-width: 220px;
+    }
+    .hero-card-float-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .hero-card-float-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .hero-card-float-btn {
+      display: block;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      background: var(--primary);
+      padding: 48px 24px;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 42px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 96px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+    }
+    .step {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+    }
+    .step-number {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background: var(--primary-light);
+      border: 2px solid #B87878;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+    }
+    .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── APP CTAs ── */
+    .app-cta-section {
+      background: white;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .app-cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .app-cta-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .app-cta-sub {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .app-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .app-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--on-bg);
+      color: white;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      transition: opacity 0.15s;
+    }
+    .app-btn:hover { opacity: 0.85; }
+    .app-btn-icon { font-size: 28px; line-height: 1; }
+    .app-btn-text { display: flex; flex-direction: column; }
+    .app-btn-small { font-size: 11px; opacity: 0.7; }
+    .app-btn-large { font-size: 16px; font-weight: 700; }
+    .app-preview {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .phone-mock {
+      width: 160px;
+      height: 320px;
+      background: var(--on-bg);
+      border-radius: 28px;
+      border: 6px solid #333;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-mock-screen {
+      flex: 1;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+    .phone-mock:last-child { margin-top: 40px; }
+
+    /* ── AUDIENCE CARDS ── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .audience-card {
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+    .audience-card--user { background: var(--primary-light); border: 1.5px solid #B87878; }
+    .audience-card--influencer { background: #EFF6FF; border: 1.5px solid #93C5FD; }
+    .audience-card--restaurant { background: #F0FDF4; border: 1.5px solid #86EFAC; }
+    .audience-icon {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    .audience-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    .audience-card > p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+    .audience-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .audience-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .feature-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .audience-card--influencer .feature-check { background: #3B82F6; }
+    .audience-card--restaurant .feature-check { background: #22C55E; }
+    .audience-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--on-bg);
+      color: white;
+      transition: opacity 0.15s;
+      align-self: flex-start;
+    }
+    .audience-cta:hover { opacity: 0.8; }
+
+    /* ── REVIEWS ── */
+    .reviews-section { background: white; border-top: 1px solid var(--border); }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .review-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .review-stars {
+      color: var(--primary);
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+    .review-text {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--on-bg);
+      margin-bottom: 20px;
+    }
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .review-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .review-name { font-weight: 700; font-size: 13px; }
+    .review-handle { font-size: 12px; color: var(--muted); }
+    .review-cta-wrap {
+      margin-top: 56px;
+      text-align: center;
+    }
+    .review-cta-wrap p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--on-bg);
+      color: rgba(255,255,255,0.5);
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+    }
+    .footer-logo span { color: var(--secondary); }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      font-size: 13px;
+    }
+    .footer-links a:hover { color: white; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { display: none; }
+      .how-steps { grid-template-columns: 1fr; }
+      .app-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+      .app-preview { display: none; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; gap: 24px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">La <span>Table</span></a>
+      <ul class="nav-links">
+        <li><a href="#comment">Comment ça marche</a></li>
+        <li><a href="#app">Télécharger</a></li>
+        <li><a href="#rejoindre">Rejoindre</a></li>
+        <li><a href="/index.html" class="nav-cta btn">Voir la carte</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section style="padding: 0;">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          Les restos recommandés par les influenceurs que vous suivez
+        </div>
+        <h1>Mangez là où vos <em>influenceurs</em> ont adoré</h1>
+        <p class="hero-sub">
+          Accédez aux restaurants de confiance recommandés par les influenceurs que vous suivez.
+          Retrouvez-les directement sur la carte et réservez en un clic.
+        </p>
+        <div class="hero-actions">
+          <a href="/index.html" class="btn btn-primary">Voir la carte</a>
+          <a href="/index.html#influenceurs" class="btn btn-outline">Voir les influenceurs</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-map-mock">
+          <span class="hero-map-mock-label">Carte interactive</span>
+        </div>
+        <div class="hero-card-float">
+          <div class="hero-card-float-name">Le Baratin</div>
+          <div class="hero-card-float-meta">Française · €€ · Paris 20e</div>
+          <a href="#" class="hero-card-float-btn">Réserver</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-inner">
+      <div>
+        <div class="stat-value">150+</div>
+        <div class="stat-label">Restaurants sélectionnés</div>
+      </div>
+      <div>
+        <div class="stat-value">10+</div>
+        <div class="stat-label">Influenceurs partenaires</div>
+      </div>
+      <div>
+        <div class="stat-value">1 clic</div>
+        <div class="stat-label">Pour réserver</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section id="comment">
+    <div class="section-inner">
+      <div class="section-eyebrow">Comment ça marche</div>
+      <h2 class="section-title">Du feed Instagram<br>à la table en 3 étapes</h2>
+      <p class="section-sub">
+        Fini de noter des adresses dans vos notes. Vos influenceurs préférés ont déjà fait la sélection pour vous.
+      </p>
+      <div class="how-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Suivez vos influenceurs</h3>
+          <p>Choisissez les influenceurs gastronomiques que vous faites confiance. Leurs recommandations apparaissent sur la carte.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Explorez la carte</h3>
+          <p>Chaque restaurant est épinglé sur une carte interactive. Filtrez par ville, cuisine ou influenceur, cherchez par nom.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Réservez en un clic</h3>
+          <p>Directement depuis la fiche du restaurant : réservez, appelez ou commandez sans quitter l'application.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="app" class="app-cta-section" style="padding: 0;">
+    <div class="app-cta-inner">
+      <div>
+        <div class="section-eyebrow">Application mobile</div>
+        <h2 class="app-cta-title">Emportez La Table<br>partout avec vous</h2>
+        <p class="app-cta-sub">
+          Disponible sur iPhone et Android. La carte, les fiches restaurants, les réservations — tout dans votre poche.
+        </p>
+        <div class="app-btns">
+          <a href="#" class="app-btn">
+            <div class="app-btn-icon"></div>
+            <div class="app-btn-text">
+              <span class="app-btn-small">Télécharger sur</span>
+              <span class="app-btn-large">App Store</span>
+            </div>
+          </a>
+          <a href="#" class="app-btn">
+            <div class="app-btn-icon">▶</div>
+            <div class="app-btn-text">
+              <span class="app-btn-small">Disponible sur</span>
+              <span class="app-btn-large">Google Play</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="app-preview">
+        <div class="phone-mock">
+          <div class="phone-mock-screen">Carte</div>
+        </div>
+        <div class="phone-mock">
+          <div class="phone-mock-screen">Fiche</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIENCE -->
+  <section id="rejoindre">
+    <div class="section-inner">
+      <div class="section-eyebrow">Rejoignez La Table</div>
+      <h2 class="section-title">Une plateforme,<br>trois profils</h2>
+      <p class="section-sub">
+        Que vous soyez un utilisateur, un influenceur ou un restaurant, La Table a été pensée pour vous.
+      </p>
+      <div class="audience-grid">
+
+        <!-- UTILISATEUR -->
+        <div class="audience-card audience-card--user">
+          <div class="audience-icon">🍽️</div>
+          <h3>Utilisateur</h3>
+          <p>Créez votre compte et retrouvez en un endroit tous les restaurants que vos influenceurs recommandent.</p>
+          <ul class="audience-features">
+            <li>
+              <div class="feature-check">✓</div>
+              <span>Sauvegardez les restaurants à visiter</span>
+            </li>
+            <li>
+              <div class="feature-check">✓</div>
+              <span>Créez des listes : favoris, souhaits, visités</span>
+            </li>
+            <li>
+              <div class="feature-check">✓</div>
+              <span>Partagez une adresse à un ami</span>
+            </li>
+            <li>
+              <div class="feature-check">✓</div>
+              <span>Suivez vos influenceurs préférés</span>
+            </li>
+          </ul>
+          <a href="#" class="audience-cta">Créer mon compte →</a>
+        </div>
+
+        <!-- INFLUENCEUR -->
+        <div class="audience-card audience-card--influencer">
+          <div class="audience-icon">📸</div>
+          <h3>Influenceur</h3>
+          <p>Valorisez vos recommandations et donnez à votre communauté un accès direct à vos adresses favorites.</p>
+          <ul class="audience-features">
+            <li>
+              <div class="feature-check" style="background:#3B82F6;">✓</div>
+              <span>Créez votre profil influenceur</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#3B82F6;">✓</div>
+              <span>Ajoutez vos restaurants coups de cœur</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#3B82F6;">✓</div>
+              <span>Liez directement votre reel Instagram</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#3B82F6;">✓</div>
+              <span>Vos followers retrouvent vos adresses en un clic</span>
+            </li>
+          </ul>
+          <a href="#" class="audience-cta">Rejoindre en tant qu'influenceur →</a>
+        </div>
+
+        <!-- RESTAURANT -->
+        <div class="audience-card audience-card--restaurant">
+          <div class="audience-icon">🏪</div>
+          <h3>Restaurant</h3>
+          <p>Rejoignez la plateforme et suivez l'impact de votre présence auprès des communautés des influenceurs.</p>
+          <ul class="audience-features">
+            <li>
+              <div class="feature-check" style="background:#22C55E;">✓</div>
+              <span>Créez votre fiche restaurant</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#22C55E;">✓</div>
+              <span>Visualisez les réservations issues de la plateforme</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#22C55E;">✓</div>
+              <span>Suivez les bookmarks et partages de votre fiche</span>
+            </li>
+            <li>
+              <div class="feature-check" style="background:#22C55E;">✓</div>
+              <span>Mesurez votre visibilité par influenceur</span>
+            </li>
+          </ul>
+          <a href="#" class="audience-cta">Inscrire mon restaurant →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section">
+    <div class="section-inner">
+      <div class="section-eyebrow">Avis</div>
+      <h2 class="section-title">Ce qu'ils en pensent</h2>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "J'ai enfin arrêté de noter des adresses dans mes notes iPhone. Tout est là, directement recommandé par les gens que je suis."
+          </p>
+          <div class="review-author">
+            <div class="review-avatar">👩</div>
+            <div>
+              <div class="review-name">Marie L.</div>
+              <div class="review-handle">Utilisatrice</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "En tant qu'influenceur, c'est exactement l'outil qu'il manquait. Mes abonnés peuvent accéder à toutes mes adresses en un endroit."
+          </p>
+          <div class="review-author">
+            <div class="review-avatar">👨‍🍳</div>
+            <div>
+              <div class="review-name">Thomas V.</div>
+              <div class="review-handle">Influenceur gastronomie</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "Depuis que notre restaurant est sur La Table, on voit clairement les réservations qui viennent des influenceurs. Très utile."
+          </p>
+          <div class="review-author">
+            <div class="review-avatar">🏪</div>
+            <div>
+              <div class="review-name">Sophie & Marc</div>
+              <div class="review-handle">Restaurateurs, Paris 11e</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="review-cta-wrap">
+        <p>Vous avez essayé La Table ? Partagez votre expérience.</p>
+        <a href="#" class="btn btn-outline">Laisser un avis</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">La <span>Table</span></div>
+      <ul class="footer-links">
+        <li><a href="#">Mentions légales</a></li>
+        <li><a href="#">Confidentialité</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <div style="font-size: 13px;">© 2026 La Table. Tous droits réservés.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

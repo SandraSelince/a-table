@@ -99,11 +99,29 @@
     .menu-signup { background: var(--primary); color: #fff; }
     .menu-signup:hover { background: var(--primary-dark); }
 
+    /* ── APP BANNER ── */
+    .app-banner {
+      background: var(--dark-2);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 48px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .app-banner-text { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .app-banner-text strong { color: #fff; font-weight: 600; }
+    .app-banner-btns { display: flex; gap: 10px; align-items: center; }
+    .app-store-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; padding: 8px 16px; border-radius: 9999px;
+      font-size: 12px; font-weight: 600; transition: background 0.15s;
+    }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+
 
     /* ── CONTENT ── */
     .content {
       background: var(--bg);
-      padding: 96px 48px 96px;
+      padding: 48px 48px 96px;
       max-width: 1280px; margin: 0 auto;
     }
 
@@ -198,7 +216,8 @@
       .nav-search { display: none; }
       .nav-links .nav-btn-login { display: none; }
       .nav-links .nav-btn-signup { display: none; }
-      .content { padding: 80px 20px 64px; }
+      .app-banner { padding: 14px 20px; flex-wrap: wrap; gap: 12px; }
+      .content { padding: 32px 20px 64px; }
       .curator-top { flex-direction: column; gap: 20px; }
       .curator-cta { align-self: flex-start; }
       .restaurant-list { grid-template-columns: 1fr 1fr; }
@@ -243,6 +262,17 @@
     </div>
   </div>
 
+  <!-- APP DOWNLOAD BANNER -->
+  <div class="app-banner" style="margin-top:60px;">
+    <p class="app-banner-text">
+      <strong>C'est mieux sur mobile.</strong>
+      &nbsp;Disponible sur iPhone et Android — la carte, les fiches, les réservations dans votre poche.
+    </p>
+    <div class="app-banner-btns">
+      <a href="#" class="app-store-btn"><span style="font-size:16px;"></span> App Store</a>
+      <a href="#" class="app-store-btn"><span style="font-size:14px;">▶</span> Google Play</a>
+    </div>
+  </div>
 
   <div class="content">
 

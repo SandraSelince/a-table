@@ -50,35 +50,35 @@
     .nav-back:hover { color: #fff; }
     .nav-back svg { width: 16px; height: 16px; }
 
-    /* ── PAGE HEADER ── */
-    .page-header {
+    /* ── PAGE TOPBAR ── */
+    .page-topbar {
       background: var(--dark);
-      padding: 120px 48px 64px;
+      padding-top: 60px; /* nav height */
+    }
+    .page-topbar-inner {
       max-width: 1280px; margin: 0 auto;
+      padding: 28px 48px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .page-header-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--secondary); margin-bottom: 16px;
+    .page-topbar-title {
+      font-size: clamp(20px, 3vw, 28px); font-weight: 700;
+      color: #fff; letter-spacing: -0.3px;
     }
-    .page-header h1 {
-      font-size: clamp(40px, 6vw, 72px); font-weight: 800;
-      color: #fff; letter-spacing: -1px; line-height: 1.05;
-      max-width: 600px;
+    .page-topbar-title em { font-style: italic; color: var(--secondary); font-weight: 300; }
+    .page-topbar-cta {
+      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+      background: var(--primary); color: #fff;
+      padding: 10px 22px; border-radius: 9999px;
+      font-size: 13px; font-weight: 600;
+      transition: background 0.15s;
     }
-    .page-header h1 em { font-style: italic; color: var(--secondary); font-weight: 300; }
-    .page-header-sub {
-      font-size: 16px; color: var(--muted-dark); margin-top: 20px; max-width: 480px; line-height: 1.6;
-    }
-    .page-header-bg {
-      position: fixed; inset: 0; z-index: -1;
-      background: var(--dark);
-      height: 360px;
-    }
+    .page-topbar-cta:hover { background: var(--primary-dark); }
 
     /* ── CONTENT ── */
     .content {
       background: var(--bg);
-      padding: 64px 48px 96px;
+      padding: 48px 48px 96px;
       max-width: 1280px; margin: 0 auto;
     }
 
@@ -170,7 +170,7 @@
     .footer p { font-size: 13px; color: var(--muted-dark); }
 
     @media (max-width: 768px) {
-      .page-header { padding: 100px 20px 48px; }
+      .page-topbar-inner { padding: 20px; flex-wrap: wrap; gap: 16px; }
       .content { padding: 40px 20px 64px; }
       .curator-top { flex-direction: column; gap: 20px; }
       .curator-cta { align-self: flex-start; }
@@ -192,11 +192,10 @@
     </div>
   </nav>
 
-  <div style="background:var(--dark);">
-    <div class="page-header">
-      <p class="page-header-label">La Table · Curateurs</p>
-      <h1>Les <em>passionnés</em><br>qui font la carte.</h1>
-      <p class="page-header-sub">Des amateurs éclairés, des critiques indépendants, des chefs amoureux de bonne table. Leurs adresses, sur la carte.</p>
+  <div class="page-topbar">
+    <div class="page-topbar-inner">
+      <p class="page-topbar-title">Les curateurs <em>La Table</em></p>
+      <a href="#" class="page-topbar-cta">Télécharger l'app</a>
     </div>
   </div>
 

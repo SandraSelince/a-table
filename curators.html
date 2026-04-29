@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Les curateurs — La Table</title>
+  <meta name="description" content="Découvrez les curateurs gastronomiques de La Table et leurs adresses préférées à Paris." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #CC7039;
+      --primary-dark:  #B8602F;
+      --primary-light: #F5E6D8;
+      --secondary:     #EBC4AD;
+      --bg:            #FDFAF8;
+      --dark:          #111010;
+      --dark-2:        #1C1A18;
+      --border-light:  #E8D5CC;
+      --muted:         #7A5C52;
+      --muted-dark:    rgba(255,255,255,0.55);
+      --font:          'Sora', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(17,16,16,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 32px;
+      height: 60px; display: flex; align-items: center; gap: 24px;
+    }
+    .nav-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; }
+    .nav-logo span { color: var(--secondary); }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: rgba(255,255,255,0.6);
+      margin-left: auto; transition: color 0.15s;
+    }
+    .nav-back:hover { color: #fff; }
+    .nav-back svg { width: 16px; height: 16px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: var(--dark);
+      padding: 120px 48px 64px;
+      max-width: 1280px; margin: 0 auto;
+    }
+    .page-header-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--secondary); margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: clamp(40px, 6vw, 72px); font-weight: 800;
+      color: #fff; letter-spacing: -1px; line-height: 1.05;
+      max-width: 600px;
+    }
+    .page-header h1 em { font-style: italic; color: var(--secondary); font-weight: 300; }
+    .page-header-sub {
+      font-size: 16px; color: var(--muted-dark); margin-top: 20px; max-width: 480px; line-height: 1.6;
+    }
+    .page-header-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background: var(--dark);
+      height: 360px;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      background: var(--bg);
+      padding: 64px 48px 96px;
+      max-width: 1280px; margin: 0 auto;
+    }
+
+    /* ── CURATOR BLOCK ── */
+    .curator-block {
+      border-top: 1px solid var(--border-light);
+      padding: 56px 0;
+    }
+    .curator-block:last-child { border-bottom: 1px solid var(--border-light); }
+
+    .curator-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 32px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .curator-identity { display: flex; flex-direction: column; gap: 6px; }
+    .curator-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .curator-name {
+      font-size: clamp(28px, 4vw, 48px); font-weight: 800;
+      letter-spacing: -0.5px; line-height: 1.05; color: var(--dark);
+    }
+    .curator-meta {
+      display: flex; align-items: center; gap: 12px; margin-top: 4px;
+    }
+    .curator-followers { font-size: 13px; color: var(--muted); }
+    .curator-ig {
+      display: flex; align-items: center; color: var(--muted); transition: color 0.15s;
+    }
+    .curator-ig:hover { color: var(--dark); }
+    .curator-ig svg { width: 20px; height: 20px; }
+
+    .curator-cta {
+      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+      background: var(--dark); color: #fff;
+      padding: 12px 24px; border-radius: 9999px;
+      font-size: 13px; font-weight: 600;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .curator-cta:hover { background: #2a2520; }
+    .curator-cta svg { width: 14px; height: 14px; }
+
+    /* ── RESTAURANT LIST ── */
+    .restaurant-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .restaurant-item {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 16px 20px;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .restaurant-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 12px rgba(204,112,57,0.1);
+    }
+    .restaurant-item-name {
+      font-size: 14px; font-weight: 600; color: var(--dark);
+    }
+    .restaurant-item-meta {
+      font-size: 12px; color: var(--muted);
+    }
+
+    .restaurant-more {
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px 20px;
+      background: var(--primary-light);
+      border: 1.5px dashed var(--primary);
+      border-radius: 12px;
+      font-size: 13px; font-weight: 600; color: var(--primary-dark);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .restaurant-more:hover { background: #eedad0; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--dark-2); color: #fff;
+      padding: 40px 48px;
+      text-align: center;
+    }
+    .footer a { color: var(--secondary); }
+    .footer p { font-size: 13px; color: var(--muted-dark); }
+
+    @media (max-width: 768px) {
+      .page-header { padding: 100px 20px 48px; }
+      .content { padding: 40px 20px 64px; }
+      .curator-top { flex-direction: column; gap: 20px; }
+      .curator-cta { align-self: flex-start; }
+      .restaurant-list { grid-template-columns: 1fr 1fr; }
+      .footer { padding: 32px 20px; }
+      .nav-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/landing.html" class="nav-logo">La <span>Table</span></a>
+      <a href="/landing.html" class="nav-back">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Retour
+      </a>
+    </div>
+  </nav>
+
+  <div style="background:var(--dark);">
+    <div class="page-header">
+      <p class="page-header-label">La Table · Curateurs</p>
+      <h1>Les <em>passionnés</em><br>qui font la carte.</h1>
+      <p class="page-header-sub">Des amateurs éclairés, des critiques indépendants, des chefs amoureux de bonne table. Leurs adresses, sur la carte.</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── LE PARIS D'ALEXIS ── -->
+    <div class="curator-block">
+      <div class="curator-top">
+        <div class="curator-identity">
+          <p class="curator-label">Curateur</p>
+          <h2 class="curator-name">Le Paris d'Alexis</h2>
+          <div class="curator-meta">
+            <span class="curator-followers">825K abonnés</span>
+            <a href="https://www.instagram.com/p/DWooKbLiBJG/" target="_blank" rel="noopener noreferrer" class="curator-ig">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+        <a href="/?influencer=@leparisdalexis" class="curator-cta">
+          Voir toutes ses adresses
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="restaurant-list">
+        <a href="/?influencer=@leparisdalexis" class="restaurant-item">
+          <span class="restaurant-item-name">Maison Rostang</span>
+          <span class="restaurant-item-meta">Française · Paris 17</span>
+        </a>
+        <a href="/?influencer=@leparisdalexis" class="restaurant-item">
+          <span class="restaurant-item-name">Biche Paris</span>
+          <span class="restaurant-item-meta">Française · Paris</span>
+        </a>
+        <a href="/?influencer=@leparisdalexis" class="restaurant-item">
+          <span class="restaurant-item-name">Libeyrouth</span>
+          <span class="restaurant-item-meta">Libanaise · Paris</span>
+        </a>
+        <a href="/?influencer=@leparisdalexis" class="restaurant-item">
+          <span class="restaurant-item-name">Drouant</span>
+          <span class="restaurant-item-meta">Française · Paris 2</span>
+        </a>
+        <a href="/?influencer=@leparisdalexis" class="restaurant-item">
+          <span class="restaurant-item-name">Casimir</span>
+          <span class="restaurant-item-meta">Française · Paris 10</span>
+        </a>
+        <a href="/?influencer=@leparisdalexis" class="restaurant-more">+ 60 adresses</a>
+      </div>
+    </div>
+
+    <!-- ── THÉO VOYAGEUR GOURMAND ── -->
+    <div class="curator-block">
+      <div class="curator-top">
+        <div class="curator-identity">
+          <p class="curator-label">Curateur</p>
+          <h2 class="curator-name">Théo, Voyageur Gourmand</h2>
+          <div class="curator-meta">
+            <span class="curator-followers">185K abonnés</span>
+            <a href="https://www.instagram.com/theovoyageurgourmand/" target="_blank" rel="noopener noreferrer" class="curator-ig">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+        <a href="/?influencer=@theovoyageurgourmand" class="curator-cta">
+          Voir toutes ses adresses
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="restaurant-list">
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-item">
+          <span class="restaurant-item-name">Le Baratin</span>
+          <span class="restaurant-item-meta">Française · Paris 20</span>
+        </a>
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-item">
+          <span class="restaurant-item-name">Patine Bistrot</span>
+          <span class="restaurant-item-meta">Bistronomique · Paris</span>
+        </a>
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-item">
+          <span class="restaurant-item-name">Gramme</span>
+          <span class="restaurant-item-meta">Française · Paris</span>
+        </a>
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-item">
+          <span class="restaurant-item-name">Alliance</span>
+          <span class="restaurant-item-meta">Gastronomique · Paris 5</span>
+        </a>
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-item">
+          <span class="restaurant-item-name">Pastasuta</span>
+          <span class="restaurant-item-meta">Italienne · Paris</span>
+        </a>
+        <a href="/?influencer=@theovoyageurgourmand" class="restaurant-more">+ 30 adresses</a>
+      </div>
+    </div>
+
+    <!-- ── PHILOU D'ARBLAY ── -->
+    <div class="curator-block">
+      <div class="curator-top">
+        <div class="curator-identity">
+          <p class="curator-label">Curateur</p>
+          <h2 class="curator-name">Philou d'Arblay</h2>
+          <div class="curator-meta">
+            <span class="curator-followers">153K abonnés</span>
+            <a href="https://www.instagram.com/philoudarblay/" target="_blank" rel="noopener noreferrer" class="curator-ig">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+        <a href="/?influencer=@philoudarblay" class="curator-cta">
+          Voir toutes ses adresses
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="restaurant-list">
+        <a href="/?influencer=@philoudarblay" class="restaurant-item">
+          <span class="restaurant-item-name">Chez Georges</span>
+          <span class="restaurant-item-meta">Française · Paris 2</span>
+        </a>
+        <a href="/?influencer=@philoudarblay" class="restaurant-item">
+          <span class="restaurant-item-name">Restaurant Anne</span>
+          <span class="restaurant-item-meta">Gastronomique · Paris</span>
+        </a>
+        <a href="/?influencer=@philoudarblay" class="restaurant-item">
+          <span class="restaurant-item-name">Vivide</span>
+          <span class="restaurant-item-meta">Créative · Paris</span>
+        </a>
+        <a href="/?influencer=@philoudarblay" class="restaurant-item">
+          <span class="restaurant-item-name">Le Mâche-Dru</span>
+          <span class="restaurant-item-meta">Française · Paris</span>
+        </a>
+        <a href="/?influencer=@philoudarblay" class="restaurant-item">
+          <span class="restaurant-item-name">Bon Vivant</span>
+          <span class="restaurant-item-meta">Bistrot · Paris</span>
+        </a>
+        <a href="/?influencer=@philoudarblay" class="restaurant-more">+ 40 adresses</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 La Table · <a href="/landing.html">Accueil</a> · <a href="/index.html">La carte</a></p>
+  </footer>
+
+</body>
+</html>

@@ -40,45 +40,70 @@
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
       height: 60px; display: flex; align-items: center; gap: 24px;
     }
-    .nav-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; }
+    .nav-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; margin-right: 8px; }
     .nav-logo span { color: var(--secondary); }
-    .nav-back {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; color: rgba(255,255,255,0.6);
-      margin-left: auto; transition: color 0.15s;
+    .nav-search { flex: 1; max-width: 340px; position: relative; }
+    .nav-search input {
+      width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9999px; padding: 8px 16px 8px 38px; font-family: var(--font);
+      font-size: 13px; color: #fff; outline: none; transition: border-color 0.15s, background 0.15s;
     }
-    .nav-back:hover { color: #fff; }
-    .nav-back svg { width: 16px; height: 16px; }
+    .nav-search input::placeholder { color: rgba(255,255,255,0.4); }
+    .nav-search input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); }
+    .nav-search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,0.4); font-size: 15px; pointer-events: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .nav-links a, .nav-links button {
+      padding: 7px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500;
+      color: var(--muted-dark); transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover, .nav-links button:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-btn-login { color: rgba(255,255,255,0.75) !important; }
+    .nav-btn-signup { background: var(--primary) !important; color: #fff !important; font-weight: 600 !important; }
+    .nav-btn-signup:hover { background: var(--primary-dark) !important; }
+    .nav-menu-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      gap: 4px; color: rgba(255,255,255,0.75); transition: background 0.15s; flex-shrink: 0;
+    }
+    .nav-menu-btn:hover { background: rgba(255,255,255,0.1); }
+    .nav-menu-btn span { display: block; width: 16px; height: 1.5px; background: currentColor; }
+    /* Slide-out menu */
+    .menu-overlay {
+      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+    .menu-panel {
+      position: fixed; top: 0; right: 0; width: 320px; height: 100%;
+      background: var(--dark-2); z-index: 400;
+      transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column; padding: 32px;
+    }
+    .menu-panel.open { transform: translateX(0); }
+    .menu-close { align-self: flex-end; color: rgba(255,255,255,0.5); font-size: 22px; line-height: 1; margin-bottom: 40px; }
+    .menu-close:hover { color: #fff; }
+    .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .menu-nav a {
+      display: block; padding: 14px 0; font-size: 20px; font-weight: 700;
+      color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.15s; letter-spacing: -0.3px;
+    }
+    .menu-nav a:hover { color: var(--secondary); }
+    .menu-bottom { margin-top: auto; display: flex; gap: 12px; }
+    .menu-bottom a { flex: 1; text-align: center; padding: 12px; border-radius: 9999px; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+    .menu-login { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
+    .menu-login:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .menu-signup { background: var(--primary); color: #fff; }
+    .menu-signup:hover { background: var(--primary-dark); }
 
-    /* ── PAGE TOPBAR ── */
-    .page-topbar {
-      background: var(--dark);
-      padding-top: 60px; /* nav height */
-    }
-    .page-topbar-inner {
-      max-width: 1280px; margin: 0 auto;
-      padding: 28px 48px;
-      display: flex; align-items: center; justify-content: space-between; gap: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .page-topbar-title {
-      font-size: clamp(20px, 3vw, 28px); font-weight: 700;
-      color: #fff; letter-spacing: -0.3px;
-    }
-    .page-topbar-title em { font-style: italic; color: var(--secondary); font-weight: 300; }
-    .page-topbar-cta {
-      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
-      background: var(--primary); color: #fff;
-      padding: 10px 22px; border-radius: 9999px;
-      font-size: 13px; font-weight: 600;
-      transition: background 0.15s;
-    }
-    .page-topbar-cta:hover { background: var(--primary-dark); }
 
     /* ── CONTENT ── */
     .content {
       background: var(--bg);
-      padding: 48px 48px 96px;
+      padding: 96px 48px 96px;
       max-width: 1280px; margin: 0 auto;
     }
 
@@ -170,8 +195,10 @@
     .footer p { font-size: 13px; color: var(--muted-dark); }
 
     @media (max-width: 768px) {
-      .page-topbar-inner { padding: 20px; flex-wrap: wrap; gap: 16px; }
-      .content { padding: 40px 20px 64px; }
+      .nav-search { display: none; }
+      .nav-links .nav-btn-login { display: none; }
+      .nav-links .nav-btn-signup { display: none; }
+      .content { padding: 80px 20px 64px; }
       .curator-top { flex-direction: column; gap: 20px; }
       .curator-cta { align-self: flex-start; }
       .restaurant-list { grid-template-columns: 1fr 1fr; }
@@ -184,20 +211,38 @@
 
   <nav class="nav">
     <div class="nav-inner">
-      <a href="/landing.html" class="nav-logo">La <span>Table</span></a>
-      <a href="/landing.html" class="nav-back">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Retour
-      </a>
+      <a class="nav-logo" href="/landing.html">La <span>Table</span></a>
+      <div class="nav-search">
+        <span class="nav-search-icon">⌕</span>
+        <input type="text" placeholder="Rechercher un restaurant, une cuisine…" />
+      </div>
+      <div class="nav-links">
+        <a href="/index.html" class="nav-btn-login">Voir la carte</a>
+        <a href="#" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
+        <button class="nav-menu-btn" onclick="openMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </nav>
 
-  <div class="page-topbar">
-    <div class="page-topbar-inner">
-      <p class="page-topbar-title">Les curateurs <em>La Table</em></p>
-      <a href="#" class="page-topbar-cta">Télécharger l'app</a>
+  <!-- SLIDE-OUT MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu-panel" id="menuPanel">
+    <button class="menu-close" onclick="closeMenu()">✕</button>
+    <ul class="menu-nav">
+      <li><a href="#">À propos — About Us</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Curateurs — How to</a></li>
+      <li><a href="/index.html">Voir la carte</a></li>
+      <li><a href="/curators.html">Les curateurs</a></li>
+    </ul>
+    <div class="menu-bottom">
+      <a href="#" class="menu-login">Connexion</a>
+      <a href="#" class="menu-signup">S'inscrire</a>
     </div>
   </div>
+
 
   <div class="content">
 
@@ -335,6 +380,20 @@
   <footer class="footer">
     <p>© 2025 La Table · <a href="/landing.html">Accueil</a> · <a href="/index.html">La carte</a></p>
   </footer>
+
+  <script>
+    function openMenu() {
+      document.getElementById('menuOverlay').classList.add('open')
+      document.getElementById('menuPanel').classList.add('open')
+      document.body.style.overflow = 'hidden'
+    }
+    function closeMenu() {
+      document.getElementById('menuOverlay').classList.remove('open')
+      document.getElementById('menuPanel').classList.remove('open')
+      document.body.style.overflow = ''
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu() })
+  </script>
 
 </body>
 </html>

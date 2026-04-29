@@ -33,6 +33,21 @@ function usePlaceDetails(restaurant: Restaurant | null) {
 
 
 
+const INFLUENCER_META: Record<string, { instagramUrl: string; photoUrl: string }> = {
+  '@theovoyageurgourmand': {
+    instagramUrl: 'https://www.instagram.com/theovoyageurgourmand/',
+    photoUrl: 'https://unavatar.io/instagram/theovoyageurgourmand',
+  },
+  '@philoudarblay': {
+    instagramUrl: 'https://www.instagram.com/philoudarblay/',
+    photoUrl: 'https://unavatar.io/instagram/philoudarblay',
+  },
+  '@leparisdalexis': {
+    instagramUrl: 'https://www.instagram.com/p/DWooKbLiBJG/',
+    photoUrl: 'https://unavatar.io/instagram/leparisdalexis',
+  },
+}
+
 const INFLUENCERS: Influencer[] = [
   ...new Map(
     RESTAURANTS.flatMap(r => [r.recommendedBy, ...(r.coRecommendedBy ?? [])]).map(i => [i.handle, i])
@@ -59,21 +74,47 @@ function InfluencerPage({ influencer, onClose, onSelectRestaurant }: { influence
       r.coRecommendedBy?.some(i => i.handle === influencer.handle)
     ), [influencer.handle])
 
+  const meta = INFLUENCER_META[influencer.handle]
+
   return (
     <div className="influencer-page">
-      <div className="influencer-page-header">
+      <div className="influencer-page-topbar">
         <button className="influencer-page-back" onClick={onClose}>
           <span className="mi">arrow_back</span>
         </button>
-        <div className="influencer-page-info">
-          <div>
-            <h2 className="influencer-page-name">{influencer.name}</h2>
-            <p className="influencer-page-handle">{influencer.handle} · {influencer.followers} abonnés</p>
-          </div>
-        </div>
-        <p className="influencer-page-count"><strong>{restaurants.length}</strong> adresse{restaurants.length !== 1 ? 's' : ''}</p>
       </div>
       <div className="influencer-page-body">
+        <div className="influencer-page-hero">
+          <div className="influencer-page-avatar-wrap">
+            {meta?.photoUrl
+              ? <img className="influencer-page-photo" src={meta.photoUrl} alt={influencer.name} />
+              : <span className="influencer-page-avatar-emoji">{influencer.avatar}</span>
+            }
+          </div>
+          <p className="influencer-page-label">Recommandé par</p>
+          <h2 className="influencer-page-name">{influencer.name}</h2>
+          <div className="influencer-page-meta-row">
+            <span className="influencer-page-followers">{influencer.followers} abonnés</span>
+            {meta?.instagramUrl && (
+              <a
+                href={meta.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="influencer-page-ig-link"
+                onClick={e => e.stopPropagation()}
+              >
+                <svg className="influencer-page-ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="1.8" fill="none"/>
+                  <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.8" fill="none"/>
+                  <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/>
+                </svg>
+              </a>
+            )}
+          </div>
+          <p className="influencer-page-count">
+            <strong>{restaurants.length}</strong> adresse{restaurants.length !== 1 ? 's' : ''}
+          </p>
+        </div>
         <div className="grid">
           {restaurants.map(r => (
             <RestaurantCard key={r.id} restaurant={r} onClick={() => onSelectRestaurant(r)} />

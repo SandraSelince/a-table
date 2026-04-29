@@ -482,6 +482,10 @@ export function App() {
       const inf = INFLUENCERS.find(i => i.handle === handle)
       if (inf) setInfluencerPage(inf)
     }
+    const cuisine = params.get('cuisine')
+    if (cuisine && CUISINES.includes(cuisine)) {
+      setSelectedCuisines([cuisine])
+    }
   }, [])
 
   // Pending state — mobile sheet uniquement

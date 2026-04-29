@@ -6,7 +6,7 @@
   <title>Les curateurs — La Table</title>
   <meta name="description" content="Découvrez les curateurs gastronomiques de La Table et leurs adresses préférées à Paris." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -40,8 +40,7 @@
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
       height: 60px; display: flex; align-items: center; gap: 24px;
     }
-    .nav-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; margin-right: 8px; }
-    .nav-logo span { color: var(--secondary); }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; flex-shrink: 0; margin-right: 8px; line-height: 60px; }
     .nav-search { flex: 1; max-width: 340px; position: relative; }
     .nav-search input {
       width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
@@ -204,13 +203,29 @@
     .restaurant-more:hover { background: #eedad0; }
 
     /* ── FOOTER ── */
-    .footer {
-      background: var(--dark-2); color: #fff;
-      padding: 40px 48px;
-      text-align: center;
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 64px;
     }
-    .footer a { color: var(--secondary); }
-    .footer p { font-size: 13px; color: var(--muted-dark); }
+    .footer-brand .footer-logo {
+      font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400;
+      color: #fff; letter-spacing: 0; margin-bottom: 12px; line-height: 1;
+    }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .footer-bottom-links { display: flex; gap: 20px; list-style: none; }
+    .footer-bottom-links a { font-size: 12px; color: rgba(255,255,255,0.55); transition: color 0.15s; }
+    .footer-bottom-links a:hover { color: rgba(255,255,255,0.85); }
 
     @media (max-width: 768px) {
       .nav-search { display: none; }
@@ -221,7 +236,8 @@
       .curator-top { flex-direction: column; gap: 20px; }
       .curator-cta { align-self: flex-start; }
       .restaurant-list { grid-template-columns: 1fr 1fr; }
-      .footer { padding: 32px 20px; }
+      .footer { padding: 48px 20px 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
       .nav-inner { padding: 0 20px; }
     }
   </style>
@@ -230,7 +246,7 @@
 
   <nav class="nav">
     <div class="nav-inner">
-      <a class="nav-logo" href="/landing.html">La <span>Table</span></a>
+      <a class="nav-logo" href="/landing.html">La Table</a>
       <div class="nav-search">
         <span class="nav-search-icon">⌕</span>
         <input type="text" placeholder="Rechercher un restaurant, une cuisine…" />
@@ -250,11 +266,11 @@
   <div class="menu-panel" id="menuPanel">
     <button class="menu-close" onclick="closeMenu()">✕</button>
     <ul class="menu-nav">
-      <li><a href="#">À propos — About Us</a></li>
-      <li><a href="#">Contact</a></li>
-      <li><a href="#">Curateurs — How to</a></li>
+      <li><a href="/how-it-works.html">Comment ça marche</a></li>
+      <li><a href="/landing.html">Accueil</a></li>
       <li><a href="/index.html">Voir la carte</a></li>
       <li><a href="/curators.html">Les curateurs</a></li>
+      <li><a href="#">Contact</a></li>
     </ul>
     <div class="menu-bottom">
       <a href="#" class="menu-login">Connexion</a>
@@ -408,7 +424,60 @@
   </div>
 
   <footer class="footer">
-    <p>© 2025 La Table · <a href="/landing.html">Accueil</a> · <a href="/index.html">La carte</a></p>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">La Table</div>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="#">Inscrire mon restaurant</a></li>
+            <li><a href="#">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; Légal</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 La Table. Tous droits réservés.</p>
+        <ul class="footer-bottom-links">
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
   </footer>
 
   <script>

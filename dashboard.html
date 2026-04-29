@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon tableau de bord — La Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:       #CC7039;
+      --primary-dark:  #B8602F;
+      --primary-light: #F5E6D8;
+      --secondary:     #EBC4AD;
+      --bg:            #FDFAF8;
+      --dark:          #111010;
+      --dark-2:        #1C1A18;
+      --border-light:  #E8D5CC;
+      --muted:         #7A5C52;
+      --error:         #D94F4F;
+      --font:          'Sora', -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(17,16,16,0.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 32px;
+      height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 60px; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    /* Dropdown */
+    .nav-user { position: relative; }
+    .nav-user-btn {
+      display: flex; align-items: center; gap: 9px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 9999px; cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .nav-user-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+    .nav-user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, #3D2B1F, #1F1208);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: var(--secondary);
+      flex-shrink: 0;
+    }
+    .nav-user-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .nav-user-chevron { color: rgba(255,255,255,0.45); transition: transform 0.2s; }
+    .nav-user-btn[aria-expanded="true"] .nav-user-chevron { transform: rotate(180deg); }
+
+    .nav-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--dark-2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 6px;
+      min-width: 200px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.15s, transform 0.15s;
+      z-index: 100;
+    }
+    .nav-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 9px;
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8);
+      cursor: pointer; transition: background 0.12s, color 0.12s;
+      width: 100%; text-align: left;
+    }
+    .nav-dropdown-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-dropdown-item svg { color: rgba(255,255,255,0.4); flex-shrink: 0; }
+    .nav-dropdown-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+    .nav-dropdown-item--danger { color: rgba(255,100,100,0.75); }
+    .nav-dropdown-item--danger:hover { background: rgba(255,50,50,0.08); color: #ff6b6b; }
+    .nav-dropdown-item--danger svg { color: rgba(255,100,100,0.5); }
+
+    /* ── LAYOUT ── */
+    .shell {
+      max-width: 1280px; margin: 0 auto;
+      padding: 40px 48px 80px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: sticky; top: 80px; }
+    .profile-card {
+      background: var(--dark);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+    .profile-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, #3D2B1F, #1F1208);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 800; color: var(--secondary);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-name { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-bottom: 2px; }
+    .profile-handle { font-size: 13px; color: var(--secondary); margin-bottom: 12px; }
+    .profile-followers { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+    .profile-followers strong { color: #fff; font-size: 15px; font-weight: 700; }
+    .profile-ig-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 9999px;
+      padding: 5px 12px; transition: all 0.15s;
+    }
+    .profile-ig-link:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .profile-badge {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: rgba(255,255,255,0.5);
+    }
+    .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #3CB371; }
+
+    .stat-cards { display: flex; flex-direction: column; gap: 10px; }
+    .stat-card {
+      background: #fff; border: 1px solid var(--border-light);
+      border-radius: 14px; padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--primary-light); display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon svg { color: var(--primary); }
+
+    /* ── MAIN CONTENT ── */
+    .main-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .main-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .main-count { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+    /* Add restaurant button */
+    .add-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 10px;
+      background: var(--primary); color: #fff;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 0.15s; border: none; font-family: var(--font);
+    }
+    .add-btn:hover { background: var(--primary-dark); }
+
+    /* ── ADD FORM ── */
+    .add-form-wrap {
+      background: #fff; border: 1.5px solid var(--primary);
+      border-radius: 16px; padding: 28px;
+      margin-bottom: 24px;
+      display: none;
+    }
+    .add-form-wrap.open { display: block; }
+    .add-form-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--dark); }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
+    .form-label .required { color: var(--primary); margin-left: 2px; }
+    .form-input {
+      width: 100%; padding: 10px 13px;
+      border: 1.5px solid var(--border-light); border-radius: 9px;
+      font-family: var(--font); font-size: 14px; color: var(--dark);
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(204,112,57,0.1); }
+    .form-input::placeholder { color: rgba(122,92,82,0.45); }
+    .form-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .add-form-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-save {
+      flex: 1; padding: 11px; background: var(--primary); color: #fff;
+      border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer;
+      border: none; font-family: var(--font); transition: background 0.15s;
+    }
+    .btn-save:hover { background: var(--primary-dark); }
+    .btn-cancel {
+      padding: 11px 20px; background: transparent; color: var(--muted);
+      border: 1.5px solid var(--border-light); border-radius: 9px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      font-family: var(--font); transition: all 0.15s;
+    }
+    .btn-cancel:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── RESTAURANT CARDS ── */
+    .restaurant-list { display: flex; flex-direction: column; gap: 14px; }
+    .restaurant-card {
+      background: #fff; border: 1px solid var(--border-light);
+      border-radius: 16px; padding: 20px 24px;
+      display: flex; align-items: flex-start; gap: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .restaurant-card:hover { border-color: var(--secondary); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .restaurant-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--primary-light); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .restaurant-body { flex: 1; min-width: 0; }
+    .restaurant-name { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+    .restaurant-address { font-size: 13px; color: var(--muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .restaurant-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .restaurant-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: var(--primary);
+      border: 1px solid rgba(204,112,57,0.25); border-radius: 9999px;
+      padding: 4px 10px; background: var(--primary-light);
+      transition: all 0.15s;
+    }
+    .restaurant-link:hover { background: var(--secondary); border-color: var(--secondary); color: var(--dark); }
+    .restaurant-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
+    .btn-edit, .btn-delete {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #ccc; transition: all 0.15s; cursor: pointer;
+      background: transparent;
+    }
+    .btn-edit:hover { background: var(--primary-light); color: var(--primary); }
+    .btn-delete:hover { background: #FEF2F2; color: var(--error); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 64px 32px;
+      background: #fff; border: 1.5px dashed var(--border-light);
+      border-radius: 16px;
+    }
+    .empty-state-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--primary-light); margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-state h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+
+    /* ── RESTAURANT STATS ── */
+    .restaurant-stats {
+      display: flex; gap: 0;
+      border-top: 1px solid var(--border-light);
+      margin-top: 14px; padding-top: 14px;
+    }
+    .stat-pill {
+      flex: 1; text-align: center;
+      padding: 0 8px;
+      border-right: 1px solid var(--border-light);
+    }
+    .stat-pill:last-child { border-right: none; }
+    .stat-pill-value { font-size: 18px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; line-height: 1; margin-bottom: 3px; }
+    .stat-pill-label { font-size: 10px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── EDIT FORM (inline) ── */
+    .edit-form-wrap {
+      display: none; margin-top: 16px; padding-top: 16px;
+      border-top: 1.5px dashed var(--border-light);
+    }
+    .edit-form-wrap.open { display: block; }
+    .edit-form-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--dark); color: #fff; padding: 12px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 500; z-index: 999;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; padding: 24px 20px 64px; }
+      .sidebar { position: static; }
+      .stat-cards { flex-direction: row; }
+      .stat-card { flex: 1; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .stat-cards { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="/landing.html">La Table</a>
+      <div class="nav-right">
+        <div class="nav-user" id="navUser">
+          <button class="nav-user-btn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
+            <span class="nav-user-avatar" id="navAvatar"></span>
+            <span class="nav-user-name" id="navHandle"></span>
+            <svg class="nav-user-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
+          </button>
+          <div class="nav-dropdown" id="navDropdown">
+            <a class="nav-dropdown-item" href="/profile.html">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Mon profil
+            </a>
+            <a class="nav-dropdown-item" href="#restaurantList" onclick="closeDropdown();">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2h18M3 12h18M12 2v20"/></svg>
+              Mes restaurants
+            </a>
+            <div class="nav-dropdown-divider"></div>
+            <button class="nav-dropdown-item nav-dropdown-item--danger" onclick="logout()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <p class="profile-name" id="profileName"></p>
+        <p class="profile-handle" id="profileHandle"></p>
+        <p class="profile-followers"><strong id="profileFollowers"></strong> abonnés</p>
+        <a href="#" class="profile-ig-link" id="profileIgLink" target="_blank" rel="noopener noreferrer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/>
+          </svg>
+          Instagram
+        </a>
+        <div class="profile-badge">
+          <span class="badge-dot"></span>
+          Curator vérifié La Table
+        </div>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div>
+            <p class="stat-label">Restaurants</p>
+            <p class="stat-value" id="statRestaurants">0</p>
+          </div>
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2h18M3 12h18M12 2v20M5 7l7-5 7 5"/></svg>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div>
+            <p class="stat-label">Clics ce mois</p>
+            <p class="stat-value">—</p>
+          </div>
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div>
+            <p class="stat-label">Réservations</p>
+            <p class="stat-value">—</p>
+          </div>
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+      <div class="main-header">
+        <div>
+          <h1 class="main-title">Mes restaurants</h1>
+          <p class="main-count" id="mainCount"></p>
+        </div>
+        <button class="add-btn" onclick="toggleAddForm()" id="addBtn" aria-expanded="false">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+          Ajouter un restaurant
+        </button>
+      </div>
+
+      <!-- ADD FORM -->
+      <div class="add-form-wrap" id="addFormWrap">
+        <h3 class="add-form-title">Nouveau restaurant</h3>
+        <form id="addRestaurantForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="rName">Nom du restaurant <span class="required">*</span></label>
+            <input class="form-input" id="rName" type="text" placeholder="ex : Septime" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="rAddress">Adresse <span class="required">*</span></label>
+            <input class="form-input" id="rAddress" type="text" placeholder="ex : 80 rue de Charonne, Paris 11e" required />
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="rInstagram">Lien de votre post Instagram</label>
+              <input class="form-input" id="rInstagram" type="url" placeholder="https://instagram.com/p/xxx" />
+              <p class="form-hint">Le post dans lequel vous recommandez ce restaurant</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rBooking">Lien de réservation / commande / site</label>
+              <input class="form-input" id="rBooking" type="url" placeholder="https://thefork.fr/..." />
+              <p class="form-hint">TheFork, site du restaurant, Uber Eats…</p>
+            </div>
+          </div>
+          <div class="add-form-actions">
+            <button class="btn-save" type="submit">Ajouter le restaurant</button>
+            <button class="btn-cancel" type="button" onclick="toggleAddForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RESTAURANT LIST -->
+      <div id="restaurantList"></div>
+    </main>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Data ──────────────────────────────────────
+    let profile = null;
+    let restaurants = [];
+
+    function loadData() {
+      const raw = localStorage.getItem('curatorProfile');
+      if (!raw) { window.location.href = '/signup.html'; return; }
+      profile = JSON.parse(raw);
+      // For demo: bypass pending check so we can access dashboard
+      // In production this would require server-side approval
+      restaurants = JSON.parse(localStorage.getItem('curatorRestaurants') || '[]');
+    }
+
+    function saveRestaurants() {
+      localStorage.setItem('curatorRestaurants', JSON.stringify(restaurants));
+    }
+
+    // ── Render profile ──────────────────────────────
+    function renderProfile() {
+      const initials = (profile.firstName || '?')[0].toUpperCase();
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('navAvatar').textContent = initials;
+      document.getElementById('profileName').textContent = `${profile.firstName} ${profile.lastName}`;
+      document.getElementById('profileHandle').textContent = profile.handle;
+      document.getElementById('profileFollowers').textContent = Number(profile.followers).toLocaleString('fr-FR');
+      document.getElementById('profileIgLink').href = profile.instagramUrl || '#';
+      document.getElementById('navHandle').textContent = `${profile.firstName} ${profile.lastName}`;
+    }
+
+    // ── Dropdown ─────────────────────────────────────
+    function toggleDropdown() {
+      const btn = document.querySelector('.nav-user-btn');
+      const dd = document.getElementById('navDropdown');
+      const open = dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+    }
+    function closeDropdown() {
+      document.getElementById('navDropdown').classList.remove('open');
+      document.querySelector('.nav-user-btn').setAttribute('aria-expanded', 'false');
+    }
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    document.addEventListener('click', e => {
+      if (!document.getElementById('navUser').contains(e.target)) closeDropdown();
+    });
+
+    // ── Render restaurants ──────────────────────────
+    function renderRestaurants() {
+      const list = document.getElementById('restaurantList');
+      const count = restaurants.length;
+
+      document.getElementById('statRestaurants').textContent = count;
+      document.getElementById('mainCount').textContent = count === 0 ? '' : `${count} adresse${count > 1 ? 's' : ''} recommandée${count > 1 ? 's' : ''}`;
+
+      if (count === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#CC7039" stroke-width="1.8" stroke-linecap="round">
+                <path d="M3 2h18M3 12h18M12 2v20M5 7l7-5 7 5"/>
+              </svg>
+            </div>
+            <h3>Ajoutez votre première adresse</h3>
+            <p>Commencez à construire votre portfolio de recommandations. Chaque restaurant ajouté génère un lien unique pour tracker vos réservations.</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = `<div class="restaurant-list">${restaurants.map((r) => {
+        const s = r.stats || { clicksIg: 0, clicksBooking: 0, bookings: 0 };
+        return `
+        <div class="restaurant-card" id="card-${r.id}">
+          <div class="restaurant-body" style="width:100%;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+              <div style="min-width:0;">
+                <p class="restaurant-name">${escHtml(r.name)}</p>
+                <p class="restaurant-address">📍 ${escHtml(r.address)}</p>
+                <div class="restaurant-links">
+                  ${r.instagram ? `<a href="${escHtml(r.instagram)}" target="_blank" rel="noopener noreferrer" class="restaurant-link">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/></svg>
+                    Post Instagram
+                  </a>` : ''}
+                  ${r.booking ? `<a href="${escHtml(r.booking)}" target="_blank" rel="noopener noreferrer" class="restaurant-link">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    Réserver
+                  </a>` : ''}
+                </div>
+              </div>
+              <div class="restaurant-actions" style="flex-shrink:0;">
+                <button class="btn-edit" onclick="toggleEdit('${r.id}')" aria-label="Modifier ${escHtml(r.name)}">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-delete" onclick="deleteRestaurant('${r.id}')" aria-label="Supprimer ${escHtml(r.name)}">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                    <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="restaurant-stats">
+              <div class="stat-pill">
+                <p class="stat-pill-value">${s.clicksIg > 0 ? s.clicksIg : '—'}</p>
+                <p class="stat-pill-label">Clics post</p>
+              </div>
+              <div class="stat-pill">
+                <p class="stat-pill-value">${s.clicksBooking > 0 ? s.clicksBooking : '—'}</p>
+                <p class="stat-pill-label">Clics réservation</p>
+              </div>
+              <div class="stat-pill">
+                <p class="stat-pill-value">${s.bookings > 0 ? s.bookings : '—'}</p>
+                <p class="stat-pill-label">Réservations</p>
+              </div>
+            </div>
+
+            <!-- EDIT FORM -->
+            <div class="edit-form-wrap" id="edit-${r.id}">
+              <p class="edit-form-title">Modifier le restaurant</p>
+              <div class="form-group">
+                <label class="form-label" for="eName-${r.id}">Nom</label>
+                <input class="form-input" id="eName-${r.id}" type="text" value="${escHtml(r.name)}" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="eAddress-${r.id}">Adresse</label>
+                <input class="form-input" id="eAddress-${r.id}" type="text" value="${escHtml(r.address)}" />
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="eInstagram-${r.id}">Lien post Instagram</label>
+                  <input class="form-input" id="eInstagram-${r.id}" type="url" value="${escHtml(r.instagram || '')}" placeholder="https://instagram.com/p/xxx" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="eBooking-${r.id}">Lien réservation / commande / site</label>
+                  <input class="form-input" id="eBooking-${r.id}" type="url" value="${escHtml(r.booking || '')}" placeholder="https://thefork.fr/..." />
+                </div>
+              </div>
+              <div class="add-form-actions">
+                <button class="btn-save" onclick="saveEdit('${r.id}')">Enregistrer</button>
+                <button class="btn-cancel" onclick="toggleEdit('${r.id}')">Annuler</button>
+              </div>
+            </div>
+
+          </div>
+        </div>`;
+      }).join('')}
+      </div>`;
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Add form ────────────────────────────────────
+    function toggleAddForm() {
+      const wrap = document.getElementById('addFormWrap');
+      const btn = document.getElementById('addBtn');
+      const isOpen = wrap.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        document.getElementById('rName').focus();
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        document.getElementById('addRestaurantForm').reset();
+      }
+    }
+
+    document.getElementById('addRestaurantForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('rName').value.trim();
+      const address = document.getElementById('rAddress').value.trim();
+      if (!name || !address) return;
+
+      const restaurant = {
+        id: Date.now().toString(),
+        name,
+        address,
+        instagram: document.getElementById('rInstagram').value.trim(),
+        booking: document.getElementById('rBooking').value.trim(),
+        addedAt: new Date().toISOString()
+      };
+
+      restaurants.unshift(restaurant);
+      saveRestaurants();
+      renderRestaurants();
+      toggleAddForm();
+      showToast(`"${name}" ajouté à vos recommandations`);
+    });
+
+    // ── Edit ────────────────────────────────────────
+    function toggleEdit(id) {
+      const form = document.getElementById(`edit-${id}`);
+      form.classList.toggle('open');
+      if (form.classList.contains('open')) {
+        form.querySelector('input').focus();
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function saveEdit(id) {
+      const r = restaurants.find(r => r.id === id);
+      if (!r) return;
+      const name = document.getElementById(`eName-${id}`).value.trim();
+      const address = document.getElementById(`eAddress-${id}`).value.trim();
+      if (!name || !address) return;
+      r.name = name;
+      r.address = address;
+      r.instagram = document.getElementById(`eInstagram-${id}`).value.trim();
+      r.booking = document.getElementById(`eBooking-${id}`).value.trim();
+      saveRestaurants();
+      renderRestaurants();
+      showToast(`"${name}" mis à jour`);
+    }
+
+    // ── Delete ──────────────────────────────────────
+    function deleteRestaurant(id) {
+      const r = restaurants.find(r => r.id === id);
+      if (!r) return;
+      if (!confirm(`Supprimer "${r.name}" de vos recommandations ?`)) return;
+      restaurants = restaurants.filter(r => r.id !== id);
+      saveRestaurants();
+      renderRestaurants();
+      showToast(`"${r.name}" supprimé`);
+    }
+
+    // ── Toast ───────────────────────────────────────
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // ── Logout ──────────────────────────────────────
+    function logout() {
+      if (confirm('Se déconnecter ?')) {
+        localStorage.removeItem('curatorProfile');
+        localStorage.removeItem('curatorRestaurants');
+        window.location.href = '/landing.html';
+      }
+    }
+
+    // ── Init ────────────────────────────────────────
+    loadData();
+    renderProfile();
+    renderRestaurants();
+
+    // Auto-open add form if ?add=1
+    if (new URLSearchParams(window.location.search).get('add') === '1') {
+      toggleAddForm();
+      document.getElementById('addFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>

@@ -561,10 +561,10 @@ export function App() {
       <header className="header">
         <div className="header-inner">
           <div className="header-brand">
-            <div>
+            <a href="/landing.html" className="header-brand-link">
               <h1 className="header-title">La Table</h1>
               <p className="header-sub">Les restos des influenceurs</p>
-            </div>
+            </a>
           </div>
           <div className="header-search-wrap" ref={searchWrapRef}>
             <div className="header-search">

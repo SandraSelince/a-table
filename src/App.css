@@ -23,6 +23,12 @@
   min-height: 64px;
 }
 
+.header-brand-link {
+  display: contents;
+  text-decoration: none;
+  color: inherit;
+}
+
 .header-brand {
   display: flex;
   align-items: center;

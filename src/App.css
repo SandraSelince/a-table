@@ -24,7 +24,8 @@
 }
 
 .header-brand-link {
-  display: contents;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: inherit;
 }

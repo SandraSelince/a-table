@@ -1060,31 +1060,6 @@
   gap: 6px;
 }
 
-.influencer-page-avatar-wrap {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 16px;
-  background: var(--md-sys-color-surface-container-high);
-  flex-shrink: 0;
-}
-
-.influencer-page-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.influencer-page-avatar-emoji {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 52px;
-}
-
 .influencer-page-label {
   font-size: 13px;
   font-style: italic;

@@ -85,12 +85,6 @@ function InfluencerPage({ influencer, onClose, onSelectRestaurant }: { influence
       </div>
       <div className="influencer-page-body">
         <div className="influencer-page-hero">
-          <div className="influencer-page-avatar-wrap">
-            {meta?.photoUrl
-              ? <img className="influencer-page-photo" src={meta.photoUrl} alt={influencer.name} />
-              : <span className="influencer-page-avatar-emoji">{influencer.avatar}</span>
-            }
-          </div>
           <p className="influencer-page-label">Recommandé par</p>
           <h2 className="influencer-page-name">{influencer.name}</h2>
           <div className="influencer-page-meta-row">

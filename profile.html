@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mon profil — La Table</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -365,7 +366,7 @@
     function loadProfile() {
       const raw = localStorage.getItem('curatorProfile');
       if (!raw) { window.location.href = '/signup.html'; return; }
-      profile = JSON.parse(raw);
+      try { profile = JSON.parse(raw); } catch(e) { window.location.href = '/signup.html'; return; }
     }
 
     function populateForm() {

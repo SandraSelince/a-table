@@ -6,7 +6,8 @@
   <title>Comment ça marche — La Table</title>
   <meta name="description" content="Transformez vos recommandations en impact mesurable. Découvrez comment La Table vous aide à prouver votre influence." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -547,12 +548,12 @@
       </a>
       <div class="nav-search">
         <span class="nav-search-icon">⌕</span>
-        <input type="text" placeholder="Rechercher un restaurant, une cuisine…" />
+        <input type="text" placeholder="Rechercher un restaurant, une cuisine…" aria-label="Rechercher un restaurant ou une cuisine" />
       </div>
       <div class="nav-links">
         <a href="/index.html" class="nav-btn-login">Voir la carte</a>
         <a href="/signup.html" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
-        <button class="nav-menu-btn" onclick="openMenu()" aria-label="Ouvrir le menu">
+        <button type="button" class="nav-menu-btn" onclick="openMenu()" aria-label="Ouvrir le menu">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -562,7 +563,7 @@
   <!-- SLIDE-OUT MENU -->
   <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
   <div class="menu-panel" id="menuPanel">
-    <button class="menu-close" onclick="closeMenu()" aria-label="Fermer le menu">✕</button>
+    <button type="button" class="menu-close" onclick="closeMenu()" aria-label="Fermer le menu">✕</button>
     <ul class="menu-nav">
       <li><a href="/how-it-works.html">Comment ça marche ?</a></li>
       <li><a href="/index.html">Voir la carte</a></li>
@@ -735,7 +736,7 @@
       <div class="faq-list" role="list">
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="true" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="true" onclick="toggleFaq(this)">
             Est-ce gratuit ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -747,7 +748,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Dois-je modifier ma façon de poster sur Instagram ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -759,7 +760,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Où placer le lien La Table ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -771,7 +772,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Comment sont trackées les réservations ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -783,7 +784,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Et si un restaurant n'a pas de système de réservation ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -795,7 +796,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Est-ce que mes données sont visibles par d'autres ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
@@ -807,7 +808,7 @@
         </div>
 
         <div class="faq-item" role="listitem">
-          <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+          <button type="button" class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
             Quel est l'intérêt pour les restaurants ?
             <span class="faq-chevron">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>

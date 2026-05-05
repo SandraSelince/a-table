@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rejoindre La Table</title>
+  <title>Se connecter — A Table</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
   <style>
@@ -11,7 +11,8 @@
     :root {
       --primary: #CC7039; --primary-dark: #B8602F; --primary-light: #F5E6D8;
       --secondary: #EBC4AD; --dark: #111010; --dark-2: #1C1A18;
-      --border-light: #E8D5CC; --muted: #7A5C52; --font: 'Sora', -apple-system, sans-serif;
+      --border-light: #E8D5CC; --muted: #7A5C52; --error: #D94F4F;
+      --font: 'Sora', -apple-system, sans-serif;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -45,100 +46,94 @@
       align-items: center; justify-content: center;
       padding: 64px 32px;
     }
-    .eyebrow {
-      font-size: 11px; font-weight: 600; color: var(--secondary);
-      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px;
-    }
-    .main-title {
-      font-size: clamp(36px, 5vw, 56px); font-weight: 800;
-      letter-spacing: -2px; line-height: 1.06; text-align: center;
-      margin-bottom: 12px;
-    }
-    .main-subtitle {
-      font-size: 16px; color: rgba(255,255,255,0.5);
-      text-align: center; margin-bottom: 52px; line-height: 1.6;
-    }
 
-    /* ── CHOICE CARDS ── */
-    .choice-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-      max-width: 840px; width: 100%;
-    }
-    .choice-card {
+    /* ── CARD ── */
+    .login-card {
+      width: 100%; max-width: 420px;
       background: rgba(255,255,255,0.04);
       border: 1.5px solid rgba(255,255,255,0.09);
-      border-radius: 24px; padding: 40px 36px;
-      display: flex; flex-direction: column;
-      cursor: pointer; position: relative; overflow: hidden;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      border-radius: 24px; padding: 44px 40px;
     }
-    .choice-card:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(204,112,57,0.45);
-      transform: translateY(-5px);
-      box-shadow: 0 24px 56px rgba(0,0,0,0.4);
+    .card-eyebrow {
+      font-size: 11px; font-weight: 600; color: var(--secondary);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
     }
-    .choice-arrow {
-      position: absolute; top: 32px; right: 32px;
-      color: rgba(255,255,255,0.2); transition: color 0.2s, transform 0.2s;
+    .card-title {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.8px;
+      line-height: 1.1; margin-bottom: 6px;
     }
-    .choice-card:hover .choice-arrow {
-      color: rgba(255,255,255,0.45); transform: translate(3px, -3px);
+    .card-subtitle {
+      font-size: 14px; color: rgba(255,255,255,0.45);
+      line-height: 1.55; margin-bottom: 36px;
     }
-    .choice-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      background: rgba(204,112,57,0.12); border: 1.5px solid rgba(204,112,57,0.25);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 24px; flex-shrink: 0;
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.65); margin-bottom: 7px; letter-spacing: 0.2px;
     }
-    .choice-tag {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      color: var(--secondary); background: rgba(204,112,57,0.12);
-      border: 1px solid rgba(204,112,57,0.2); border-radius: 9999px;
-      padding: 3px 10px; letter-spacing: 1px; text-transform: uppercase;
-      margin-bottom: 14px; align-self: flex-start;
+    .form-input {
+      width: 100%; padding: 12px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px; font-family: var(--font); font-size: 14px;
+      color: #fff; outline: none;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
     }
-    .choice-title {
-      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
-      line-height: 1.2; margin-bottom: 12px;
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input:focus {
+      border-color: var(--primary);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 3px rgba(204,112,57,0.15);
     }
-    .choice-desc {
-      font-size: 14px; color: rgba(255,255,255,0.52);
-      line-height: 1.65; margin-bottom: 28px; flex: 1;
+    .form-input.error { border-color: var(--error); }
+
+    .password-wrap { position: relative; }
+    .password-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,0.35); cursor: pointer; padding: 4px;
+      font-size: 12px; font-weight: 500; transition: color 0.15s;
+      user-select: none;
     }
-    .choice-perks {
-      list-style: none; margin-bottom: 32px;
-      display: flex; flex-direction: column; gap: 9px;
+    .password-toggle:hover { color: rgba(255,255,255,0.7); }
+
+    .forgot-link {
+      display: block; text-align: right; font-size: 12px;
+      color: rgba(255,255,255,0.4); margin-top: 6px;
+      transition: color 0.15s;
     }
-    .choice-perks li {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: 13px; color: rgba(255,255,255,0.68); line-height: 1.4;
+    .forgot-link:hover { color: rgba(255,255,255,0.75); }
+
+    .form-error-msg {
+      display: none; font-size: 12px; color: var(--error);
+      margin-top: 5px;
     }
-    .choice-perks li::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: var(--primary); flex-shrink: 0; margin-top: 5px;
-    }
-    .choice-cta {
-      width: 100%; padding: 13px 20px;
+    .form-error-msg.visible { display: block; }
+
+    .submit-btn {
+      width: 100%; margin-top: 28px; padding: 14px 20px;
       background: var(--primary); color: #fff;
-      border-radius: 12px; font-size: 14px; font-weight: 700;
-      font-family: var(--font); text-align: center; display: block;
-      border: none; transition: background 0.15s;
+      border-radius: 12px; font-size: 15px; font-weight: 700;
+      font-family: var(--font); text-align: center;
+      border: none; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
     }
-    .choice-card:hover .choice-cta { background: var(--primary-dark); }
+    .submit-btn:hover { background: var(--primary-dark); }
+    .submit-btn:active { transform: scale(0.99); }
 
-    .signin-link {
-      margin-top: 36px; font-size: 13px;
-      color: rgba(255,255,255,0.38); text-align: center;
+    .signup-link {
+      margin-top: 28px; font-size: 13px;
+      color: rgba(255,255,255,0.35); text-align: center;
     }
-    .signin-link a { color: rgba(255,255,255,0.65); font-weight: 500; }
-    .signin-link a:hover { color: #fff; text-decoration: underline; }
+    .signup-link a { color: rgba(255,255,255,0.65); font-weight: 500; }
+    .signup-link a:hover { color: #fff; text-decoration: underline; }
 
-    @media (max-width: 640px) {
-      .choice-grid { grid-template-columns: 1fr; }
+    @media (max-width: 480px) {
       .main { padding: 40px 20px 60px; }
-      .main-title { font-size: 36px; }
-      .choice-card { padding: 32px 28px; }
+      .login-card { padding: 36px 28px; }
+      .card-title { font-size: 24px; }
     }
     /* ── FOOTER ── */
     .footer { background: #0D0B0A; padding: 64px 48px 40px; }
@@ -174,55 +169,85 @@
   </nav>
 
   <main class="main">
-    <p class="eyebrow">Rejoindre La Table</p>
-    <h1 class="main-title">Vous êtes…</h1>
-    <p class="main-subtitle">Choisissez votre profil pour créer votre compte</p>
+    <div class="login-card">
+      <p class="card-eyebrow">Connexion</p>
+      <h1 class="card-title">Bon retour</h1>
+      <p class="card-subtitle">Connectez-vous à votre espace A Table.</p>
 
-    <div class="choice-grid">
+      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
 
-      <!-- CURATEUR -->
-      <a href="/signup-curator.html" class="choice-card">
-        <svg class="choice-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
-        <div class="choice-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#CC7039" stroke-width="1.8" stroke-linecap="round">
-            <circle cx="12" cy="7" r="4"/>
-            <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
-          </svg>
+        <div class="form-group">
+          <label class="form-label" for="email">Mail de contact</label>
+          <input
+            class="form-input" type="email" id="email" name="email"
+            placeholder="votre@email.com" autocomplete="email"
+          />
+          <p class="form-error-msg" id="emailError">Adresse e-mail invalide.</p>
         </div>
-        <span class="choice-tag">Curateur</span>
-        <h2 class="choice-title">Influenceur &amp;<br>créateur de contenu</h2>
-        <p class="choice-desc">Partagez vos adresses favorites et transformez vos recommandations en impact mesurable.</p>
-        <ul class="choice-perks">
-          <li>Ajoutez vos restaurants recommandés</li>
-          <li>Suivez les clics et réservations générés</li>
-          <li>Prouvez votre influence aux restaurants</li>
-        </ul>
-        <span class="choice-cta">Créer mon profil curateur</span>
-      </a>
 
-      <!-- RESTAURANT -->
-      <a href="/signup-restaurant.html" class="choice-card">
-        <svg class="choice-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
-        <div class="choice-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#CC7039" stroke-width="1.8" stroke-linecap="round">
-            <path d="M3 2h18M3 12h18M12 2v20M3 7h18M3 17h18"/>
-          </svg>
+        <div class="form-group">
+          <label class="form-label" for="password">Mot de passe</label>
+          <div class="password-wrap">
+            <input
+              class="form-input" type="password" id="password" name="password"
+              placeholder="••••••••" autocomplete="current-password"
+            />
+            <span class="password-toggle" id="pwToggle" onclick="togglePassword()">Voir</span>
+          </div>
+          <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+          <p class="form-error-msg" id="passwordError">Veuillez saisir votre mot de passe.</p>
         </div>
-        <span class="choice-tag">Restaurant</span>
-        <h2 class="choice-title">Restaurant &amp;<br>établissement</h2>
-        <p class="choice-desc">Référencez votre établissement et recevez des réservations via nos curateurs influents.</p>
-        <ul class="choice-perks">
-          <li>Créez votre fiche restaurant</li>
-          <li>Soyez recommandé par nos curateurs</li>
-          <li>Accueillez de nouveaux clients</li>
-        </ul>
-        <span class="choice-cta">Inscrire mon restaurant</span>
-      </a>
 
+        <button type="submit" class="submit-btn">Se connecter</button>
+      </form>
+
+      <p class="signup-link">Pas encore de compte ? <a href="/signup.html">S'inscrire</a></p>
     </div>
-
-    <p class="signin-link">Déjà un compte ? <a href="/login.html">Se connecter</a></p>
   </main>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const toggle = document.getElementById('pwToggle');
+      if (input.type === 'password') {
+        input.type = 'text';
+        toggle.textContent = 'Cacher';
+      } else {
+        input.type = 'password';
+        toggle.textContent = 'Voir';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      let valid = true;
+
+      email.classList.remove('error');
+      password.classList.remove('error');
+      emailError.classList.remove('visible');
+      passwordError.classList.remove('visible');
+
+      if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        email.classList.add('error');
+        emailError.classList.add('visible');
+        valid = false;
+      }
+      if (!password.value) {
+        password.classList.add('error');
+        passwordError.classList.add('visible');
+        valid = false;
+      }
+
+      if (valid) {
+        // Redirection selon le type de compte (à connecter au backend)
+        window.location.href = '/dashboard.html';
+      }
+    }
+  </script>
 
   <!-- FOOTER -->
   <footer class="footer">

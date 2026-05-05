@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon restaurant — La Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #E05535; --primary-dark: #C44220; --primary-light: #FEF0EA;
+      --secondary: #F0C4A8; --bg: #F8F3EE; --dark: #111010; --dark-2: #1C1A18;
+      --border-light: #EAE3DA; --muted: #9B8E86; --error: #D94F4F;
+      --font: 'Sora', -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: linear-gradient(145deg, #FAF6F0 0%, #F3E9DC 55%, #EAD8C6 100%) fixed; min-height: 100vh; color: var(--dark); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav { position: sticky; top: 0; z-index: 200; background: rgba(17,16,16,0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-user { position: relative; }
+    .nav-user-btn { display: flex; align-items: center; gap: 9px; padding: 6px 12px 6px 6px; border-radius: 9999px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); transition: background 0.15s, border-color 0.15s; }
+    .nav-user-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+    .nav-user-avatar { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .nav-user-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .nav-user-chevron { color: rgba(255,255,255,0.45); transition: transform 0.2s; }
+    .nav-user-btn[aria-expanded="true"] .nav-user-chevron { transform: rotate(180deg); }
+    .nav-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--dark-2); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 6px; min-width: 210px; box-shadow: 0 16px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s; z-index: 100; }
+    .nav-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); cursor: pointer; transition: background 0.12s, color 0.12s; width: 100%; text-align: left; }
+    .nav-dropdown-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-dropdown-item svg { color: rgba(255,255,255,0.4); flex-shrink: 0; }
+    .nav-dropdown-item.active { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-dropdown-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+    .nav-dropdown-item--danger { color: rgba(255,100,100,0.75); }
+    .nav-dropdown-item--danger:hover { background: rgba(255,50,50,0.08); color: #ff6b6b; }
+    .nav-dropdown-item--danger svg { color: rgba(255,100,100,0.5); }
+
+    /* ── LAYOUT ── */
+    .shell { max-width: 1280px; margin: 0 auto; padding: 40px 48px 80px; display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: sticky; top: 80px; }
+    .profile-card { background: var(--dark); border-radius: 20px; padding: 28px; margin-bottom: 16px; }
+    .profile-avatar { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .profile-name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .profile-cuisine { display: inline-block; font-size: 11px; font-weight: 600; color: var(--secondary); background: rgba(204,112,57,0.15); border: 1px solid rgba(204,112,57,0.25); border-radius: 9999px; padding: 3px 10px; margin-bottom: 10px; }
+    .profile-address { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 14px; }
+    .profile-links { display: flex; flex-direction: column; gap: 7px; }
+    .profile-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 9999px; padding: 5px 12px; transition: all 0.15s; align-self: flex-start; }
+    .profile-link:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+    .profile-badge { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px; font-size: 11px; color: rgba(255,255,255,0.5); }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .badge-dot--pending { background: #F5A623; } .badge-dot--verified { background: #3CB371; }
+    .stat-cards { display: flex; flex-direction: column; gap: 10px; }
+    .stat-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+    .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
+    .stat-delta { font-size: 11px; font-weight: 600; margin-top: 2px; }
+    .stat-delta--up { color: #2E7D5E; } .stat-delta--flat { color: var(--muted); }
+    .stat-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
+    .stat-icon svg { color: var(--primary); }
+
+    /* ── CHART CARD ── */
+    .chart-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; padding: 28px 28px 20px; margin-bottom: 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .chart-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .chart-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 3px; }
+    .chart-sub { font-size: 12px; color: var(--muted); }
+    .chart-filter-wrap { display: flex; align-items: center; gap: 8px; }
+    .chart-filter-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; transition: background 0.15s; }
+    .chart-filter-select { padding: 5px 28px 5px 10px; border: 1.5px solid var(--border-light); border-radius: 8px; font-size: 12px; font-weight: 600; font-family: var(--font); color: var(--dark); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A5C52' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 9px center; appearance: none; outline: none; cursor: pointer; transition: border-color 0.15s; }
+    .chart-filter-select:focus { border-color: var(--primary); }
+    .legend-line { width: 14px; height: 2px; background: var(--primary); border-radius: 2px; flex-shrink: 0; }
+
+    /* Period controls */
+    .chart-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .period-tabs { display: flex; gap: 2px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); border-radius: 10px; padding: 3px; }
+    .period-tab { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: var(--font); white-space: nowrap; }
+    .period-tab:hover:not(.active) { color: var(--dark); }
+    .period-tab.active { background: #fff; color: var(--dark); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .custom-range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+    .date-input { padding: 6px 10px; border: 1.5px solid var(--border-light); border-radius: 8px; font-size: 12px; font-family: var(--font); color: var(--dark); outline: none; transition: border-color 0.15s; }
+    .date-input:focus { border-color: var(--primary); }
+    .apply-btn { padding: 6px 14px; background: var(--primary); color: #fff; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
+    .apply-btn:hover { background: var(--primary-dark); }
+    .zoom-hint { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .zoom-reset-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--primary); background: var(--primary-light); border: none; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
+    .zoom-reset-btn:hover { background: #EECDB5; }
+
+    /* Nav arrows + jump */
+    .chart-nav-row { display: flex; align-items: center; gap: 6px; }
+    .nav-arrow { width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--border-light); background: #fff; color: var(--dark); font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; padding: 0; line-height: 1; }
+    .nav-arrow:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+    .nav-arrow:disabled { opacity: 0.3; cursor: default; }
+    .jump-select { padding: 6px 10px; border: 1.5px solid var(--border-light); border-radius: 8px; font-size: 12px; font-family: var(--font); color: var(--dark); background: #fff; outline: none; cursor: pointer; transition: border-color 0.15s; max-width: 150px; }
+    .jump-select:focus { border-color: var(--primary); }
+
+    /* Chart SVG */
+    .chart-svg-wrap { width: 100%; overflow: hidden; }
+    .chart-svg-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .chart-bar:hover { opacity: 0.85; }
+
+    /* Tooltip */
+    .chart-tooltip { position: fixed; background: var(--dark); color: #fff; padding: 9px 13px; border-radius: 9px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.1s; white-space: nowrap; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.3); line-height: 1.6; }
+    .chart-tooltip.visible { opacity: 1; }
+
+    /* Detail panel */
+    .chart-detail { border: 1px solid rgba(0,0,0,0.06); border-radius: 14px; overflow: hidden; margin-top: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+    .chart-detail-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .chart-detail-date { font-size: 13px; font-weight: 700; }
+    .chart-detail-total { font-size: 13px; font-weight: 800; color: var(--primary); }
+    .chart-detail-close { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; transition: background 0.15s; }
+    .chart-detail-close:hover { background: var(--border-light); color: var(--dark); }
+    .chart-detail-body { max-height: 220px; overflow-y: auto; }
+    .chart-detail-row { display: grid; grid-template-columns: 10px 1fr 60px 60px 52px; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 1px solid var(--border-light); font-size: 12px; }
+    .chart-detail-row:last-child { border-bottom: none; }
+    .chart-detail-row--head { background: var(--bg); font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding: 7px 18px; position: sticky; top: 0; }
+    .chart-detail-bar-wrap { height: 4px; background: var(--border-light); border-radius: 2px; }
+    .chart-detail-bar { height: 4px; border-radius: 2px; }
+    .chart-detail-hint { font-size: 11px; color: var(--muted); padding: 10px 18px; font-style: italic; border-top: 1px solid var(--border-light); }
+
+    /* ── POSTS ── */
+    .section-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .section-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+    .section-note { font-size: 11px; color: var(--muted); }
+    .posts-period-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
+    .posts-period-filter { padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
+    .posts-period-filter:hover { border-color: var(--dark); color: var(--dark); }
+    .posts-period-filter.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+    /* ── CALENDAR PICKER ── */
+    .cal-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
+    .cal-btn:hover { border-color: var(--dark); color: var(--dark); }
+    .cal-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .cal-wrap { position: relative; }
+    .cal-popover { position: absolute; top: calc(100% + 8px); left: 0; z-index: 300; background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.10); padding: 16px; width: 280px; display: none; }
+    .cal-popover.open { display: block; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cal-month-label { font-size: 13px; font-weight: 700; color: var(--dark); }
+    .cal-nav { width: 28px; height: 28px; border-radius: 8px; border: 1.5px solid var(--border-light); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all 0.15s; font-family: var(--font); }
+    .cal-nav:hover { border-color: var(--dark); color: var(--dark); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-dow { font-size: 10px; font-weight: 700; color: var(--muted); text-align: center; padding: 4px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cal-day { font-size: 12px; font-weight: 500; text-align: center; padding: 6px 2px; border-radius: 8px; cursor: pointer; color: var(--dark); transition: background 0.1s, color 0.1s; border: none; background: none; font-family: var(--font); width: 100%; }
+    .cal-day:hover:not(:disabled) { background: var(--primary-light); color: var(--primary-dark); }
+    .cal-day--today { font-weight: 800; color: var(--primary); }
+    .cal-day--in-range { background: var(--primary-light); border-radius: 0; }
+    .cal-day--start, .cal-day--end { background: var(--primary) !important; color: #fff !important; border-radius: 8px !important; font-weight: 700; }
+    .cal-day--start.cal-day--in-range { border-radius: 8px 0 0 8px !important; }
+    .cal-day--end.cal-day--in-range { border-radius: 0 8px 8px 0 !important; }
+    .cal-day:disabled { color: #ccc; cursor: default; }
+    .cal-day--empty { pointer-events: none; }
+    .cal-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .cal-range-label { font-size: 11px; color: var(--muted); flex: 1; }
+    .cal-apply { padding: 6px 14px; background: var(--primary); color: #fff; border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
+    .cal-apply:hover { background: var(--primary-dark); }
+    .cal-apply:disabled { background: var(--border-light); color: var(--muted); cursor: default; }
+    .posts-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .posts-filter { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
+    .posts-filter:hover { border-color: currentColor; }
+    .posts-filter.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+    .posts-filter-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .posts-list { display: flex; flex-direction: column; gap: 12px; }
+    .post-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 18px 20px; display: grid; grid-template-columns: 4px 1fr auto auto; align-items: center; gap: 16px; transition: box-shadow 0.2s; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+    .post-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); }
+    .post-color-bar { width: 4px; height: 48px; border-radius: 9999px; }
+    .post-curator { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .post-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .post-curator-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .post-meta { font-size: 12px; color: var(--muted); }
+    .post-meta span { margin-right: 8px; }
+    .post-stats { text-align: right; flex-shrink: 0; }
+    .post-stat-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .post-stat-label { font-size: 11px; color: var(--muted); }
+    .post-bar-wrap { width: 80px; height: 5px; background: var(--border-light); border-radius: 9999px; margin-top: 5px; margin-left: auto; }
+    .post-bar { height: 5px; border-radius: 9999px; }
+    .post-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 9999px; cursor: pointer; transition: all 0.15s; border: 1.5px solid var(--border-light); color: var(--dark); font-family: var(--font); flex-shrink: 0; }
+    .post-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── COMMISSION ── */
+    .commission-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; padding: 28px; margin-bottom: 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .commission-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+    .commission-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+    .commission-total { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--dark); }
+    .commission-total span { font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+    .commission-split-bar { height: 8px; border-radius: 99px; overflow: hidden; display: flex; margin-bottom: 10px; background: var(--border-light); }
+    .commission-split-bar-direct { background: var(--primary); border-radius: 99px 0 0 99px; }
+    .commission-split-bar-pool { background: #F59E0B; border-radius: 0 99px 99px 0; }
+    .commission-split-labels { display: flex; gap: 16px; font-size: 11px; color: var(--muted); margin-bottom: 20px; flex-wrap: wrap; }
+    .commission-split-labels span { display: flex; align-items: center; gap: 5px; }
+    .commission-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .commission-table { width: 100%; border-collapse: collapse; }
+    .commission-table th { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; padding: 0 0 10px; text-align: left; }
+    .commission-table th:not(:first-child) { text-align: right; }
+    .commission-table td { padding: 10px 0; border-top: 1px solid var(--border-light); font-size: 13px; vertical-align: middle; }
+    .commission-table td:not(:first-child) { text-align: right; font-weight: 700; }
+    .commission-curator { display: flex; align-items: center; gap: 9px; }
+    .commission-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .commission-name { font-size: 13px; font-weight: 600; }
+    .commission-note { font-size: 11px; color: var(--muted); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); line-height: 1.6; display: flex; gap: 7px; align-items: flex-start; }
+    .tag-direct { display: inline-block; font-size: 10px; font-weight: 700; background: var(--primary-light); color: var(--primary); border-radius: 4px; padding: 1px 6px; }
+    .tag-pool { display: inline-block; font-size: 10px; font-weight: 700; background: rgba(245,158,11,0.12); color: #D97706; border-radius: 4px; padding: 1px 6px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) { .shell { grid-template-columns: 240px 1fr; padding: 32px 24px 64px; } }
+    @media (max-width: 768px) { .shell { grid-template-columns: 1fr; padding: 24px 16px 64px; } .sidebar { position: static; } .post-card { grid-template-columns: 1fr; } .post-color-bar { display: none; } }
+
+    /* ── FOOTER ── */
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .footer-bottom-links { display: flex; gap: 20px; list-style: none; }
+    .footer-bottom-links a { font-size: 12px; color: rgba(255,255,255,0.55); transition: color 0.15s; }
+    .footer-bottom-links a:hover { color: rgba(255,255,255,0.85); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; transition: background 0.15s; }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer { padding: 48px 20px 32px; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
+      <div class="nav-user" id="navUser">
+        <button class="nav-user-btn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
+          <span class="nav-user-avatar" id="navAvatar"></span>
+          <span class="nav-user-name" id="navName"></span>
+          <svg class="nav-user-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
+        </button>
+        <div class="nav-dropdown" id="navDropdown">
+          <a class="nav-dropdown-item active" href="/dashboard-restaurant.html">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Mon tableau de bord
+          </a>
+          <a class="nav-dropdown-item" href="/restaurant-profile.html">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Mon profil
+          </a>
+          <div class="nav-dropdown-divider"></div>
+          <button class="nav-dropdown-item nav-dropdown-item--danger" onclick="logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <h2 class="profile-name" id="profileName"></h2>
+        <span class="profile-cuisine" id="profileCuisine"></span>
+        <p class="profile-address" id="profileAddress"></p>
+        <div class="profile-links" id="profileLinks"></div>
+        <div class="profile-badge" id="profileBadge"></div>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div><p class="stat-label">Vues de la fiche</p><p class="stat-value">3 841</p><p class="stat-delta stat-delta--up">+12% ce mois</p></div>
+          <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        </div>
+        <div class="stat-card">
+          <div><p class="stat-label">Clics réservation</p><p class="stat-value" id="statClicks">—</p><p class="stat-delta stat-delta--up">12 mois cumulés</p></div>
+          <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        </div>
+        <div class="stat-card">
+          <div><p class="stat-label">Curateurs actifs</p><p class="stat-value">3</p><p class="stat-delta stat-delta--flat">12 posts / an</p></div>
+          <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+      <!-- CHART -->
+      <div class="chart-card">
+        <div class="chart-top">
+          <div>
+            <h2 class="chart-title">Clics sur le lien de réservation</h2>
+            <p class="chart-sub" id="chartSub">30 derniers jours</p>
+          </div>
+          <div class="chart-filter-wrap">
+            <span class="chart-filter-dot" id="chartFilterDot"></span>
+            <select class="chart-filter-select" id="chartFilterSelect" onchange="setFilter(this.value || null)">
+              <option value="">Tous les influenceurs</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="chart-controls">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div class="period-tabs">
+              <button class="period-tab" data-p="week"   onclick="setPeriod('week')">7 jours</button>
+              <button class="period-tab active" data-p="month" onclick="setPeriod('month')">30 jours</button>
+              <button class="period-tab" data-p="year"   onclick="setPeriod('year')">12 mois</button>
+              <button class="period-tab" data-p="custom" onclick="setPeriod('custom')">Personnalisé</button>
+            </div>
+            <select class="jump-select" id="yearSelect" style="display:none" onchange="setYear(this.value)"></select>
+            <select class="jump-select" id="monthSelect" style="display:none" onchange="setMonthYear(this.value)"></select>
+          </div>
+          <div id="customRange" class="custom-range" style="display:none">
+            <span>Du</span>
+            <input type="date" id="dateFrom" class="date-input" />
+            <span>au</span>
+            <input type="date" id="dateTo" class="date-input" />
+            <button class="apply-btn" onclick="applyCustom()">Appliquer</button>
+          </div>
+          <div id="zoomInfo" style="display:none">
+            <button class="zoom-reset-btn" onclick="resetZoom()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Réinitialiser le zoom
+            </button>
+          </div>
+          <!-- Navigation arrows + jump dropdown -->
+          <div class="chart-nav-row" id="chartNavRow">
+          <button class="nav-arrow" id="navPrev" onclick="navShift(-1)" title="Période précédente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+          </button>
+          <button class="nav-arrow" id="navNext" onclick="navShift(1)" title="Période suivante">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+          </button>
+          <select class="jump-select" id="jumpSelect" onchange="jumpTo(this.value)">
+            <option value="">Aller à…</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="chart-svg-wrap">
+          <svg id="mainChart" viewBox="0 0 720 210" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <!-- Attribution detail panel (shown on click) -->
+        <div id="chartDetail" style="display:none" class="chart-detail"></div>
+
+        <p class="zoom-hint" style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            Cliquer sur un point avec post pour voir le détail · sinon zoom
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Molette ou pincement pour zoomer/dézoomer
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+            Glissement horizontal pour naviguer dans le temps
+          </span>
+        </p>
+      </div>
+
+      <!-- COMMISSION -->
+      <div id="commissionSection"></div>
+
+      <!-- POSTS -->
+      <div>
+        <div class="section-header">
+          <h2 class="section-title">Posts & performances</h2>
+          <span class="section-note">Clics enregistrés depuis chaque publication</span>
+        </div>
+        <div class="posts-period-filters" id="postsPeriodFilters">
+          <div class="cal-wrap">
+            <button class="cal-btn" id="calBtn" onclick="toggleCalendar()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span id="calBtnLabel">Période</span>
+            </button>
+            <div class="cal-popover" id="calPopover">
+              <div class="cal-header">
+                <button class="cal-nav" onclick="calNavMonth(-1)">
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="10,3 5,8 10,13"/></svg>
+                </button>
+                <span class="cal-month-label" id="calMonthLabel"></span>
+                <button class="cal-nav" onclick="calNavMonth(1)">
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6,3 11,8 6,13"/></svg>
+                </button>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+              <div class="cal-footer">
+                <span class="cal-range-label" id="calRangeLabel">Sélectionnez une date de début</span>
+                <button class="cal-apply" id="calApply" onclick="applyCalendar()" disabled>Appliquer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="posts-filters" id="postsFilters"></div>
+        <div class="posts-list" id="postsList"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support & Légal</h4>
+          <ul>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="chart-tooltip" id="chartTooltip"></div>
+
+  <script>
+  // ─────────────────────────────────────────────────
+  //  DATA
+  // ─────────────────────────────────────────────────
+
+  const TODAY  = new Date('2026-05-03');
+  const ORIGIN = new Date('2025-05-03'); // 12 months back
+
+  const CURATOR_POSTS = [
+    { dateStr:'2025-05-20', curator:'Théo V.G.',          initial:'T', color:'#0284C7', spikeMax:88,  followers:'185K', postUrl:'#' },
+    { dateStr:'2025-06-14', curator:'Le Paris d\'Alexis',  initial:'A', color:'#7C3AED', spikeMax:145, followers:'825K', postUrl:'#' },
+    { dateStr:'2025-07-09', curator:'Philou d\'Arblay',    initial:'P', color:'#059669', spikeMax:62,  followers:'153K', postUrl:'#' },
+    { dateStr:'2025-08-22', curator:'Théo V.G.',          initial:'T', color:'#0284C7', spikeMax:95,  followers:'185K', postUrl:'#' },
+    { dateStr:'2025-10-05', curator:'Le Paris d\'Alexis',  initial:'A', color:'#7C3AED', spikeMax:178, followers:'825K', postUrl:'#' },
+    { dateStr:'2025-11-18', curator:'Théo V.G.',          initial:'T', color:'#0284C7', spikeMax:72,  followers:'185K', postUrl:'#' },
+    { dateStr:'2026-01-09', curator:'Philou d\'Arblay',    initial:'P', color:'#059669', spikeMax:58,  followers:'153K', postUrl:'#' },
+    { dateStr:'2026-02-14', curator:'Le Paris d\'Alexis',  initial:'A', color:'#7C3AED', spikeMax:165, followers:'825K', postUrl:'#' },
+    { dateStr:'2026-03-20', curator:'Théo V.G.',          initial:'T', color:'#0284C7', spikeMax:83,  followers:'185K', postUrl:'#' },
+    { dateStr:'2026-04-10', curator:'Théo V.G.',          initial:'T', color:'#0284C7', spikeMax:88,  followers:'185K', postUrl:'#' },
+    { dateStr:'2026-04-10', curator:'Philou d\'Arblay',   initial:'P', color:'#059669', spikeMax:54,  followers:'153K', postUrl:'#' },
+    { dateStr:'2026-04-20', curator:'Le Paris d\'Alexis',  initial:'A', color:'#7C3AED', spikeMax:134, followers:'825K', postUrl:'#' },
+    { dateStr:'2026-04-29', curator:'Philou d\'Arblay',    initial:'P', color:'#059669', spikeMax:66,  followers:'153K', postUrl:'#' },
+  ];
+
+  // Deterministic base noise: 4–9 clicks/day
+  function base(i) { return 4 + Math.floor(Math.abs(Math.sin(i * 1.7 + 0.3) * 5)); }
+
+  // Build full daily dataset
+  const ALL_DATA = (() => {
+    const days = Math.round((TODAY - ORIGIN) / 86400000) + 1;
+    return Array.from({ length: days }, (_, i) => {
+      const d = new Date(ORIGIN); d.setDate(ORIGIN.getDate() + i);
+      const ds = d.toISOString().slice(0, 10);
+      let clicks = base(i);
+      const postContribs = []; // [{post, clicks}] for every active post that day
+      CURATOR_POSTS.forEach(p => {
+        const diff = Math.round((d - new Date(p.dateStr)) / 86400000);
+        if (diff >= 0 && diff <= 12) {
+          const c = Math.round(p.spikeMax * Math.exp(-diff * 0.52));
+          clicks += c;
+          postContribs.push({ post: p, clicks: c });
+        }
+      });
+      const posts = CURATOR_POSTS.filter(p => p.dateStr === ds);
+      return { ds, d: new Date(d), clicks, posts, post: posts[0] || null, postContribs };
+    });
+  })();
+
+  // Update total clicks stat
+  document.getElementById('statClicks').textContent =
+    ALL_DATA.reduce((s, d) => s + d.clicks, 0).toLocaleString('fr-FR');
+
+  // ─────────────────────────────────────────────────
+  //  STATE
+  // ─────────────────────────────────────────────────
+
+  let period           = 'month'; // week | month | year | custom | zoom
+  let zoomDate         = null;
+  let custFrom         = null, custTo = null;
+  let viewEndDate      = new Date(TODAY);
+  let selectedYear     = TODAY.getFullYear();
+  let selectedMonthYear = { year: TODAY.getFullYear(), month: TODAY.getMonth() };
+  let activeFilter = null;       // null = all curators, or curator name string
+  let activePostDays = null;     // null = all time, or number of days
+
+  // ─────────────────────────────────────────────────
+  //  DATA GETTERS
+  // ─────────────────────────────────────────────────
+
+  function getViewData() {
+    if (period === 'week') {
+      const end = ALL_DATA.filter(d => d.d <= viewEndDate);
+      return { pts: end.slice(-7), mode: 'daily' };
+    }
+    if (period === 'month') {
+      const { year, month } = selectedMonthYear;
+      // End = last day of selected month, capped at TODAY
+      const lastDay = new Date(year, month + 1, 0);
+      const endDate = lastDay > TODAY ? TODAY : lastDay;
+      const end = ALL_DATA.filter(d => d.d <= endDate);
+      return { pts: end.slice(-30), mode: 'daily' };
+    }
+    if (period === 'year') {
+      const filtered = ALL_DATA.filter(d => d.d.getFullYear() === selectedYear);
+      return { pts: byMonth(filtered), mode: 'monthly' };
+    }
+    if (period === 'zoom' && zoomDate) {
+      const center = zoomDate.getTime();
+      const pts = ALL_DATA.filter(d => Math.abs(d.d.getTime() - center) <= 7 * 86400000);
+      return { pts, mode: 'daily' };
+    }
+    if (period === 'custom' && custFrom && custTo) {
+      const pts = ALL_DATA.filter(d => d.d >= custFrom && d.d <= custTo);
+      if (pts.length > 90) return { pts: byWeek(pts), mode: 'weekly' };
+      return { pts, mode: pts.length > 30 ? 'sparse' : 'daily' };
+    }
+    return { pts: ALL_DATA.slice(-30), mode: 'daily' };
+  }
+
+  function byMonth(data) {
+    const map = {};
+    data.forEach(d => {
+      const key = d.ds.slice(0, 7);
+      if (!map[key]) map[key] = { ds: key, d: new Date(d.d.getFullYear(), d.d.getMonth(), 1), clicks: 0, posts: [], _contribMap: {} };
+      map[key].clicks += d.clicks;
+      d.posts.forEach(p => { if (!map[key].posts.includes(p)) map[key].posts.push(p); });
+      d.postContribs.forEach(({ post, clicks }) => {
+        const k = post.dateStr + '|' + post.curator;
+        if (!map[key]._contribMap[k]) map[key]._contribMap[k] = { post, clicks: 0 };
+        map[key]._contribMap[k].clicks += clicks;
+      });
+    });
+    return Object.values(map).map(m => ({
+      ...m, post: m.posts[0] || null,
+      postContribs: Object.values(m._contribMap).sort((a, b) => b.clicks - a.clicks)
+    }));
+  }
+
+  function byWeek(data) {
+    const res = [];
+    for (let i = 0; i < data.length; i += 7) {
+      const chunk = data.slice(i, Math.min(i + 7, data.length));
+      const posts  = chunk.flatMap(d => d.posts).filter((p, idx, a) => a.indexOf(p) === idx);
+      const _cMap  = {};
+      chunk.forEach(d => d.postContribs.forEach(({ post, clicks }) => {
+        const k = post.dateStr + '|' + post.curator;
+        if (!_cMap[k]) _cMap[k] = { post, clicks: 0 };
+        _cMap[k].clicks += clicks;
+      }));
+      res.push({
+        ds: chunk[0].ds, d: chunk[0].d,
+        clicks: chunk.reduce((s, x) => s + x.clicks, 0),
+        posts, post: posts[0] || null,
+        postContribs: Object.values(_cMap).sort((a, b) => b.clicks - a.clicks)
+      });
+    }
+    return res;
+  }
+
+  // ─────────────────────────────────────────────────
+  //  CHART RENDER
+  // ─────────────────────────────────────────────────
+
+  const MONTHS_FR = ['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  const DAYS_FR   = ['dim','lun','mar','mer','jeu','ven','sam'];
+
+  function fmtLabel(item, mode, total) {
+    const d = item.d;
+    if (mode === 'monthly') return MONTHS_FR[d.getMonth()];
+    if (mode === 'daily' && total <= 7) return DAYS_FR[d.getDay()] + ' ' + d.getDate();
+    if (mode === 'daily' || mode === 'sparse') return d.getDate() + ' ' + MONTHS_FR[d.getMonth()];
+    return d.getDate() + ' ' + MONTHS_FR[d.getMonth()];
+  }
+
+  function fmtTooltip(item, mode) {
+    const d = item.d;
+    if (mode === 'monthly') return MONTHS_FR[d.getMonth()] + ' ' + d.getFullYear();
+    if (mode === 'weekly')  return 'Sem. du ' + d.getDate() + ' ' + MONTHS_FR[d.getMonth()];
+    return d.getDate() + ' ' + MONTHS_FR[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function renderChart() {
+    const { pts, mode } = getViewData();
+    if (!pts.length) return;
+
+    const W = 720, H = 210;
+    const P = { t: 16, r: 16, b: 40, l: 46 };
+    const iW = W - P.l - P.r, iH = H - P.t - P.b;
+    const n = pts.length;
+    const maxV = Math.max(...pts.map(p => p.clicks), 1);
+
+    const xOf = i => P.l + (n === 1 ? iW / 2 : (i / (n - 1)) * iW);
+    const yOf = v => P.t + iH - (v / maxV) * iH;
+
+    // Y grid
+    let grid = '', yLbls = '';
+    [0, 0.25, 0.5, 0.75, 1].forEach(s => {
+      const y = (P.t + iH * (1 - s)).toFixed(1);
+      const v = Math.round(s * maxV);
+      grid  += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" stroke="#EAE3DA" stroke-width="1"/>`;
+      yLbls += `<text x="${P.l - 6}" y="${(+y + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="#9B8E86">${v}</text>`;
+    });
+
+    // X labels — spaced dynamically so they never overlap (~44px min gap)
+    let xLbls = '';
+    const pxPerPt = iW / Math.max(n - 1, 1);
+    const step = Math.max(1, Math.ceil(44 / pxPerPt));
+    pts.forEach((p, i) => {
+      if (i % step !== 0 && i !== n - 1) return;
+      const x = xOf(i).toFixed(1);
+      xLbls += `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="10" fill="#9B8E86">${fmtLabel(p, mode, n)}</text>`;
+    });
+
+    // Post vertical lines — filtered by activeFilter if set
+    let postLines = '';
+    pts.forEach((p, i) => {
+      if (!p.posts || !p.posts.length) return;
+      const visible = activeFilter ? p.posts.filter(pst => pst.curator === activeFilter) : p.posts;
+      if (!visible.length) return;
+      const total = visible.length;
+      const spacing = 4;
+      visible.forEach((pst, pi) => {
+        const offset = total > 1 ? (pi - (total - 1) / 2) * spacing : 0;
+        const x = (xOf(i) + offset).toFixed(1);
+        postLines += `<line x1="${x}" y1="${P.t}" x2="${x}" y2="${P.t + iH}" stroke="${pst.color}" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.75"/>`;
+      });
+    });
+
+    let chartBody = '';
+
+    if (mode === 'monthly' || mode === 'weekly') {
+      // Bar chart — stacked by post attribution when posts exist
+      const bW = Math.max(4, Math.min(28, iW / n - 6));
+      pts.forEach((p, i) => {
+        const x    = (xOf(i) - bW / 2).toFixed(1);
+        const contribs = p.postContribs || [];
+        if (!contribs.length) {
+          // No posts — plain grey bar
+          const barH = ((p.clicks / maxV) * iH).toFixed(1);
+          const y    = yOf(p.clicks).toFixed(1);
+          chartBody += `<rect class="chart-bar" x="${x}" y="${y}" width="${bW}" height="${barH}" rx="4"
+            fill="#EAE3DA" opacity="0.8" data-i="${i}" style="cursor:pointer"/>`;
+        } else {
+          // Stacked bar: base (grey) then each post's contribution (colored) from bottom up
+          const postTotal = contribs.reduce((s, c) => s + c.clicks, 0);
+          const baseClicks = Math.max(0, p.clicks - postTotal);
+          let yBottom = P.t + iH;
+
+          const drawSeg = (segClicks, fill, isTop, dataI) => {
+            const segH = Math.max(1, (segClicks / maxV) * iH);
+            const segY = yBottom - segH;
+            chartBody += `<rect class="chart-bar" x="${x}" y="${segY.toFixed(1)}" width="${bW}"
+              height="${segH.toFixed(1)}" rx="${isTop ? 4 : 0}"
+              fill="${fill}" opacity="0.9" data-i="${dataI}" style="cursor:pointer"/>`;
+            yBottom = segY;
+          };
+
+          drawSeg(baseClicks, '#EAE3DA', false, i);
+          contribs.forEach(({ post: pst, clicks: c }, ci) =>
+            drawSeg(c, pst.color, ci === contribs.length - 1, i)
+          );
+        }
+      });
+    } else {
+      // Line + area chart
+      const ptCoords = pts.map((p, i) => `${xOf(i).toFixed(1)},${yOf(p.clicks).toFixed(1)}`);
+      const linePath = `M${ptCoords.join(' L')}`;
+      const areaPath = `M${xOf(0).toFixed(1)},${yOf(0).toFixed(1)} L${ptCoords.join(' L')} L${xOf(n-1).toFixed(1)},${(P.t+iH).toFixed(1)} L${P.l},${(P.t+iH).toFixed(1)} Z`;
+
+      chartBody = `
+        <defs>
+          <linearGradient id="aG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E05535" stop-opacity="0.14"/>
+            <stop offset="100%" stop-color="#E05535" stop-opacity="0.01"/>
+          </linearGradient>
+        </defs>
+        <path d="${areaPath}" fill="url(#aG)"/>
+        <path d="${linePath}" fill="none" stroke="#E05535" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      `;
+
+      // Post peak markers — filtered by activeFilter if set
+      pts.forEach((p, i) => {
+        if (!p.postContribs || !p.postContribs.length) return;
+        const contribs = activeFilter
+          ? p.postContribs.filter(({ post: pst }) => pst.curator === activeFilter)
+          : p.postContribs;
+        if (!contribs.length) return;
+
+        const cx  = parseFloat(xOf(i).toFixed(1));
+        const cy  = parseFloat(yOf(p.clicks).toFixed(1));
+        const cnt = contribs.length;
+        const top = contribs[0].post;
+
+        if (cnt === 1) {
+          chartBody += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${top.color}" stroke-width="2.5"/>`;
+        } else {
+          chartBody += `<circle cx="${cx}" cy="${cy}" r="6" fill="#fff" stroke="${top.color}" stroke-width="2.5"/>`;
+          const pips = contribs.slice(0, 3);
+          pips.forEach(({ post: pst }, pi) => {
+            const angle = -90 + pi * (180 / Math.max(pips.length - 1, 1));
+            const rad   = angle * Math.PI / 180;
+            const px    = (cx + 11 * Math.cos(rad)).toFixed(1);
+            const py    = (cy + 11 * Math.sin(rad)).toFixed(1);
+            chartBody += `<circle cx="${px}" cy="${py}" r="3" fill="${pst.color}"/>`;
+          });
+          if (cnt > 3) {
+            chartBody += `<text x="${(cx + 14).toFixed(1)}" y="${(cy - 8).toFixed(1)}"
+              font-size="9" font-weight="800" fill="#555">+${cnt - 3}</text>`;
+          }
+        }
+      });
+    }
+
+    // Invisible hover targets
+    let hovers = '';
+    pts.forEach((p, i) => {
+      const cx = xOf(i).toFixed(1);
+      const hH = (iH + P.t).toFixed(1);
+      const tW = Math.max(20, iW / n);
+      hovers += `<rect x="${(+cx - tW/2).toFixed(1)}" y="${P.t}" width="${tW}" height="${hH}" fill="transparent"
+        data-i="${i}" style="cursor:${mode === 'daily' ? 'crosshair' : 'pointer'}" class="hover-target"/>`;
+    });
+
+    document.getElementById('mainChart').innerHTML =
+      grid + postLines + chartBody + yLbls + xLbls + hovers;
+
+    // Tooltip + click
+    const tooltip = document.getElementById('chartTooltip');
+    document.querySelectorAll('.hover-target, .chart-bar').forEach(el => {
+      el.addEventListener('mousemove', function(e) {
+        const i = parseInt(this.getAttribute('data-i'));
+        const p = pts[i];
+        const contribs = p.postContribs || [];
+        const top2 = contribs.slice(0, 2);
+        const rest = contribs.length - 2;
+        let html = `<strong>${fmtTooltip(p, mode)}</strong> — <strong>${p.clicks.toLocaleString('fr-FR')}</strong> clics`;
+        if (top2.length) {
+          html += top2.map(({ post: pst }) =>
+            `<br><span style="color:${pst.color}">● ${pst.curator.split(' ')[0]}</span>`
+          ).join('');
+          if (rest > 0) html += `<br><span style="color:#9B8B82">+ ${rest} autre${rest > 1 ? 's' : ''}</span>`;
+        }
+        tooltip.innerHTML = html;
+        tooltip.style.left = (e.clientX + 14) + 'px';
+        tooltip.style.top  = (e.clientY - 44) + 'px';
+        tooltip.classList.add('visible');
+      });
+      el.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+      el.addEventListener('click', function() {
+        const i = parseInt(this.getAttribute('data-i'));
+        const p = pts[i];
+        const contribs = p.postContribs || [];
+        if (contribs.length) {
+          // Show attribution detail panel
+          showDetailPanel(p, mode);
+        } else if (mode === 'monthly') {
+          custFrom = new Date(p.d.getFullYear(), p.d.getMonth(), 1);
+          custTo   = new Date(p.d.getFullYear(), p.d.getMonth() + 1, 0);
+          period = 'custom'; updateUI();
+        } else {
+          zoomDate = p.d; period = 'zoom'; updateUI();
+        }
+      });
+    });
+  }
+
+  // ─────────────────────────────────────────────────
+  //  DETAIL PANEL
+  // ─────────────────────────────────────────────────
+
+  function showDetailPanel(p, mode) {
+    const contribs  = p.postContribs || [];
+    const postTotal = contribs.reduce((s, c) => s + c.clicks, 0);
+    const organic   = Math.max(0, p.clicks - postTotal);
+    const all       = [...contribs, ...(organic > 0 ? [{ post: { curator: 'Organique (map / accueil)', color: '#B0A0A0', initial: '○' }, clicks: organic }] : [])];
+    const fmt       = v => v.toLocaleString('fr-FR');
+    const pct       = v => p.clicks > 0 ? Math.round((v / p.clicks) * 100) : 0;
+
+    const rows = all.map(({ post: pst, clicks: c }) => `
+      <div class="chart-detail-row">
+        <span style="width:10px;height:10px;border-radius:50%;background:${pst.color};flex-shrink:0;display:inline-block"></span>
+        <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${pst.curator}</span>
+        <span style="font-weight:800;text-align:right">${fmt(c)}</span>
+        <span style="color:var(--muted);text-align:right">${pct(c)} %</span>
+        <div class="chart-detail-bar-wrap"><div class="chart-detail-bar" style="width:${pct(c)}%;background:${pst.color}"></div></div>
+      </div>`).join('');
+
+    const panel = document.getElementById('chartDetail');
+    panel.style.display = 'block';
+    panel.innerHTML = `
+      <div class="chart-detail-head">
+        <span class="chart-detail-date">${fmtTooltip(p, mode)}</span>
+        <span class="chart-detail-total">${fmt(p.clicks)} clics au total</span>
+        <button class="chart-detail-close" onclick="document.getElementById('chartDetail').style.display='none'"
+          title="Fermer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="chart-detail-body">
+        <div class="chart-detail-row chart-detail-row--head">
+          <span></span><span>Curateur / source</span><span style="text-align:right">Clics</span><span style="text-align:right">Part</span><span></span>
+        </div>
+        ${rows}
+      </div>
+      ${contribs.length > 1 ? `<p class="chart-detail-hint">Attribution estimée via modèle de décroissance post × audience. Clics directs trackés via lien unique.</p>` : ''}
+    `;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ─────────────────────────────────────────────────
+  //  CONTROLS
+  // ─────────────────────────────────────────────────
+
+  function setPeriod(p) {
+    period = p;
+    zoomDate = null;
+    viewEndDate = new Date(TODAY);
+    if (p === 'year')  { selectedYear = TODAY.getFullYear(); document.getElementById('yearSelect').value = selectedYear; }
+    if (p === 'month') { selectedMonthYear = { year: TODAY.getFullYear(), month: TODAY.getMonth() }; document.getElementById('monthSelect').value = `${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}`; }
+    if (p !== 'custom') { custFrom = null; custTo = null; }
+    updateUI();
+  }
+
+  function applyCustom() {
+    const f = document.getElementById('dateFrom').value;
+    const t = document.getElementById('dateTo').value;
+    if (!f || !t) return;
+    custFrom = new Date(f); custTo = new Date(t);
+    if (custFrom > custTo) { [custFrom, custTo] = [custTo, custFrom]; }
+    period = 'custom'; zoomDate = null;
+    updateUI();
+  }
+
+  function resetZoom() {
+    period = 'month'; zoomDate = null; custFrom = null; custTo = null;
+    viewEndDate = new Date(TODAY);
+    updateUI();
+  }
+
+  function navShift(dir) {
+    if (period === 'year') {
+      const years = [...new Set(ALL_DATA.map(d => d.d.getFullYear()))].sort((a, b) => a - b);
+      const idx = years.indexOf(selectedYear) + dir;
+      if (idx >= 0 && idx < years.length) {
+        selectedYear = years[idx];
+        document.getElementById('yearSelect').value = selectedYear;
+      }
+    } else if (period === 'month') {
+      let { year, month } = selectedMonthYear;
+      month += dir;
+      if (month < 0)  { month = 11; year--; }
+      if (month > 11) { month = 0;  year++; }
+      const d = new Date(year, month, 1);
+      const minD = new Date(ORIGIN.getFullYear(), ORIGIN.getMonth(), 1);
+      const maxD = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+      if (d >= minD && d <= maxD) {
+        selectedMonthYear = { year, month };
+        document.getElementById('monthSelect').value = `${year}-${String(month + 1).padStart(2, '0')}`;
+      }
+    } else if (period === 'week') {
+      const d = new Date(viewEndDate);
+      d.setDate(d.getDate() + dir * 7);
+      const minEnd = new Date(ORIGIN); minEnd.setDate(minEnd.getDate() + 6);
+      if (d > TODAY) viewEndDate = new Date(TODAY);
+      else if (d < minEnd) viewEndDate = new Date(minEnd);
+      else viewEndDate = d;
+    }
+    updateUI();
+  }
+
+  function jumpTo(value) {
+    if (!value) return;
+    const [y, m] = value.split('-').map(Number);
+    custFrom = new Date(y, m - 1, 1);
+    custTo   = new Date(y, m, 0);
+    if (custTo > TODAY) custTo = new Date(TODAY);
+    period = 'custom'; zoomDate = null;
+    updateUI();
+    document.getElementById('jumpSelect').value = '';
+  }
+
+  // ─────────────────────────────────────────────────
+  //  WHEEL ZOOM
+  // ─────────────────────────────────────────────────
+
+  let _panAccum = 0; // sub-day accumulator for smooth horizontal pan
+
+  function handleChartWheel(e) {
+    const isHorizSwipe = Math.abs(e.deltaX) > Math.abs(e.deltaY) && !e.ctrlKey;
+    const isPinch      = e.ctrlKey;
+
+    // Ignore pure vertical scroll — let the page scroll naturally
+    if (!isHorizSwipe && !isPinch) return;
+
+    e.preventDefault();
+
+    const { pts } = getViewData();
+    if (!pts.length) return;
+
+    const startDate = pts[0].d;
+    const endDate   = pts[pts.length - 1].d;
+    const rangeDays = Math.max(1, Math.round((endDate - startDate) / 86400000) + 1);
+
+    const svgEl  = document.getElementById('mainChart');
+    const rect   = svgEl.getBoundingClientRect();
+    const Pl = 46, Pr = 16;
+    const chartW = rect.width - Pl - Pr;
+
+    // Horizontal swipe (pan)
+    if (isHorizSwipe) {
+      // deltaX > 0 = swipe fingers left = move forward in time
+      _panAccum += (e.deltaX / chartW) * rangeDays;
+      const days = Math.round(_panAccum);
+      if (Math.abs(days) < 1) return;
+      _panAccum -= days;
+
+      const newFrom = new Date(startDate.getTime() + days * 86400000);
+      const newTo   = new Date(endDate.getTime()   + days * 86400000);
+
+      if (newFrom < ORIGIN) {
+        custFrom = new Date(ORIGIN);
+        custTo   = new Date(ORIGIN.getTime() + (rangeDays - 1) * 86400000);
+      } else if (newTo > TODAY) {
+        custTo   = new Date(TODAY);
+        custFrom = new Date(TODAY.getTime() - (rangeDays - 1) * 86400000);
+      } else {
+        custFrom = newFrom;
+        custTo   = newTo;
+      }
+      period = 'custom'; zoomDate = null;
+      document.getElementById('jumpSelect').value = '';
+      updateUI();
+      return;
+    }
+
+    // Vertical scroll or pinch → zoom
+    _panAccum = 0;
+    const cx    = Math.max(0, Math.min(e.clientX - rect.left - Pl, chartW));
+    const ratio = chartW > 0 ? cx / chartW : 0.5;
+
+    const zoomIn = e.deltaY < 0;
+    const factor = zoomIn ? 0.88 : 1.14;
+    let newRange = Math.max(5, Math.min(366, Math.round(rangeDays * factor)));
+    // Guarantee zoom-out always adds at least 5 days (prevents feeling stuck at small ranges)
+    if (!zoomIn) newRange = Math.min(366, Math.max(newRange, rangeDays + 5));
+
+    const anchorTime = startDate.getTime() + ratio * (endDate.getTime() - startDate.getTime());
+    const newStart   = new Date(anchorTime - ratio * newRange * 86400000);
+    const newEnd     = new Date(newStart.getTime() + (newRange - 1) * 86400000);
+
+    custFrom = newStart < ORIGIN ? new Date(ORIGIN) : newStart;
+    custTo   = newEnd   > TODAY  ? new Date(TODAY)  : newEnd;
+    if (custFrom > custTo) custTo = new Date(custFrom);
+    period = 'custom'; zoomDate = null;
+    document.getElementById('jumpSelect').value = '';
+    updateUI();
+  }
+
+  const MONTHS_FULL_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+  function buildJumpMenu() {
+    const sel = document.getElementById('jumpSelect');
+    for (let y = ORIGIN.getFullYear(); y <= TODAY.getFullYear(); y++) {
+      const mStart = (y === ORIGIN.getFullYear()) ? ORIGIN.getMonth() : 0;
+      const mEnd   = (y === TODAY.getFullYear())  ? TODAY.getMonth()  : 11;
+      for (let mo = mStart; mo <= mEnd; mo++) {
+        const opt = document.createElement('option');
+        opt.value = `${y}-${String(mo + 1).padStart(2, '0')}`;
+        opt.textContent = `${MONTHS_FULL_FR[mo]} ${y}`;
+        sel.appendChild(opt);
+      }
+    }
+  }
+
+  function buildYearMenu() {
+    const sel = document.getElementById('yearSelect');
+    sel.innerHTML = '';
+    const years = [...new Set(ALL_DATA.map(d => d.d.getFullYear()))].sort((a, b) => a - b);
+    years.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      if (y === selectedYear) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildMonthMenu() {
+    const sel = document.getElementById('monthSelect');
+    sel.innerHTML = '';
+    for (let y = ORIGIN.getFullYear(); y <= TODAY.getFullYear(); y++) {
+      const mStart = (y === ORIGIN.getFullYear()) ? ORIGIN.getMonth() : 0;
+      const mEnd   = (y === TODAY.getFullYear())  ? TODAY.getMonth()  : 11;
+      for (let mo = mStart; mo <= mEnd; mo++) {
+        const opt = document.createElement('option');
+        opt.value = `${y}-${String(mo + 1).padStart(2, '0')}`;
+        opt.textContent = `${MONTHS_FULL_FR[mo]} ${y}`;
+        if (y === selectedMonthYear.year && mo === selectedMonthYear.month) opt.selected = true;
+        sel.appendChild(opt);
+      }
+    }
+  }
+
+  function setYear(value) {
+    selectedYear = parseInt(value);
+    updateUI();
+  }
+
+  function setMonthYear(value) {
+    const [y, m] = value.split('-').map(Number);
+    selectedMonthYear = { year: y, month: m - 1 };
+    updateUI();
+  }
+
+  function updateUI() {
+    // Tabs
+    document.querySelectorAll('.period-tab').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-p') === (period === 'zoom' ? 'custom' : period));
+    });
+    // Custom range inputs
+    document.getElementById('customRange').style.display = (period === 'custom') ? 'flex' : 'none';
+    // Zoom reset
+    const showReset = period === 'zoom' || (period === 'custom' && custFrom);
+    document.getElementById('zoomInfo').style.display = showReset ? 'block' : 'none';
+    // Year / month context selectors
+    document.getElementById('yearSelect').style.display  = period === 'year'  ? 'inline-block' : 'none';
+    document.getElementById('monthSelect').style.display = period === 'month' ? 'inline-block' : 'none';
+    // Nav row: only for preset periods
+    const showNav = ['week','month','year'].includes(period);
+    document.getElementById('chartNavRow').style.display = showNav ? 'flex' : 'none';
+    if (showNav) {
+      let prevDisabled = false, nextDisabled = false;
+      if (period === 'year') {
+        const years = [...new Set(ALL_DATA.map(d => d.d.getFullYear()))].sort((a,b) => a-b);
+        prevDisabled = selectedYear <= years[0];
+        nextDisabled = selectedYear >= years[years.length - 1];
+      } else if (period === 'month') {
+        const minD = new Date(ORIGIN.getFullYear(), ORIGIN.getMonth(), 1);
+        const maxD = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+        const curD = new Date(selectedMonthYear.year, selectedMonthYear.month, 1);
+        prevDisabled = curD <= minD;
+        nextDisabled = curD >= maxD;
+      } else if (period === 'week') {
+        const { pts } = getViewData();
+        prevDisabled = pts.length > 0 && pts[0].ds === ALL_DATA[0].ds;
+        nextDisabled = viewEndDate.toISOString().slice(0,10) >= TODAY.toISOString().slice(0,10);
+      }
+      document.getElementById('navPrev').disabled = prevDisabled;
+      document.getElementById('navNext').disabled = nextDisabled;
+    }
+    // Subtitle
+    const weekEndLabel = period === 'week' && viewEndDate < TODAY
+      ? ` jusqu'au ${viewEndDate.getDate()} ${MONTHS_FR[viewEndDate.getMonth()]}`
+      : '';
+    const subs = {
+      week:  `7 jours${weekEndLabel}`,
+      month: `30 jours · fin ${MONTHS_FULL_FR[selectedMonthYear.month].toLowerCase()} ${selectedMonthYear.year}`,
+      year:  `Année ${selectedYear}`
+    };
+    let sub = subs[period] || '';
+    if (period === 'zoom' && zoomDate) {
+      const d = zoomDate; sub = `Zoom : ±7 jours autour du ${d.getDate()} ${MONTHS_FR[d.getMonth()]} ${d.getFullYear()}`;
+    }
+    if (period === 'custom' && custFrom && custTo) {
+      sub = `Du ${custFrom.getDate()} ${MONTHS_FR[custFrom.getMonth()]} au ${custTo.getDate()} ${MONTHS_FR[custTo.getMonth()]}`;
+    }
+    document.getElementById('chartSub').textContent = sub;
+    document.getElementById('chartDetail').style.display = 'none';
+    renderChart();
+  }
+
+  // ─────────────────────────────────────────────────
+  //  LEGEND
+  // ─────────────────────────────────────────────────
+
+  function renderLegend() {
+    const curators = [...new Map(CURATOR_POSTS.map(p => [p.curator, p])).values()];
+    const sel = document.getElementById('chartFilterSelect');
+    // Rebuild options preserving current selection
+    sel.innerHTML = '<option value="">Tous les influenceurs</option>' +
+      curators.map(p => `<option value="${p.curator}"${activeFilter === p.curator ? ' selected' : ''}>${p.curator}</option>`).join('');
+    // Update dot color
+    const active = curators.find(p => p.curator === activeFilter);
+    document.getElementById('chartFilterDot').style.background = active ? active.color : 'var(--primary)';
+  }
+
+  // ─────────────────────────────────────────────────
+  //  POSTS LIST
+  // ─────────────────────────────────────────────────
+
+  function renderFilters() {
+    const curators = [...new Map(CURATOR_POSTS.map(p => [p.curator, p])).values()];
+    const allActive = activeFilter === null;
+    document.getElementById('postsFilters').innerHTML =
+      `<button class="posts-filter${allActive ? ' active' : ''}" onclick="setFilter(null)">Tous</button>` +
+      curators.map(p =>
+        `<button class="posts-filter${activeFilter === p.curator ? ' active' : ''}" onclick="setFilter('${p.curator.replace(/'/g,"\\'")}')">
+          <span class="posts-filter-dot" style="background:${p.color}"></span>${p.curator}
+        </button>`
+      ).join('');
+  }
+
+  function setFilter(name) {
+    activeFilter = name;
+    renderLegend();
+    renderFilters();
+    renderChart();
+    renderPosts();
+  }
+
+  // ─────────────────────────────────────────────────
+  //  CALENDAR DATE RANGE PICKER
+  // ─────────────────────────────────────────────────
+
+  let calViewYear  = TODAY.getFullYear();
+  let calViewMonth = TODAY.getMonth();
+  let calFrom = null; // Date | null
+  let calTo   = null; // Date | null
+  let calHover = null;
+
+  function toggleCalendar() {
+    const pop = document.getElementById('calPopover');
+    const isOpen = pop.classList.contains('open');
+    if (isOpen) { pop.classList.remove('open'); return; }
+    calViewYear  = TODAY.getFullYear();
+    calViewMonth = TODAY.getMonth();
+    renderCalendar();
+    pop.classList.add('open');
+  }
+
+  function calNavMonth(dir) {
+    calViewMonth += dir;
+    if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+    if (calViewMonth < 0)  { calViewMonth = 11; calViewYear--; }
+    renderCalendar();
+  }
+
+  function calDayClick(y, m, d) {
+    const clicked = new Date(y, m, d);
+    if (!calFrom || (calFrom && calTo)) {
+      // start fresh selection
+      calFrom = clicked; calTo = null;
+    } else {
+      // set end — ensure from <= to
+      if (clicked < calFrom) { calTo = calFrom; calFrom = clicked; }
+      else { calTo = clicked; }
+    }
+    renderCalendar();
+    updateCalFooter();
+  }
+
+  function calDayHover(y, m, d) {
+    if (calFrom && !calTo) {
+      calHover = new Date(y, m, d);
+      renderCalendar();
+    }
+  }
+
+  function updateCalFooter() {
+    const fmtD = d => d.getDate() + ' ' + MONTHS_FR[d.getMonth()] + ' ' + d.getFullYear();
+    const lbl  = document.getElementById('calRangeLabel');
+    const btn  = document.getElementById('calApply');
+    if (!calFrom) {
+      lbl.textContent = 'Sélectionnez une date de début';
+      btn.disabled = true;
+    } else if (!calTo) {
+      lbl.textContent = 'Du ' + fmtD(calFrom) + ' → ?';
+      btn.disabled = true;
+    } else {
+      lbl.textContent = fmtD(calFrom) + ' – ' + fmtD(calTo);
+      btn.disabled = false;
+    }
+  }
+
+  function applyCalendar() {
+    if (!calFrom || !calTo) return;
+    activePostDays = 'custom';
+    renderPeriodFilters();
+    renderPosts();
+    // Update button label
+    const fmtD = d => d.getDate() + ' ' + MONTHS_FR[d.getMonth()];
+    document.getElementById('calBtnLabel').textContent = fmtD(calFrom) + ' – ' + fmtD(calTo);
+    document.getElementById('calBtn').classList.add('active');
+    document.getElementById('calPopover').classList.remove('open');
+  }
+
+  function renderCalendar() {
+    const MONTHS_LONG = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    document.getElementById('calMonthLabel').textContent = MONTHS_LONG[calViewMonth] + ' ' + calViewYear;
+
+    const firstDay = new Date(calViewYear, calViewMonth, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+    // Mon-first offset
+    const offset = (firstDay + 6) % 7;
+
+    const effTo = calTo || calHover;
+    let html = ['L','M','M','J','V','S','D'].map(d => `<span class="cal-dow">${d}</span>`).join('');
+
+    for (let i = 0; i < offset; i++) html += `<span class="cal-day cal-day--empty"></span>`;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(calViewYear, calViewMonth, day);
+      const isDisabled = date > TODAY || date < ORIGIN;
+      const isToday    = date.toDateString() === TODAY.toDateString();
+      const isStart    = calFrom && date.toDateString() === calFrom.toDateString();
+      const isEnd      = effTo  && date.toDateString() === effTo.toDateString();
+      const inRange    = calFrom && effTo && date > calFrom && date < effTo;
+
+      let cls = 'cal-day';
+      if (isToday)   cls += ' cal-day--today';
+      if (isStart)   cls += ' cal-day--start';
+      if (isEnd)     cls += ' cal-day--end';
+      if (inRange || isStart || isEnd) cls += ' cal-day--in-range';
+
+      const attrs = isDisabled
+        ? 'disabled'
+        : `onclick="calDayClick(${calViewYear},${calViewMonth},${day})" onmouseenter="calDayHover(${calViewYear},${calViewMonth},${day})"`;
+
+      html += `<button class="${cls}" ${attrs}>${day}</button>`;
+    }
+    document.getElementById('calGrid').innerHTML = html;
+    updateCalFooter();
+  }
+
+  // Close calendar on outside click
+  document.addEventListener('click', e => {
+    const wrap = document.querySelector('.cal-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('calPopover').classList.remove('open');
+    }
+  });
+
+  const POST_PERIODS = [
+    { label: 'Tout', days: null },
+    { label: '30 jours', days: 30 },
+    { label: '3 mois',   days: 90 },
+    { label: '6 mois',   days: 180 },
+    { label: '1 an',     days: 365 },
+  ];
+
+  function renderPeriodFilters() {
+    document.getElementById('postsPeriodFilters').innerHTML = POST_PERIODS.map(p =>
+      `<button class="posts-period-filter${activePostDays === p.days ? ' active' : ''}"
+        onclick="setPostPeriod(${p.days === null ? 'null' : p.days})">${p.label}</button>`
+    ).join('');
+  }
+
+  function setPostPeriod(days) {
+    activePostDays = days;
+    calFrom = null; calTo = null;
+    document.getElementById('calBtnLabel').textContent = 'Période';
+    document.getElementById('calBtn').classList.remove('active');
+    renderPeriodFilters();
+    renderPosts();
+  }
+
+  function renderPosts() {
+    let filtered = CURATOR_POSTS;
+    if (activeFilter) filtered = filtered.filter(p => p.curator === activeFilter);
+    if (activePostDays === 'custom' && calFrom && calTo) {
+      filtered = filtered.filter(p => { const d = new Date(p.dateStr); return d >= calFrom && d <= calTo; });
+    } else if (activePostDays !== null) {
+      const cutoff = new Date(TODAY.getTime() - activePostDays * 86400000);
+      filtered = filtered.filter(p => new Date(p.dateStr) >= cutoff);
+    }
+    if (!filtered.length) {
+      document.getElementById('postsList').innerHTML =
+        `<p style="font-size:13px;color:var(--muted);padding:24px 0;text-align:center">Aucun post sur cette période</p>`;
+      return;
+    }
+    const maxC = Math.max(...filtered.map(p => p.spikeMax));
+    document.getElementById('postsList').innerHTML = [...filtered].reverse().map(p => {
+      const bW = Math.round((p.spikeMax / maxC) * 100);
+      const dateObj = new Date(p.dateStr);
+      const dateFr = dateObj.getDate() + ' ' + MONTHS_FR[dateObj.getMonth()] + ' ' + dateObj.getFullYear();
+      return `
+        <div class="post-card">
+          <div class="post-color-bar" style="background:${p.color}"></div>
+          <div class="post-curator">
+            <div class="post-avatar" style="background:${p.color}">${p.initial}</div>
+            <div>
+              <p class="post-curator-name">${p.curator}</p>
+              <p class="post-meta">
+                <span>${p.followers} abonnés</span>
+                <span>Publié le ${dateFr}</span>
+              </p>
+            </div>
+          </div>
+          <div class="post-stats">
+            <p class="post-stat-val">${p.spikeMax}</p>
+            <p class="post-stat-label">clics (pic J+1)</p>
+            <div class="post-bar-wrap"><div class="post-bar" style="width:${bW}%;background:${p.color}"></div></div>
+          </div>
+          <a href="${p.postUrl}" target="_blank" class="post-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            Voir le post
+          </a>
+        </div>`;
+    }).join('');
+  }
+
+  // ─────────────────────────────────────────────────
+  //  COMMISSION
+  // ─────────────────────────────────────────────────
+
+  const RATE      = 0.625; // €/clic → €2.50/résa × 25 % conversion estimée
+  const CUR_SHARE = 0.85;  // 85 % aux curateurs, 15 % La Table
+
+  function computeCommission() {
+    // Aggregate direct clicks per curator
+    const byName = {};
+    CURATOR_POSTS.forEach(p => {
+      if (!byName[p.curator]) byName[p.curator] = { post: p, directClicks: 0 };
+    });
+    let totalOrganic = 0;
+    ALL_DATA.forEach(d => {
+      const postSum = d.postContribs.reduce((s, c) => s + c.clicks, 0);
+      totalOrganic += Math.max(0, d.clicks - postSum);
+      d.postContribs.forEach(({ post, clicks }) => {
+        if (byName[post.curator]) byName[post.curator].directClicks += clicks;
+      });
+    });
+
+    // Pool split: weighted by follower count
+    const curators = Object.values(byName);
+    const totalFollowers = curators.reduce((s, c) => s + parseInt(c.post.followers) * 1000, 0);
+    const poolTotal = totalOrganic * RATE * CUR_SHARE;
+    curators.forEach(c => {
+      const w = (parseInt(c.post.followers) * 1000) / totalFollowers;
+      c.directRevenue = c.directClicks * RATE * CUR_SHARE;
+      c.poolRevenue   = poolTotal * w;
+      c.totalRevenue  = c.directRevenue + c.poolRevenue;
+    });
+    curators.sort((a, b) => b.totalRevenue - a.totalRevenue);
+
+    const totalDirect = curators.reduce((s, c) => s + c.directRevenue, 0);
+    const totalRevenue = totalDirect + poolTotal;
+    return { curators, totalRevenue, totalDirect, poolTotal, totalOrganic };
+  }
+
+  function renderCommission() {
+    const { curators, totalRevenue, totalDirect, poolTotal } = computeCommission();
+    const directPct = totalRevenue > 0 ? Math.round((totalDirect / totalRevenue) * 100) : 0;
+    const fmt = v => v.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+    document.getElementById('commissionSection').innerHTML = `
+    <div class="commission-card">
+      <div class="commission-header">
+        <h2 class="commission-title">Commission estimée</h2>
+        <div>
+          <span class="commission-total">${fmt(totalRevenue)} €<span> sur 12 mois</span></span>
+        </div>
+      </div>
+
+      <div class="commission-split-bar">
+        <div class="commission-split-bar-direct" style="width:${directPct}%"></div>
+        <div class="commission-split-bar-pool"   style="width:${100 - directPct}%"></div>
+      </div>
+      <div class="commission-split-labels">
+        <span><span class="commission-dot" style="background:var(--primary)"></span>
+          <strong>${fmt(totalDirect)} €</strong> directs (${directPct} %)</span>
+        <span><span class="commission-dot" style="background:#F59E0B"></span>
+          <strong>${fmt(poolTotal)} €</strong> pool map (${100 - directPct} %)</span>
+      </div>
+
+      <table class="commission-table">
+        <thead>
+          <tr>
+            <th>Curateur</th>
+            <th><span class="tag-direct">Direct</span></th>
+            <th><span class="tag-pool">Pool</span></th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${curators.map(c => `
+          <tr>
+            <td>
+              <div class="commission-curator">
+                <div class="commission-avatar" style="background:${c.post.color}">${c.post.initial}</div>
+                <div>
+                  <p class="commission-name">${c.post.curator}</p>
+                  <p style="font-size:11px;color:var(--muted)">${c.post.followers} abonnés</p>
+                </div>
+              </div>
+            </td>
+            <td style="color:var(--primary)">${fmt(c.directRevenue)} €</td>
+            <td style="color:#D97706">${fmt(c.poolRevenue)} €</td>
+            <td>${fmt(c.totalRevenue)} €</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+
+      <p class="commission-note">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Direct</strong> = clics via le lien de tracking unique de chaque post.
+        <strong>Pool</strong> = clics depuis la map ou l'accueil, répartis entre les curateurs actifs proportionnellement à leur audience.
+        Calcul estimatif : €2,50/réservation × 25 % de conversion × 85 % part curateur.</span>
+      </p>
+    </div>`;
+  }
+
+  // ─────────────────────────────────────────────────
+  //  SIDEBAR
+  // ─────────────────────────────────────────────────
+
+  function loadProfile() {
+    const raw = localStorage.getItem('restaurantProfile');
+    if (!raw) { window.location.href = '/signup-restaurant.html'; return; }
+    const r = JSON.parse(raw);
+    document.getElementById('navAvatar').textContent  = (r.name||'?')[0].toUpperCase();
+    document.getElementById('navName').textContent    = r.name;
+    document.getElementById('profileAvatar').textContent = (r.name||'?')[0].toUpperCase();
+    document.getElementById('profileName').textContent   = r.name;
+    document.getElementById('profileCuisine').textContent = r.cuisine || '';
+    document.getElementById('profileAddress').textContent = r.address || '';
+    const L = document.getElementById('profileLinks');
+    if (r.instagramUrl) L.innerHTML += `<a href="${r.instagramUrl}" target="_blank" class="profile-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg>Instagram</a>`;
+    if (r.bookingUrl)   L.innerHTML += `<a href="${r.bookingUrl}"   target="_blank" class="profile-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Réservation</a>`;
+    const isPending = r.status === 'pending';
+    document.getElementById('profileBadge').innerHTML = `<span class="badge-dot ${isPending?'badge-dot--pending':'badge-dot--verified'}"></span>${isPending?'En attente de validation':'Restaurant vérifié'}`;
+  }
+
+  // ─────────────────────────────────────────────────
+  //  NAV DROPDOWN
+  // ─────────────────────────────────────────────────
+
+  function toggleDropdown() {
+    const btn = document.querySelector('.nav-user-btn');
+    const dd  = document.getElementById('navDropdown');
+    btn.setAttribute('aria-expanded', dd.classList.toggle('open'));
+  }
+  document.addEventListener('click', e => {
+    if (!document.getElementById('navUser').contains(e.target)) {
+      document.getElementById('navDropdown').classList.remove('open');
+      document.querySelector('.nav-user-btn').setAttribute('aria-expanded','false');
+    }
+  });
+  function logout() { localStorage.removeItem('restaurantProfile'); window.location.href='/landing.html'; }
+
+  // ─────────────────────────────────────────────────
+  //  INIT
+  // ─────────────────────────────────────────────────
+  loadProfile();
+  renderLegend();
+  buildJumpMenu();
+  buildYearMenu();
+  buildMonthMenu();
+  renderChart();
+  renderCommission();
+  renderPeriodFilters();
+  renderFilters();
+  renderPosts();
+  updateUI();
+
+  // Attach wheel zoom — must be non-passive to call preventDefault
+  document.querySelector('.chart-svg-wrap')
+    .addEventListener('wheel', handleChartWheel, { passive: false });
+  </script>
+</body>
+</html>

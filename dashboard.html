@@ -34,9 +34,11 @@
     }
     .nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
-      height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 60px; }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
 
     /* Dropdown */
@@ -287,6 +289,27 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
+    /* ── EARNINGS ── */
+    .earnings-card { background: linear-gradient(135deg, #1C1408 0%, #2A1F0E 100%); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+    .earnings-label { font-size: 11px; font-weight: 600; color: rgba(235,196,173,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .earnings-total { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 4px; }
+    .earnings-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .earnings-split { display: flex; gap: 12px; }
+    .earnings-pill { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 12px; }
+    .earnings-pill-val { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .earnings-pill-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .earnings-pill--direct .earnings-pill-val { color: var(--secondary); }
+    .earnings-pill--pool   .earnings-pill-val { color: #C4B5FD; }
+    .earn-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid var(--border-light); font-size: 13px; }
+    .earn-row:first-child { border-top: none; }
+    .earn-row-name { font-weight: 600; color: var(--dark); }
+    .earn-row-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .earn-amount { font-weight: 800; color: var(--dark); }
+    .earn-breakdown { display: flex; gap: 8px; }
+    .earn-tag { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 6px; }
+    .earn-tag--direct { background: var(--primary-light); color: var(--primary); }
+    .earn-tag--pool   { background: rgba(124,58,237,0.1); color: #7C3AED; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .shell { grid-template-columns: 1fr; padding: 24px 20px 64px; }
@@ -298,6 +321,23 @@
     @media (max-width: 600px) {
       .stat-cards { flex-direction: column; }
     }
+    /* ── FOOTER ── */
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; transition: background 0.15s; }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer { padding: 48px 20px 32px; } }
   </style>
 </head>
 <body>
@@ -305,7 +345,10 @@
   <!-- NAV -->
   <nav class="nav">
     <div class="nav-inner">
-      <a class="nav-logo" href="/landing.html">La Table</a>
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
       <div class="nav-right">
         <div class="nav-user" id="navUser">
           <button class="nav-user-btn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
@@ -353,6 +396,23 @@
         <div class="profile-badge">
           <span class="badge-dot"></span>
           Curator vérifié La Table
+        </div>
+      </div>
+
+      <!-- EARNINGS CARD -->
+      <div class="earnings-card" id="earningsCard" style="display:none">
+        <p class="earnings-label">Revenus estimés</p>
+        <p class="earnings-total" id="earningsTotal">0 €</p>
+        <p class="earnings-sub">12 derniers mois · toutes adresses</p>
+        <div class="earnings-split">
+          <div class="earnings-pill earnings-pill--direct">
+            <p class="earnings-pill-val" id="earningsDirect">—</p>
+            <p class="earnings-pill-lbl">Direct</p>
+          </div>
+          <div class="earnings-pill earnings-pill--pool">
+            <p class="earnings-pill-val" id="earningsPool">—</p>
+            <p class="earnings-pill-lbl">Pool map</p>
+          </div>
         </div>
       </div>
 
@@ -444,13 +504,27 @@
     let profile = null;
     let restaurants = [];
 
+    const DEMO_RESTAURANTS = [
+      { id:'d1', name:'Septime',    address:'80 rue de Charonne, Paris 11e', instagram:'#', booking:'#', addedAt:'2025-06-14T10:00:00Z',
+        stats:{ clicksIg:12800, clicksBooking:847, directRevenue:423, poolRevenue:112 } },
+      { id:'d2', name:'Le Chateaubriand', address:'129 av. Parmentier, Paris 11e', instagram:'#', booking:'#', addedAt:'2025-09-22T10:00:00Z',
+        stats:{ clicksIg:8400,  clicksBooking:534, directRevenue:267, poolRevenue:89  } },
+      { id:'d3', name:'Frenchie',   address:'5-6 rue du Nil, Paris 2e', instagram:'#', booking:'#', addedAt:'2026-02-10T10:00:00Z',
+        stats:{ clicksIg:5200,  clicksBooking:298, directRevenue:149, poolRevenue:61  } },
+    ];
+
     function loadData() {
       const raw = localStorage.getItem('curatorProfile');
       if (!raw) { window.location.href = '/signup.html'; return; }
       profile = JSON.parse(raw);
-      // For demo: bypass pending check so we can access dashboard
-      // In production this would require server-side approval
-      restaurants = JSON.parse(localStorage.getItem('curatorRestaurants') || '[]');
+      const stored = JSON.parse(localStorage.getItem('curatorRestaurants') || '[]');
+      // Seed demo data if first visit
+      if (!stored.length) {
+        restaurants = DEMO_RESTAURANTS;
+        localStorage.setItem('curatorRestaurants', JSON.stringify(restaurants));
+      } else {
+        restaurants = stored;
+      }
     }
 
     function saveRestaurants() {
@@ -507,8 +581,22 @@
         return;
       }
 
+      // Compute earnings totals for sidebar card
+      const hasEarnings = restaurants.some(r => r.stats && (r.stats.directRevenue || r.stats.poolRevenue));
+      if (hasEarnings) {
+        const totDirect = restaurants.reduce((s, r) => s + (r.stats?.directRevenue || 0), 0);
+        const totPool   = restaurants.reduce((s, r) => s + (r.stats?.poolRevenue   || 0), 0);
+        const fmt = v => v.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        document.getElementById('earningsCard').style.display   = 'block';
+        document.getElementById('earningsTotal').textContent    = fmt(totDirect + totPool) + ' €';
+        document.getElementById('earningsDirect').textContent   = fmt(totDirect) + ' €';
+        document.getElementById('earningsPool').textContent     = fmt(totPool) + ' €';
+      }
+
       list.innerHTML = `<div class="restaurant-list">${restaurants.map((r) => {
-        const s = r.stats || { clicksIg: 0, clicksBooking: 0, bookings: 0 };
+        const s = r.stats || { clicksIg: 0, clicksBooking: 0, directRevenue: 0, poolRevenue: 0 };
+        const hasRev = s.directRevenue || s.poolRevenue;
+        const fmt = v => v.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         return `
         <div class="restaurant-card" id="card-${r.id}">
           <div class="restaurant-body" style="width:100%;">
@@ -525,6 +613,10 @@
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                     Réserver
                   </a>` : ''}
+                  ${hasRev ? `<span class="restaurant-link" style="background:rgba(124,58,237,0.07);border-color:rgba(124,58,237,0.2);color:#7C3AED;cursor:default;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    ${fmt((s.directRevenue||0) + (s.poolRevenue||0))} € estimés
+                  </span>` : ''}
                 </div>
               </div>
               <div class="restaurant-actions" style="flex-shrink:0;">
@@ -542,17 +634,26 @@
             <!-- STATS -->
             <div class="restaurant-stats">
               <div class="stat-pill">
-                <p class="stat-pill-value">${s.clicksIg > 0 ? s.clicksIg : '—'}</p>
+                <p class="stat-pill-value">${s.clicksIg > 0 ? s.clicksIg.toLocaleString('fr-FR') : '—'}</p>
                 <p class="stat-pill-label">Clics post</p>
               </div>
               <div class="stat-pill">
-                <p class="stat-pill-value">${s.clicksBooking > 0 ? s.clicksBooking : '—'}</p>
+                <p class="stat-pill-value">${s.clicksBooking > 0 ? s.clicksBooking.toLocaleString('fr-FR') : '—'}</p>
                 <p class="stat-pill-label">Clics réservation</p>
               </div>
+              ${hasRev ? `
               <div class="stat-pill">
-                <p class="stat-pill-value">${s.bookings > 0 ? s.bookings : '—'}</p>
-                <p class="stat-pill-label">Réservations</p>
+                <p class="stat-pill-value" style="color:var(--primary)">${fmt(s.directRevenue||0)} €</p>
+                <p class="stat-pill-label">Direct <span class="earn-tag earn-tag--direct">tracké</span></p>
               </div>
+              <div class="stat-pill">
+                <p class="stat-pill-value" style="color:#7C3AED">${fmt(s.poolRevenue||0)} €</p>
+                <p class="stat-pill-label">Pool map</p>
+              </div>` : `
+              <div class="stat-pill">
+                <p class="stat-pill-value">—</p>
+                <p class="stat-pill-label">Revenus</p>
+              </div>`}
             </div>
 
             <!-- EDIT FORM -->
@@ -692,5 +793,59 @@
       document.getElementById('addFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   </script>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; Légal</h4>
+          <ul>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

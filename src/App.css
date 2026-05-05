@@ -51,6 +51,7 @@
   color: var(--md-sys-color-on-surface);
   letter-spacing: 0;
   white-space: nowrap;
+  width: 170.727px;
 }
 
 .header-sub {

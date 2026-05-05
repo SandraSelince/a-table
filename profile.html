@@ -34,9 +34,11 @@
     }
     .nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
-      height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 60px; }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
 
     /* Dropdown */
@@ -209,6 +211,23 @@
       .form-row { grid-template-columns: 1fr; }
       .card, .danger-card { padding: 24px 20px; }
     }
+    /* ── FOOTER ── */
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; transition: background 0.15s; }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer { padding: 48px 20px 32px; } }
   </style>
 </head>
 <body>
@@ -216,7 +235,10 @@
   <!-- NAV -->
   <nav class="nav">
     <div class="nav-inner">
-      <a class="nav-logo" href="/landing.html">La Table</a>
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
       <div class="nav-right">
         <div class="nav-user" id="navUser">
           <button class="nav-user-btn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
@@ -443,5 +465,59 @@
     loadProfile();
     populateForm();
   </script>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; Légal</h4>
+          <ul>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

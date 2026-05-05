@@ -38,9 +38,11 @@
     }
     .nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
-      height: 60px; display: flex; align-items: center; gap: 24px;
+      height: 76px; display: flex; align-items: center; gap: 24px;
     }
-    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; flex-shrink: 0; margin-right: 8px; line-height: 60px; }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; margin-right: 8px; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
     .nav-search { flex: 1; max-width: 340px; position: relative; }
     .nav-search input {
       width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
@@ -211,8 +213,9 @@
     }
     .footer-brand .footer-logo {
       font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400;
-      color: #fff; letter-spacing: 0; margin-bottom: 12px; line-height: 1;
+      color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1;
     }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
     .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
     .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
@@ -223,9 +226,7 @@
       display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
     }
     .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
-    .footer-bottom-links { display: flex; gap: 20px; list-style: none; }
-    .footer-bottom-links a { font-size: 12px; color: rgba(255,255,255,0.55); transition: color 0.15s; }
-    .footer-bottom-links a:hover { color: rgba(255,255,255,0.85); }
+
 
     @media (max-width: 768px) {
       .nav-search { display: none; }
@@ -246,14 +247,17 @@
 
   <nav class="nav">
     <div class="nav-inner">
-      <a class="nav-logo" href="/landing.html">La Table</a>
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
       <div class="nav-search">
         <span class="nav-search-icon">⌕</span>
         <input type="text" placeholder="Rechercher un restaurant, une cuisine…" />
       </div>
       <div class="nav-links">
         <a href="/index.html" class="nav-btn-login">Voir la carte</a>
-        <a href="#" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
+        <a href="/signup.html" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
         <button class="nav-menu-btn" onclick="openMenu()">
           <span></span><span></span><span></span>
         </button>
@@ -266,20 +270,19 @@
   <div class="menu-panel" id="menuPanel">
     <button class="menu-close" onclick="closeMenu()">✕</button>
     <ul class="menu-nav">
-      <li><a href="/how-it-works.html">Comment ça marche</a></li>
-      <li><a href="/landing.html">Accueil</a></li>
+      <li><a href="/how-it-works.html">Comment ça marche ?</a></li>
       <li><a href="/index.html">Voir la carte</a></li>
-      <li><a href="/curators.html">Les curateurs</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="/curators.html">Voir les curateurs</a></li>
+      <li><a href="/categories.html">Par cuisine</a></li>
     </ul>
     <div class="menu-bottom">
-      <a href="#" class="menu-login">Connexion</a>
-      <a href="#" class="menu-signup">S'inscrire</a>
+      <a href="/login.html" class="menu-login">Connexion</a>
+      <a href="/signup.html" class="menu-signup">S'inscrire</a>
     </div>
   </div>
 
   <!-- APP DOWNLOAD BANNER -->
-  <div class="app-banner" style="margin-top:60px;">
+  <div class="app-banner" style="margin-top:76px;">
     <p class="app-banner-text">
       <strong>C'est mieux sur mobile.</strong>
       &nbsp;Disponible sur iPhone et Android — la carte, les fiches, les réservations dans votre poche.
@@ -427,7 +430,8 @@
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="footer-logo">La Table</div>
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
           <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
           <div style="display:flex;gap:8px;">
             <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
@@ -461,21 +465,15 @@
         <div class="footer-col">
           <h4>Support &amp; Légal</h4>
           <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2026 La Table. Tous droits réservés.</p>
-        <ul class="footer-bottom-links">
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Privacy</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
+        <p>© 2026 A Table. Tous droits réservés.</p>
       </div>
     </div>
   </footer>

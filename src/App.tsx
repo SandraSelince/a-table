@@ -566,7 +566,7 @@ export function App() {
         <div className="header-inner">
           <div className="header-brand">
             <a href="/landing.html" className="header-brand-link">
-              <h1 className="header-title">La Table</h1>
+              <h1 className="header-title">A Table</h1>
               <p className="header-sub">Les restos des influenceurs</p>
             </a>
           </div>

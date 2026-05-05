@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon profil restaurant — A Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #CC7039; --primary-dark: #B8602F; --primary-light: #F5E6D8;
+      --secondary: #EBC4AD; --bg: #FDFAF8; --dark: #111010; --dark-2: #1C1A18;
+      --border-light: #E8D5CC; --muted: #7A5C52; --error: #D94F4F;
+      --font: 'Sora', -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav { position: sticky; top: 0; z-index: 200; background: rgba(17,16,16,0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .nav-inner { max-width: 800px; margin: 0 auto; padding: 0 32px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-user { position: relative; }
+    .nav-user-btn { display: flex; align-items: center; gap: 9px; padding: 6px 12px 6px 6px; border-radius: 9999px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); transition: background 0.15s, border-color 0.15s; }
+    .nav-user-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+    .nav-user-avatar { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .nav-user-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .nav-user-chevron { color: rgba(255,255,255,0.45); transition: transform 0.2s; }
+    .nav-user-btn[aria-expanded="true"] .nav-user-chevron { transform: rotate(180deg); }
+    .nav-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--dark-2); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 6px; min-width: 210px; box-shadow: 0 16px 40px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s; z-index: 100; }
+    .nav-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); cursor: pointer; transition: background 0.12s, color 0.12s; width: 100%; text-align: left; }
+    .nav-dropdown-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-dropdown-item svg { color: rgba(255,255,255,0.4); flex-shrink: 0; }
+    .nav-dropdown-item.active { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-dropdown-item.active svg { color: var(--secondary); }
+    .nav-dropdown-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+    .nav-dropdown-item--danger { color: rgba(255,100,100,0.75); }
+    .nav-dropdown-item--danger:hover { background: rgba(255,50,50,0.08); color: #ff6b6b; }
+    .nav-dropdown-item--danger svg { color: rgba(255,100,100,0.5); }
+
+    /* ── SHELL ── */
+    .shell { max-width: 800px; margin: 0 auto; padding: 48px 32px 80px; }
+
+    /* ── PAGE HEADER ── */
+    .page-back { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 28px; transition: color 0.15s; }
+    .page-back:hover { color: var(--dark); }
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .page-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
+
+    /* ── SECTION LABEL ── */
+    .section-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; margin-top: 36px; }
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* ── CARD ── */
+    .card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 32px; margin-bottom: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; }
+    .card-title svg { color: var(--primary); flex-shrink: 0; }
+
+    /* ── FORM ── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-of-type { margin-bottom: 0; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 7px; letter-spacing: 0.1px; }
+    .form-label .required { color: var(--primary); margin-left: 2px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid var(--border-light); border-radius: 10px;
+      font-family: var(--font); font-size: 14px; color: var(--dark);
+      background: #fff; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(204,112,57,0.1);
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(122,92,82,0.45); }
+    .form-textarea { resize: vertical; min-height: 88px; line-height: 1.55; }
+    .form-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+    .password-wrap { position: relative; }
+    .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; padding: 4px; user-select: none; }
+    .password-toggle:hover { color: var(--dark); }
+
+    .card-footer { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; align-items: center; gap: 12px; }
+    .btn-save { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; background: var(--primary); color: #fff; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: var(--font); transition: background 0.15s; }
+    .btn-save:hover { background: var(--primary-dark); }
+    .save-confirmation { font-size: 13px; color: #2E7D5E; font-weight: 500; opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; gap: 5px; }
+    .save-confirmation.show { opacity: 1; }
+
+    /* ── DANGER ZONE ── */
+    .danger-card { background: #fff; border: 1px solid #FCCFCF; border-radius: 20px; padding: 32px; margin-top: 40px; }
+    .danger-card .card-title { color: var(--error); border-bottom-color: #FCCFCF; }
+    .danger-card .card-title svg { color: var(--error); }
+    .danger-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+    .btn-danger { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; background: transparent; color: var(--error); border: 1.5px solid #FCCFCF; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: all 0.15s; }
+    .btn-danger:hover { background: #FEF2F2; border-color: var(--error); }
+
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; padding: 20px; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: #fff; border-radius: 20px; padding: 36px; max-width: 420px; width: 100%; transform: scale(0.95); transition: transform 0.2s; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-icon { width: 52px; height: 52px; border-radius: 50%; background: #FEF2F2; border: 1.5px solid #FCCFCF; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .modal h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 10px; color: var(--dark); }
+    .modal p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-btn-cancel { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); background: transparent; color: var(--muted); border: 1.5px solid var(--border-light); transition: all 0.15s; }
+    .modal-btn-cancel:hover { border-color: var(--dark); color: var(--dark); }
+    .modal-btn-confirm { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); background: var(--error); color: #fff; border: none; transition: background 0.15s; }
+    .modal-btn-confirm:hover { background: #B83A3A; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--dark); color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; z-index: 999; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .shell { padding: 32px 20px 64px; }
+      .form-row { grid-template-columns: 1fr; }
+      .card, .danger-card { padding: 24px 20px; }
+      .nav-inner { padding: 0 20px; }
+    }
+    /* ── FOOTER ── */
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; transition: background 0.15s; }
+    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer { padding: 48px 20px 32px; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
+      <div class="nav-user">
+        <button class="nav-user-btn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
+          <span class="nav-user-avatar" id="navAvatar">R</span>
+          <span class="nav-user-name" id="navName">Mon restaurant</span>
+          <svg class="nav-user-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
+        </button>
+        <div class="nav-dropdown" id="navDropdown">
+          <a class="nav-dropdown-item" href="/dashboard-restaurant.html">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Mon tableau de bord
+          </a>
+          <a class="nav-dropdown-item active" href="/restaurant-profile.html">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Mon profil
+          </a>
+          <div class="nav-dropdown-divider"></div>
+          <button class="nav-dropdown-item nav-dropdown-item--danger" onclick="logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENU -->
+  <div class="shell">
+
+    <a class="page-back" href="/dashboard-restaurant.html">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="10,3 5,8 10,13"/></svg>
+      Tableau de bord
+    </a>
+
+    <h1 class="page-title">Mon profil</h1>
+    <p class="page-subtitle">Gérez les informations de votre restaurant et de votre compte.</p>
+
+    <!-- ─── MON RESTAURANT ─── -->
+    <p class="section-label">Mon restaurant</p>
+
+    <div class="card">
+      <p class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2h18M3 12h18M12 2v20M3 7h18M3 17h18"/></svg>
+        Informations de l'établissement
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="restName">Nom du restaurant <span class="required">*</span></label>
+        <input class="form-input" id="restName" type="text" placeholder="Le Petit Bistrot" value="Chez Marco" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="restCuisine">Type de cuisine</label>
+          <select class="form-select" id="restCuisine">
+            <option value="">Choisir…</option>
+            <option value="française" selected>Française</option>
+            <option value="italienne">Italienne</option>
+            <option value="japonaise">Japonaise</option>
+            <option value="méditerranéenne">Méditerranéenne</option>
+            <option value="asiatique">Asiatique</option>
+            <option value="mexicaine">Mexicaine</option>
+            <option value="libanaise">Libanaise</option>
+            <option value="végétarienne">Végétarienne</option>
+            <option value="fruits de mer">Fruits de mer</option>
+            <option value="fusion">Fusion</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="restPhone">Téléphone</label>
+          <input class="form-input" id="restPhone" type="tel" placeholder="+33 1 23 45 67 89" value="+33 1 42 36 14 50" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="restAddress">Adresse</label>
+        <input class="form-input" id="restAddress" type="text" placeholder="12 rue de la Paix, 75001 Paris" value="7 rue Saint-Benoît, 75006 Paris" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="restWebsite">Site web</label>
+        <input class="form-input" id="restWebsite" type="url" placeholder="https://monrestaurant.fr" value="https://chezmarco.fr" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="restDesc">Description</label>
+        <textarea class="form-textarea" id="restDesc" placeholder="Décrivez votre restaurant en quelques phrases…">Cuisine française traditionnelle revisitée dans un cadre chaleureux au cœur de Saint-Germain-des-Prés. Produits de saison, vins naturels.</textarea>
+        <p class="form-hint">Visible sur votre fiche publique.</p>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-save" onclick="saveRestaurant()">Enregistrer</button>
+        <span class="save-confirmation" id="restConfirm">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3,8 6,11 13,4"/></svg>
+          Modifications enregistrées
+        </span>
+      </div>
+    </div>
+
+    <!-- ─── CONTACT PRINCIPAL ─── -->
+    <p class="section-label">Contact principal</p>
+
+    <div class="card">
+      <p class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Informations du contact
+      </p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="contactFirst">Prénom <span class="required">*</span></label>
+          <input class="form-input" id="contactFirst" type="text" autocomplete="given-name" value="Marco" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="contactLast">Nom <span class="required">*</span></label>
+          <input class="form-input" id="contactLast" type="text" autocomplete="family-name" value="Bellini" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactEmail">Mail de contact <span class="required">*</span></label>
+        <input class="form-input" id="contactEmail" type="email" autocomplete="email" value="marco@chezmarco.fr" />
+        <p class="form-hint">Utilisé pour vous connecter et recevoir les notifications.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactPhone">Téléphone direct</label>
+        <input class="form-input" id="contactPhone" type="tel" autocomplete="tel" value="+33 6 12 34 56 78" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactPassword">Mot de passe</label>
+        <div class="password-wrap">
+          <input class="form-input" id="contactPassword" type="password" autocomplete="new-password" placeholder="••••••••" />
+          <span class="password-toggle" onclick="togglePwd()">Voir</span>
+        </div>
+        <p class="form-hint">Laissez vide pour conserver votre mot de passe actuel.</p>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-save" onclick="saveContact()">Enregistrer</button>
+        <span class="save-confirmation" id="contactConfirm">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3,8 6,11 13,4"/></svg>
+          Modifications enregistrées
+        </span>
+      </div>
+    </div>
+
+    <!-- ─── DANGER ZONE ─── -->
+    <div class="danger-card">
+      <p class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+        Supprimer le compte
+      </p>
+      <p class="danger-desc">
+        Cette action est <strong>irréversible</strong>. Votre fiche restaurant, toutes vos statistiques, vos données de contact et votre historique seront supprimés définitivement.
+      </p>
+      <button class="btn-danger" onclick="openDeleteModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+        Supprimer mon compte
+      </button>
+    </div>
+
+  </div><!-- /shell -->
+
+  <!-- MODAL SUPPRESSION -->
+  <div class="modal-overlay" id="deleteModal" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D94F4F" stroke-width="1.8" stroke-linecap="round">
+          <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/>
+        </svg>
+      </div>
+      <h3>Supprimer le compte ?</h3>
+      <p>Êtes-vous vraiment sûr(e) de vouloir supprimer votre compte restaurant ? Toutes vos données seront perdues définitivement et cette action ne peut pas être annulée.</p>
+      <div class="modal-actions">
+        <button class="modal-btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+        <button class="modal-btn-confirm" onclick="confirmDelete()">Oui, supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ── Dropdown nav ── */
+    function toggleDropdown() {
+      const btn = document.querySelector('.nav-user-btn');
+      const dd  = document.getElementById('navDropdown');
+      const open = dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+    }
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.nav-user')) {
+        document.getElementById('navDropdown').classList.remove('open');
+        document.querySelector('.nav-user-btn').setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* ── Toggle mot de passe ── */
+    function togglePwd() {
+      const input  = document.getElementById('contactPassword');
+      const toggle = document.querySelector('.password-toggle');
+      if (input.type === 'password') { input.type = 'text';     toggle.textContent = 'Cacher'; }
+      else                           { input.type = 'password'; toggle.textContent = 'Voir';   }
+    }
+
+    /* ── Sauvegarde restaurant ── */
+    function saveRestaurant() {
+      showConfirm('restConfirm');
+      showToast('Infos restaurant enregistrées');
+    }
+
+    /* ── Sauvegarde contact ── */
+    function saveContact() {
+      const email = document.getElementById('contactEmail').value;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Veuillez saisir un mail de contact valide.');
+        return;
+      }
+      showConfirm('contactConfirm');
+      showToast('Informations de contact enregistrées');
+    }
+
+    /* ── Confirmation inline ── */
+    function showConfirm(id) {
+      const el = document.getElementById(id);
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    /* ── Toast ── */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    /* ── Modale suppression ── */
+    function openDeleteModal()  { document.getElementById('deleteModal').classList.add('open'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); }
+    function handleOverlayClick(e) { if (e.target === e.currentTarget) closeDeleteModal(); }
+    function confirmDelete() {
+      closeDeleteModal();
+      showToast('Compte supprimé. À bientôt.');
+      setTimeout(() => { window.location.href = '/landing.html'; }, 2000);
+    }
+
+    /* ── Déconnexion ── */
+    function logout() { window.location.href = '/landing.html'; }
+  </script>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="#">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; Légal</h4>
+          <ul>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

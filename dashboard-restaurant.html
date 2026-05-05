@@ -131,10 +131,25 @@
     .section-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
     .section-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
     .section-note { font-size: 11px; color: var(--muted); }
-    .posts-period-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
-    .posts-period-filter { padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
-    .posts-period-filter:hover { border-color: var(--dark); color: var(--dark); }
-    .posts-period-filter.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+    /* ── POSTS FILTER DROPDOWNS ── */
+    .posts-filters-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-start; }
+    .filter-dd { position: relative; }
+    .filter-dd-btn { display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; border: 1.5px solid var(--border-light); background: #fff; color: var(--dark); font-family: var(--font); cursor: pointer; transition: border-color 0.15s; white-space: nowrap; }
+    .filter-dd-btn:hover { border-color: rgba(0,0,0,0.3); }
+    .filter-dd-btn.has-value { background: var(--dark); color: #fff; border-color: var(--dark); }
+    .filter-dd-chevron { transition: transform 0.2s; flex-shrink: 0; opacity: 0.4; }
+    .filter-dd-btn.open .filter-dd-chevron { transform: rotate(180deg); }
+    .filter-dd-btn.has-value .filter-dd-chevron { opacity: 0.55; }
+    .filter-dd-panel { position: absolute; top: calc(100% + 6px); left: 0; background: #fff; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.10); min-width: 190px; padding: 5px; z-index: 50; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s; }
+    .filter-dd-panel.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .fdd-option { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 9px; font-size: 12px; font-weight: 500; color: var(--dark); cursor: pointer; transition: background 0.1s; }
+    .fdd-option:hover { background: var(--bg); }
+    .fdd-name { flex: 1; }
+    .fdd-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .fdd-check { width: 16px; height: 16px; border-radius: 5px; border: 1.5px solid var(--border-light); flex-shrink: 0; margin-left: auto; transition: all 0.1s; display: flex; align-items: center; justify-content: center; }
+    .fdd-option.selected .fdd-check { background: var(--dark); border-color: var(--dark); color: #fff; }
+    .fdd-divider { height: 1px; background: var(--border-light); margin: 4px 0; }
+    .fdd-cal-section { margin-top: 4px; border-top: 1px solid var(--border-light); padding-top: 10px; }
 
     /* ── CALENDAR PICKER ── */
     .cal-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
@@ -163,11 +178,6 @@
     .cal-apply { padding: 6px 14px; background: var(--primary); color: #fff; border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
     .cal-apply:hover { background: var(--primary-dark); }
     .cal-apply:disabled { background: var(--border-light); color: var(--muted); cursor: default; }
-    .posts-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-    .posts-filter { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border-light); background: #fff; color: var(--muted); font-family: var(--font); transition: all 0.15s; }
-    .posts-filter:hover { border-color: currentColor; }
-    .posts-filter.active { background: var(--dark); color: #fff; border-color: var(--dark); }
-    .posts-filter-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .posts-list { display: flex; flex-direction: column; gap: 12px; }
     .post-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 18px 20px; display: grid; grid-template-columns: 4px 1fr auto auto; align-items: center; gap: 16px; transition: box-shadow 0.2s; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
     .post-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); }
@@ -318,7 +328,7 @@
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <div class="period-tabs">
               <button type="button" class="period-tab" data-p="week"   onclick="setPeriod('week')">7 jours</button>
-              <button class="period-tab active" data-p="month" onclick="setPeriod('month')">30 jours</button>
+              <button type="button" class="period-tab active" data-p="month" onclick="setPeriod('month')">30 jours</button>
               <button type="button" class="period-tab" data-p="year"   onclick="setPeriod('year')">12 mois</button>
               <button type="button" class="period-tab" data-p="custom" onclick="setPeriod('custom')">Personnalisé</button>
             </div>
@@ -383,31 +393,42 @@
           <h2 class="section-title">Posts & performances</h2>
           <span class="section-note">Clics enregistrés depuis chaque publication</span>
         </div>
-        <div class="posts-period-filters" id="postsPeriodFilters">
-          <div class="cal-wrap">
-            <button type="button" class="cal-btn" id="calBtn" onclick="toggleCalendar()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span id="calBtnLabel">Période</span>
+        <div class="posts-filters-bar">
+          <!-- Période dropdown -->
+          <div class="filter-dd" id="periodDd">
+            <button type="button" class="filter-dd-btn" id="periodDdBtn" onclick="toggleFilterDd('period')">
+              <span id="periodDdLabel">Tout</span>
+              <svg class="filter-dd-chevron" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
             </button>
-            <div class="cal-popover" id="calPopover">
-              <div class="cal-header">
-                <button type="button" class="cal-nav" onclick="calNavMonth(-1)">
-                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="10,3 5,8 10,13"/></svg>
-                </button>
-                <span class="cal-month-label" id="calMonthLabel"></span>
-                <button type="button" class="cal-nav" onclick="calNavMonth(1)">
-                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6,3 11,8 6,13"/></svg>
-                </button>
-              </div>
-              <div class="cal-grid" id="calGrid"></div>
-              <div class="cal-footer">
-                <span class="cal-range-label" id="calRangeLabel">Sélectionnez une date de début</span>
-                <button type="button" class="cal-apply" id="calApply" onclick="applyCalendar()" disabled>Appliquer</button>
+            <div class="filter-dd-panel" id="periodDdPanel">
+              <div id="periodOptions"></div>
+              <div class="fdd-cal-section" id="calEmbedSection" style="display:none">
+                <div class="cal-header">
+                  <button type="button" class="cal-nav" onclick="calNavMonth(-1)">
+                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="10,3 5,8 10,13"/></svg>
+                  </button>
+                  <span class="cal-month-label" id="calMonthLabel"></span>
+                  <button type="button" class="cal-nav" onclick="calNavMonth(1)">
+                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6,3 11,8 6,13"/></svg>
+                  </button>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+                <div class="cal-footer">
+                  <span class="cal-range-label" id="calRangeLabel">Sélectionnez une date de début</span>
+                  <button type="button" class="cal-apply" id="calApply" onclick="applyCalendar()" disabled>Appliquer</button>
+                </div>
               </div>
             </div>
           </div>
+          <!-- Influenceurs multi-select dropdown -->
+          <div class="filter-dd" id="curatorDd">
+            <button type="button" class="filter-dd-btn" id="curatorDdBtn" onclick="toggleFilterDd('curator')">
+              <span id="curatorDdLabel">Tous les influenceurs</span>
+              <svg class="filter-dd-chevron" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
+            </button>
+            <div class="filter-dd-panel" id="curatorDdPanel"></div>
+          </div>
         </div>
-        <div class="posts-filters" id="postsFilters"></div>
         <div class="posts-list" id="postsList"></div>
       </div>
     </main>
@@ -530,8 +551,9 @@
   let viewEndDate      = new Date(TODAY);
   let selectedYear     = TODAY.getFullYear();
   let selectedMonthYear = { year: TODAY.getFullYear(), month: TODAY.getMonth() };
-  let activeFilter = null;       // null = all curators, or curator name string
+  let activeFilter = null;       // null = all curators, or curator name string (chart only)
   let activePostDays = null;     // null = all time, or number of days
+  let activePostFilters = [];    // [] = all curators, array of names for posts multi-select
 
   // ─────────────────────────────────────────────────
   //  DATA GETTERS
@@ -1137,24 +1159,111 @@
   //  POSTS LIST
   // ─────────────────────────────────────────────────
 
-  function renderFilters() {
-    const curators = [...new Map(CURATOR_POSTS.map(p => [p.curator, p])).values()];
-    const allActive = activeFilter === null;
-    document.getElementById('postsFilters').innerHTML =
-      `<button class="posts-filter${allActive ? ' active' : ''}" onclick="setFilter(null)">Tous</button>` +
-      curators.map(p =>
-        `<button class="posts-filter${activeFilter === p.curator ? ' active' : ''}" onclick="setFilter('${p.curator.replace(/'/g,"\\'")}')">
-          <span class="posts-filter-dot" style="background:${p.color}"></span>${p.curator}
-        </button>`
-      ).join('');
+  // ── Dropdown toggle ──────────────────────────────
+  function toggleFilterDd(type) {
+    const btnId   = type === 'period' ? 'periodDdBtn'   : 'curatorDdBtn';
+    const panelId = type === 'period' ? 'periodDdPanel' : 'curatorDdPanel';
+    const btn     = document.getElementById(btnId);
+    const panel   = document.getElementById(panelId);
+    const wasOpen = panel.classList.contains('open');
+    // Close all dropdowns
+    document.querySelectorAll('.filter-dd-panel').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.filter-dd-btn').forEach(b => b.classList.remove('open'));
+    if (!wasOpen) {
+      panel.classList.add('open');
+      btn.classList.add('open');
+    }
   }
 
+  // ── Period dropdown ───────────────────────────────
+  function renderPeriodDropdown() {
+    const chk = `<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1.5,6 4.5,9.5 10.5,2.5"/></svg>`;
+    document.getElementById('periodOptions').innerHTML =
+      POST_PERIODS.map(p =>
+        `<div class="fdd-option${activePostDays === p.days ? ' selected' : ''}" onclick="setPostPeriod(${p.days === null ? 'null' : p.days})">
+          <span class="fdd-name">${p.label}</span>
+          <span class="fdd-check">${activePostDays === p.days ? chk : ''}</span>
+        </div>`
+      ).join('') +
+      `<div class="fdd-divider"></div>
+       <div class="fdd-option${activePostDays === 'custom' ? ' selected' : ''}" onclick="selectCustomPeriod()">
+         <span class="fdd-name">Personnalisé…</span>
+         <span class="fdd-check">${activePostDays === 'custom' ? chk : ''}</span>
+       </div>`;
+    // Label update
+    const active = POST_PERIODS.find(p => p.days === activePostDays);
+    const label = active ? active.label : (activePostDays === 'custom' ? 'Personnalisé' : 'Tout');
+    document.getElementById('periodDdLabel').textContent = label;
+    const hasValue = activePostDays !== null;
+    document.getElementById('periodDdBtn').classList.toggle('has-value', hasValue);
+  }
+
+  function selectCustomPeriod() {
+    const section = document.getElementById('calEmbedSection');
+    const isVisible = section.style.display !== 'none';
+    if (!isVisible) {
+      calViewYear  = TODAY.getFullYear();
+      calViewMonth = TODAY.getMonth();
+      renderCalendar();
+      section.style.display = '';
+    } else {
+      section.style.display = 'none';
+    }
+  }
+
+  // ── Curator multi-select dropdown ────────────────
+  function renderFilters() {
+    const curators = [...new Map(CURATOR_POSTS.map(p => [p.curator, p])).values()];
+    const chk = `<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1.5,6 4.5,9.5 10.5,2.5"/></svg>`;
+    const allSel = activePostFilters.length === 0;
+    document.getElementById('curatorDdPanel').innerHTML =
+      `<div class="fdd-option${allSel ? ' selected' : ''}" onclick="clearPostFilters()">
+         <span class="fdd-name">Tous les influenceurs</span>
+         <span class="fdd-check">${allSel ? chk : ''}</span>
+       </div>
+       <div class="fdd-divider"></div>` +
+      curators.map(p => {
+        const isSel = activePostFilters.includes(p.curator);
+        return `<div class="fdd-option${isSel ? ' selected' : ''}" onclick="togglePostCuratorFilter('${p.curator.replace(/'/g,"\\'")}')">
+          <span class="fdd-dot" style="background:${p.color}"></span>
+          <span class="fdd-name">${p.curator}</span>
+          <span class="fdd-check">${isSel ? chk : ''}</span>
+        </div>`;
+      }).join('');
+    // Update button label
+    const btn = document.getElementById('curatorDdBtn');
+    const labelEl = document.getElementById('curatorDdLabel');
+    if (activePostFilters.length === 0) {
+      labelEl.textContent = 'Tous les influenceurs';
+      btn.classList.remove('has-value');
+    } else if (activePostFilters.length === 1) {
+      labelEl.textContent = activePostFilters[0];
+      btn.classList.add('has-value');
+    } else {
+      labelEl.textContent = `${activePostFilters.length} influenceurs`;
+      btn.classList.add('has-value');
+    }
+  }
+
+  function togglePostCuratorFilter(name) {
+    const idx = activePostFilters.indexOf(name);
+    if (idx === -1) activePostFilters.push(name);
+    else activePostFilters.splice(idx, 1);
+    renderFilters();
+    renderPosts();
+  }
+
+  function clearPostFilters() {
+    activePostFilters = [];
+    renderFilters();
+    renderPosts();
+  }
+
+  // Chart filter (single select — controls chart/legend only)
   function setFilter(name) {
     activeFilter = name;
     renderLegend();
-    renderFilters();
     renderChart();
-    renderPosts();
   }
 
   // ─────────────────────────────────────────────────
@@ -1167,15 +1276,7 @@
   let calTo   = null; // Date | null
   let calHover = null;
 
-  function toggleCalendar() {
-    const pop = document.getElementById('calPopover');
-    const isOpen = pop.classList.contains('open');
-    if (isOpen) { pop.classList.remove('open'); return; }
-    calViewYear  = TODAY.getFullYear();
-    calViewMonth = TODAY.getMonth();
-    renderCalendar();
-    pop.classList.add('open');
-  }
+  function toggleCalendar() { selectCustomPeriod(); }
 
   function calNavMonth(dir) {
     calViewMonth += dir;
@@ -1224,13 +1325,12 @@
   function applyCalendar() {
     if (!calFrom || !calTo) return;
     activePostDays = 'custom';
-    renderPeriodFilters();
+    document.getElementById('calEmbedSection').style.display = 'none';
+    // Close the period dropdown
+    document.getElementById('periodDdPanel').classList.remove('open');
+    document.getElementById('periodDdBtn').classList.remove('open');
+    renderPeriodDropdown();
     renderPosts();
-    // Update button label
-    const fmtD = d => d.getDate() + ' ' + MONTHS_FR[d.getMonth()];
-    document.getElementById('calBtnLabel').textContent = fmtD(calFrom) + ' – ' + fmtD(calTo);
-    document.getElementById('calBtn').classList.add('active');
-    document.getElementById('calPopover').classList.remove('open');
   }
 
   function renderCalendar() {
@@ -1271,11 +1371,11 @@
     updateCalFooter();
   }
 
-  // Close calendar on outside click
+  // Close dropdowns on outside click
   document.addEventListener('click', e => {
-    const wrap = document.querySelector('.cal-wrap');
-    if (wrap && !wrap.contains(e.target)) {
-      document.getElementById('calPopover').classList.remove('open');
+    if (!e.target.closest('.filter-dd')) {
+      document.querySelectorAll('.filter-dd-panel').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.filter-dd-btn').forEach(b => b.classList.remove('open'));
     }
   });
 
@@ -1287,25 +1387,22 @@
     { label: '1 an',     days: 365 },
   ];
 
-  function renderPeriodFilters() {
-    document.getElementById('postsPeriodFilters').innerHTML = POST_PERIODS.map(p =>
-      `<button class="posts-period-filter${activePostDays === p.days ? ' active' : ''}"
-        onclick="setPostPeriod(${p.days === null ? 'null' : p.days})">${p.label}</button>`
-    ).join('');
-  }
+  function renderPeriodFilters() { renderPeriodDropdown(); }
 
   function setPostPeriod(days) {
     activePostDays = days;
     calFrom = null; calTo = null;
-    document.getElementById('calBtnLabel').textContent = 'Période';
-    document.getElementById('calBtn').classList.remove('active');
-    renderPeriodFilters();
+    document.getElementById('calEmbedSection').style.display = 'none';
+    // Close period dropdown
+    document.getElementById('periodDdPanel').classList.remove('open');
+    document.getElementById('periodDdBtn').classList.remove('open');
+    renderPeriodDropdown();
     renderPosts();
   }
 
   function renderPosts() {
     let filtered = CURATOR_POSTS;
-    if (activeFilter) filtered = filtered.filter(p => p.curator === activeFilter);
+    if (activePostFilters.length > 0) filtered = filtered.filter(p => activePostFilters.includes(p.curator));
     if (activePostDays === 'custom' && calFrom && calTo) {
       filtered = filtered.filter(p => { const d = new Date(p.dateStr); return d >= calFrom && d <= calTo; });
     } else if (activePostDays !== null) {

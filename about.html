@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos — A Table</title>
+  <meta name="description" content="Pourquoi À table existe, ce qu'elle fait, et pour qui. La plateforme des restaurants recommandés par les influenceurs food de confiance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #CC7039;
+      --primary-dark:  #B8602F;
+      --primary-light: #F5E6D8;
+      --bg:            #FDFAF8;
+      --dark:          #111010;
+      --dark-2:        #1C1A18;
+      --border-light:  #E8D5CC;
+      --border-dark:   rgba(255,255,255,0.1);
+      --muted:         #7A5C52;
+      --muted-dark:    rgba(255,255,255,0.55);
+      --font:          'Sora', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(17,16,16,0.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-dark);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 32px;
+      height: 76px; display: flex; align-items: center; gap: 24px;
+    }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; margin-right: 8px; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .nav-links a, .nav-links button {
+      padding: 7px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500;
+      color: var(--muted-dark); transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover, .nav-links button:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-btn-login { color: rgba(255,255,255,0.75) !important; }
+    .nav-btn-signup { background: var(--primary) !important; color: #fff !important; font-weight: 600 !important; }
+    .nav-btn-signup:hover { background: var(--primary-dark) !important; }
+    .nav-menu-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      gap: 4px; color: rgba(255,255,255,0.75); transition: background 0.15s; flex-shrink: 0;
+    }
+    .nav-menu-btn:hover { background: rgba(255,255,255,0.1); }
+    .nav-menu-btn span { display: block; width: 16px; height: 1.5px; background: currentColor; }
+
+    /* ── SLIDE-OUT MENU ── */
+    .menu-overlay {
+      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+    .menu-panel {
+      position: fixed; top: 0; right: 0; width: 320px; height: 100%;
+      background: var(--dark-2); z-index: 400;
+      transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column; padding: 32px;
+    }
+    .menu-panel.open { transform: translateX(0); }
+    .menu-close { align-self: flex-end; color: rgba(255,255,255,0.5); font-size: 22px; line-height: 1; margin-bottom: 40px; }
+    .menu-close:hover { color: #fff; }
+    .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .menu-nav a {
+      display: block; padding: 14px 0; font-size: 20px; font-weight: 700;
+      color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.15s; letter-spacing: -0.3px;
+    }
+    .menu-nav a:hover { color: #EBC4AD; }
+    .menu-bottom { margin-top: auto; display: flex; gap: 12px; }
+    .menu-bottom a { flex: 1; text-align: center; padding: 12px; border-radius: 9999px; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+    .menu-login { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
+    .menu-login:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .menu-signup { background: var(--primary); color: #fff; }
+    .menu-signup:hover { background: var(--primary-dark); }
+
+    /* ── HERO ── */
+    .hero {
+      margin-top: 76px;
+      background: var(--dark-2);
+      padding: 80px 48px 72px;
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -60px; right: -40px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(204,112,57,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .hero-title { font-size: clamp(40px, 6vw, 64px); font-weight: 800; color: #fff; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.65; max-width: 560px; }
+
+    /* ── CONTENT ── */
+    .content { max-width: 720px; margin: 0 auto; padding: 80px 48px 100px; }
+
+    .section { margin-bottom: 72px; }
+    .section-label {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: var(--primary); letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 20px; }
+    .section-body { font-size: 16px; line-height: 1.75; color: #2A2523; }
+    .section-body p { margin-bottom: 16px; }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body strong { font-weight: 700; color: var(--dark); }
+    .section-body em { font-style: italic; }
+
+    /* Styled list */
+    .about-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+    .about-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 16px; line-height: 1.6; color: #2A2523;
+    }
+    .about-list li::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--primary); flex-shrink: 0; margin-top: 8px;
+    }
+
+    /* Highlight quote */
+    .highlight-block {
+      background: var(--primary-light); border-left: 3px solid var(--primary);
+      border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 28px 0;
+      font-size: 17px; font-weight: 600; line-height: 1.5; color: var(--dark);
+      letter-spacing: -0.2px;
+    }
+
+    /* For who — 3 cards */
+    .audience-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .audience-card {
+      background: #fff; border: 1.5px solid var(--border-light);
+      border-radius: 20px; padding: 28px 28px 24px;
+    }
+    .audience-card-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; color: var(--primary);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .audience-card-tag svg { flex-shrink: 0; }
+    .audience-card h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 10px; }
+    .audience-card p { font-size: 14px; line-height: 1.65; color: var(--muted); }
+    .audience-card .about-list { margin: 10px 0 0; }
+    .audience-card .about-list li { font-size: 14px; color: var(--muted); }
+    .audience-card .about-list li::before { width: 6px; height: 6px; margin-top: 7px; }
+
+    /* Who am I — photo + bio side by side */
+    .bio-wrap { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: start; margin-top: 8px; }
+    .bio-photo-wrap { position: relative; }
+    .bio-photo {
+      width: 200px; height: 240px; object-fit: cover; object-position: center top;
+      border-radius: 20px; display: block;
+    }
+    .bio-photo-accent {
+      position: absolute; bottom: -10px; right: -10px;
+      width: 64px; height: 64px; border-radius: 16px;
+      background: var(--primary); opacity: 0.18;
+    }
+    .bio-text { font-size: 16px; line-height: 1.75; color: #2A2523; }
+    .bio-text p { margin-bottom: 14px; }
+    .bio-text p:last-child { margin-bottom: 0; }
+
+    /* Next section */
+    .next-card {
+      background: var(--dark-2); border-radius: 24px; padding: 40px 40px 36px;
+      margin-bottom: 72px;
+    }
+    .next-card .section-label { color: rgba(255,255,255,0.45); }
+    .next-card .section-title { color: #fff; }
+    .next-card .section-body { color: rgba(255,255,255,0.65); }
+    .next-card .about-list li { color: rgba(255,255,255,0.65); }
+    .next-card .about-list li::before { background: var(--primary); }
+
+    /* Contact */
+    .contact-card {
+      background: var(--primary-light); border: 1.5px solid rgba(204,112,57,0.2);
+      border-radius: 24px; padding: 40px;
+    }
+    .contact-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 8px; }
+    .contact-sub { font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 11px 20px; border-radius: 9999px;
+      font-size: 13px; font-weight: 600;
+      background: var(--dark); color: #fff;
+      transition: background 0.15s;
+    }
+    .contact-link:hover { background: #2A2523; }
+    .contact-link--ghost {
+      background: #fff; color: var(--dark);
+      border: 1.5px solid var(--border-light);
+    }
+    .contact-link--ghost:hover { border-color: var(--dark); background: #fff; }
+
+    /* ── FOOTER ── */
+    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; transition: background 0.15s; }
+    .app-store-btn:hover { background: rgba(255,255,255,0.14); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { padding: 64px 24px 56px; }
+      .content { padding: 60px 24px 80px; }
+      .bio-wrap { grid-template-columns: 1fr; gap: 28px; }
+      .bio-photo { width: 100%; height: 280px; }
+      .bio-photo-wrap { max-width: 240px; }
+      .next-card { padding: 28px 24px 24px; }
+      .contact-card { padding: 28px 24px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .footer { padding: 48px 20px 32px; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 36px; }
+      .section-title { font-size: 22px; }
+      .audience-card { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo-wrap" href="/landing.html">
+        <span class="nav-logo">A Table</span>
+        <span class="nav-tagline">Les restos des influenceurs</span>
+      </a>
+      <div class="nav-links">
+        <a href="/index.html" class="nav-btn-login">Voir la carte</a>
+        <a href="/signup.html" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
+        <button type="button" class="nav-menu-btn" onclick="openMenu()" aria-label="Ouvrir le menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SLIDE-OUT MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu-panel" id="menuPanel">
+    <button type="button" class="menu-close" onclick="closeMenu()" aria-label="Fermer le menu">✕</button>
+    <ul class="menu-nav">
+      <li><a href="/how-it-works.html">Comment ça marche ?</a></li>
+      <li><a href="/index.html">Voir la carte</a></li>
+      <li><a href="/curators.html">Voir les curateurs</a></li>
+      <li><a href="/categories.html">Par cuisine</a></li>
+    </ul>
+    <div class="menu-bottom">
+      <a href="/login.html" class="menu-login">Connexion</a>
+      <a href="/signup.html" class="menu-signup">S'inscrire</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">À propos</p>
+      <h1 class="hero-title">Pourquoi<br>À table existe</h1>
+      <p class="hero-sub">On ne manque pas de restaurants ni de bons conseils. Mais quoi de mieux que de suivre les recommandations des influenceurs food que l'on aime le plus ?</p>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- Constat -->
+    <div class="section">
+      <span class="section-label">Le constat</span>
+      <h2 class="section-title">Une recommandation qui disparaît</h2>
+      <div class="section-body">
+        <p>Aujourd'hui, on découvre des adresses via Instagram, TikTok, des créateurs qu'on suit, dont on partage les goûts.</p>
+        <p>Mais une fois le post vu… tout disparaît.</p>
+      </div>
+      <ul class="about-list">
+        <li>Impossible de retrouver facilement une reco</li>
+        <li>Impossible de savoir si elle vaut vraiment le détour pour les créateurs</li>
+        <li>Impossible de mesurer l'impact réel de ces recommandations pour les restaurateurs</li>
+      </ul>
+      <div class="highlight-block">
+        À table est née de ce constat simple : les meilleures tables sont celles recommandées par ceux en qui on a confiance — mais elles méritent un vrai espace pour exister.
+      </div>
+    </div>
+
+    <!-- Ce que fait À table -->
+    <div class="section">
+      <span class="section-label">La plateforme</span>
+      <h2 class="section-title">Ce que fait À table</h2>
+      <div class="section-body">
+        <p>À table est une plateforme qui :</p>
+      </div>
+      <ul class="about-list">
+        <li>Centralise les restaurants recommandés par des créateurs de confiance</li>
+        <li>Permet de retrouver facilement ces adresses</li>
+        <li>Donne de la visibilité à des lieux réellement testés</li>
+        <li>Mesure l'impact des recommandations (clics, réservations…)</li>
+      </ul>
+      <div class="highlight-block">
+        On passe d'un contenu éphémère à une recommandation utile, traçable et durable.
+      </div>
+    </div>
+
+    <!-- Pour qui -->
+    <div class="section">
+      <span class="section-label">Pour qui ?</span>
+      <h2 class="section-title">Une plateforme pour trois acteurs</h2>
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="audience-card-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Utilisateurs
+          </div>
+          <h3>Trouver rapidement</h3>
+          <p>Des restaurants recommandés par des personnes dont ils partagent les goûts.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-card-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Créateurs &amp; influenceurs food
+          </div>
+          <h3>Valoriser leur expertise</h3>
+          <p>Aller plus loin qu'un simple post :</p>
+          <ul class="about-list">
+            <li>Suivre leur impact réel</li>
+            <li>Structurer leurs adresses</li>
+            <li>Créer une vraie valeur autour de leur expertise</li>
+          </ul>
+        </div>
+        <div class="audience-card">
+          <div class="audience-card-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Restaurants
+          </div>
+          <h3>Gagner en visibilité</h3>
+          <p>Grâce à des recommandations authentiques, et mesurer concrètement l'influence des créateurs sur leur activité.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vision -->
+    <div class="section">
+      <span class="section-label">La vision</span>
+      <h2 class="section-title">La recommandation mérite mieux</h2>
+      <div class="section-body">
+        <p>Je suis convaincue que la recommandation est une bonne chose et qu'elle doit être suivie et mesurée.</p>
+        <p>Aujourd'hui, cette forme de prescription :</p>
+      </div>
+      <ul class="about-list">
+        <li>n'est pas structurée</li>
+        <li>n'est pas mesurée</li>
+        <li>n'est pas valorisée à sa juste valeur</li>
+      </ul>
+      <div class="highlight-block">
+        À table est une première réponse à ce problème.
+      </div>
+    </div>
+
+    <!-- Qui suis-je -->
+    <div class="section">
+      <span class="section-label">Qui suis-je</span>
+      <h2 class="section-title">Product designer &amp; fondatrice</h2>
+      <div class="bio-wrap">
+        <div class="bio-photo-wrap">
+          <img src="/sandra-photo.png" alt="Sandra, fondatrice d'À table" class="bio-photo" />
+          <div class="bio-photo-accent"></div>
+        </div>
+        <div class="bio-text">
+          <p>Je suis product designer, avec plus de 15 ans d'expérience entre design, produit et expérience utilisateur.</p>
+          <p>J'ai travaillé sur des produits complexes, à l'intersection entre business, tech et usages.</p>
+          <p>Aujourd'hui, j'explore un sujet qui me passionne : <strong>comment transformer des comportements existants en produits utiles et durables.</strong></p>
+          <p>À table est née de cette envie : prendre quelque chose de simple — recommander un restaurant — et en faire une expérience structurée, mesurable et à forte valeur.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Et la suite -->
+    <div class="next-card">
+      <span class="section-label">Et la suite ?</span>
+      <h2 class="section-title">Un produit en construction</h2>
+      <div class="section-body">
+        <p>À table est encore en construction. Le produit évolue avec ses utilisateurs :</p>
+      </div>
+      <ul class="about-list">
+        <li>Créateurs</li>
+        <li>Utilisateurs</li>
+        <li>Restaurateurs</li>
+      </ul>
+      <div class="section-body" style="margin-top:16px;">
+        <p>Si vous souhaitez participer, tester, ou contribuer : vous êtes au bon endroit.</p>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-card">
+      <h3 class="contact-title">Posez-moi vos questions</h3>
+      <p class="contact-sub">Partagez vos feedbacks, vos idées, ou simplement dites bonjour.</p>
+      <div class="contact-links">
+        <a href="mailto:contact@atable.com" class="contact-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          contact@atable.com
+        </a>
+        <a href="#" class="contact-link contact-link--ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="#" class="contact-link contact-link--ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">A Table</div>
+          <span class="footer-tagline">Les restos des influenceurs</span>
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:10px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par catégorie</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; légal</h4>
+          <ul>
+            <li><a href="/about.html">À propos</a></li>
+            <li><a href="mailto:contact@atable.com">Nous contacter</a></li>
+            <li><a href="#">Conditions d'utilisation</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function openMenu() {
+      document.getElementById('menuOverlay').classList.add('open');
+      document.getElementById('menuPanel').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      document.getElementById('menuOverlay').classList.remove('open');
+      document.getElementById('menuPanel').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+  </script>
+</body>
+</html>

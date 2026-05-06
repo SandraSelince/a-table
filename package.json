@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && cp landing.html signup.html login.html curators.html how-it-works.html categories.html dashboard.html dashboard-restaurant.html profile.html restaurant-profile.html signup-curator.html signup-restaurant.html dist/",
+    "build": "tsc -b && vite build && cp landing.html signup.html login.html curators.html how-it-works.html categories.html dashboard.html dashboard-restaurant.html profile.html restaurant-profile.html signup-curator.html signup-restaurant.html about.html sandra-photo.png dist/",
     "preview": "vite preview"
   },
   "dependencies": {

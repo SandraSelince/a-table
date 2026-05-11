@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentions légales — A Table</title>
+  <meta name="description" content="Mentions légales du site À table — éditeur, hébergement, propriété intellectuelle, données personnelles." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #CC7039;
+      --primary-dark:  #B8602F;
+      --primary-light: #F5E6D8;
+      --bg:            #FDFAF8;
+      --dark:          #111010;
+      --dark-2:        #1C1A18;
+      --border-light:  #E8D5CC;
+      --border-dark:   rgba(255,255,255,0.1);
+      --muted:         #7A5C52;
+      --muted-dark:    rgba(255,255,255,0.55);
+      --font:          'Sora', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: #fff;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 32px;
+      height: 76px; display: flex; align-items: center; gap: 24px;
+    }
+    .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; margin-right: 8px; text-decoration: none; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .nav-links a, .nav-links button {
+      padding: 7px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500;
+      color: var(--muted); transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover, .nav-links button:hover { color: var(--dark); background: rgba(17,16,16,0.06); }
+    .nav-btn-login { color: var(--dark) !important; }
+    .nav-btn-signup { background: var(--primary) !important; color: #fff !important; font-weight: 600 !important; }
+    .nav-btn-signup:hover { background: var(--primary-dark) !important; }
+    .nav-menu-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      gap: 4px; color: var(--dark); transition: background 0.15s; flex-shrink: 0;
+    }
+    .nav-menu-btn:hover { background: rgba(17,16,16,0.06); }
+    .nav-menu-btn span { display: block; width: 16px; height: 1.5px; background: currentColor; }
+
+    /* ── SLIDE-OUT MENU ── */
+    .menu-overlay {
+      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.3);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+    .menu-panel {
+      position: fixed; top: 0; right: 0; width: 320px; height: 100%;
+      background: #fff; border-left: 1px solid var(--border-light); z-index: 400;
+      transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column; padding: 32px;
+    }
+    .menu-panel.open { transform: translateX(0); }
+    .menu-close { align-self: flex-end; color: var(--muted); font-size: 22px; line-height: 1; margin-bottom: 40px; }
+    .menu-close:hover { color: var(--dark); }
+    .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .menu-nav a {
+      display: block; padding: 14px 0; font-size: 20px; font-weight: 700;
+      color: var(--dark); border-bottom: 1px solid var(--border-light);
+      transition: color 0.15s; letter-spacing: -0.3px;
+    }
+    .menu-nav a:hover { color: var(--primary); }
+    .menu-bottom { margin-top: auto; display: flex; gap: 12px; }
+    .menu-bottom a { flex: 1; text-align: center; padding: 12px; border-radius: 9999px; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+    .menu-login { border: 1px solid var(--border-light); color: var(--dark); }
+    .menu-login:hover { border-color: var(--dark); color: var(--dark); }
+    .menu-signup { background: var(--primary); color: #fff; }
+    .menu-signup:hover { background: var(--primary-dark); }
+
+    /* ── HERO ── */
+    .hero {
+
+      background: var(--bg);
+      padding: 80px 48px 72px;
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -60px; right: -40px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(204,112,57,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .hero-title { font-size: clamp(36px, 5vw, 56px); font-weight: 800; color: var(--dark); line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+    /* ── CONTENT ── */
+    .content { max-width: 720px; margin: 0 auto; padding: 80px 48px 100px; }
+
+    .legal-section { margin-bottom: 52px; }
+    .legal-section:last-child { margin-bottom: 0; }
+
+    .legal-section h2 {
+      font-size: 17px; font-weight: 700; color: var(--dark);
+      letter-spacing: -0.2px; margin-bottom: 14px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border-light);
+    }
+    .legal-section p {
+      font-size: 15px; line-height: 1.75; color: #3A302C;
+      margin-bottom: 10px;
+    }
+    .legal-section p:last-child { margin-bottom: 0; }
+    .legal-section a { color: var(--primary); text-decoration: underline; }
+    .legal-section a:hover { color: var(--primary-dark); }
+
+    /* ── FOOTER ── */
+    .footer { background: #F7F4F1; padding: 64px 64px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: var(--dark); transition: color 0.15s; }
+    .footer-col ul a:hover { color: var(--primary); }
+    .footer-bottom { border-top: 1px solid var(--border-light); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 12px; color: var(--muted); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border-light); color: var(--dark); padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; transition: background 0.15s; }
+    .app-store-btn:hover { background: var(--primary-light); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { padding: 64px 24px 56px; }
+      .content { padding: 60px 24px 80px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .footer { padding: 48px 20px 32px; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="site-nav"></nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Légal</p>
+      <h1 class="hero-title">Mentions légales</h1>
+      <p class="hero-sub">Informations légales relatives à l'éditeur, à l'hébergement et aux conditions d'utilisation du site À table.</p>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <div class="legal-section">
+      <h2>1. Éditeur du site</h2>
+      <p>Le présent site À table est édité par :</p>
+      <p>
+        <strong>Sandra Dubosq</strong><br>
+        Domiciliée au : 40, rue Stephenson<br>
+        Email : <a href="mailto:contact@atable.com">contact@atable.com</a><br>
+        Statut : Personne physique agissant en son nom propre
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Directeur de la publication</h2>
+      <p>Le directeur de la publication est :</p>
+      <p><strong>Sandra Dubosq</strong></p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Hébergement</h2>
+      <p>Le site est hébergé par :</p>
+      <p>
+        <strong>Vercel Inc.</strong><br>
+        Adresse : 440 N Barranca Ave #4133, Covina, CA 91723, USA<br>
+        Site web : <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">https://vercel.com</a>
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Accès au site</h2>
+      <p>Le site est accessible 24h/24 et 7j/7, sauf cas de force majeure, interruption programmée ou non et pouvant découler d'une nécessité de maintenance.</p>
+      <p>L'éditeur ne saurait être tenu responsable de toute modification, interruption ou suspension des services.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Propriété intellectuelle</h2>
+      <p>L'ensemble des éléments du site (textes, images, graphismes, logo, icônes, etc.) sont protégés par les lois en vigueur sur la propriété intellectuelle.</p>
+      <p>Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site est interdite, sauf autorisation écrite préalable.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Responsabilité</h2>
+      <p>L'éditeur s'efforce de fournir sur le site des informations aussi précises que possible. Toutefois, il ne pourra être tenu responsable des omissions, inexactitudes ou carences dans la mise à jour.</p>
+      <p>L'utilisateur est seul responsable de l'utilisation qu'il fait des informations fournies sur le site.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Données personnelles</h2>
+      <p>Le site peut collecter des données personnelles (notamment via formulaires ou outils d'analyse).</p>
+      <p>Ces données sont traitées conformément à la réglementation en vigueur, notamment le Règlement Général sur la Protection des Données.</p>
+      <p>Pour en savoir plus, l'utilisateur est invité à consulter la Politique de confidentialité du site.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>8. Cookies</h2>
+      <p>Le site peut utiliser des cookies ou technologies similaires à des fins de mesure d'audience et d'amélioration de l'expérience utilisateur.</p>
+      <p>L'utilisateur peut configurer ses préférences via le bandeau cookies prévu à cet effet.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>9. Droit applicable</h2>
+      <p>Les présentes mentions légales sont régies par le droit français.</p>
+      <p>En cas de litige, et à défaut de résolution amiable, les tribunaux français seront seuls compétents.</p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/logo.svg" alt="A Table" style="height:80px;width:auto;filter:none;display:block;margin-bottom:10px;" />
+          <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
+          <div style="display:flex;gap:10px;">
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
+            <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">Google Play</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les curateurs</h4>
+          <ul>
+            <li><a href="/how-it-works.html">Comment ça marche</a></li>
+            <li><a href="/signup.html">Créer un profil</a></li>
+            <li><a href="/dashboard.html">Ajouter un restaurant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pour les restaurants</h4>
+          <ul>
+            <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
+            <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="/statistiques.html">Statistiques</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explorer</h4>
+          <ul>
+            <li><a href="/index.html">La carte</a></li>
+            <li><a href="/curators.html">Les curateurs</a></li>
+            <li><a href="/categories.html">Par cuisine</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support &amp; légal</h4>
+          <ul>
+            <li><a href="/about.html">À propos</a></li>
+            <li><a href="/about.html#contact">Nous contacter</a></li>
+            <li><a href="/conditions-utilisation.html">Conditions d'utilisation</a></li>
+            <li><a href="/mentions-legales.html">Mentions légales</a></li>
+            <li><a href="/politique-confidentialite.html">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 A Table. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  </script>
+  <script src="/nav.js"></script>
+</body>
+</html>

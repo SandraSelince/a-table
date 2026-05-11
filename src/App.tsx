@@ -6,6 +6,12 @@ import { fetchPlaceDetails, type PlaceData } from './services/places'
 const MapView = lazy(() => import('./MapView').then(m => ({ default: m.MapView })))
 import './App.css'
 
+// Safe gtag wrapper — no-ops if Google Analytics is not loaded
+declare function gtag(...args: unknown[]): void
+function track(event: string, params: Record<string, string>) {
+  try { if (typeof gtag !== 'undefined') gtag('event', event, params) } catch {}
+}
+
 const normalize = (s: string) =>
   s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
@@ -26,7 +32,9 @@ function usePlaceDetails(restaurant: Restaurant | null) {
   const [placeData, setPlaceData] = useState<PlaceData | null>(null)
   useEffect(() => {
     if (!restaurant) { setPlaceData(null); return }
-    fetchPlaceDetails(restaurant.name, restaurant.address).then(setPlaceData)
+    fetchPlaceDetails(restaurant.name, restaurant.address)
+      .then(setPlaceData)
+      .catch(() => {/* silently ignore — fallback data already in restaurant object */})
   }, [restaurant?.id])
   return placeData
 }
@@ -43,7 +51,7 @@ const INFLUENCER_META: Record<string, { instagramUrl: string; photoUrl: string }
     photoUrl: 'https://unavatar.io/instagram/philoudarblay',
   },
   '@leparisdalexis': {
-    instagramUrl: 'https://www.instagram.com/p/DWooKbLiBJG/',
+    instagramUrl: 'https://www.instagram.com/leparisdalexis/',
     photoUrl: 'https://unavatar.io/instagram/leparisdalexis',
   },
 }
@@ -60,9 +68,7 @@ const INFLUENCERS: Influencer[] = [
 function StarRating({ rating }: { rating: number }) {
   return (
     <span className="star-rating">
-      {'★'.repeat(Math.floor(rating))}
-      {rating % 1 >= 0.5 ? '½' : ''}
-      <span className="rating-value">{rating.toFixed(1)}</span>
+      ★<span className="rating-value">{rating.toFixed(1)}</span>
     </span>
   )
 }
@@ -130,7 +136,9 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
       ([entry]) => {
         if (entry.isIntersecting) {
           observer.disconnect()
-          fetchPlaceDetails(restaurant.name, restaurant.address).then(setPlaceData)
+          fetchPlaceDetails(restaurant.name, restaurant.address)
+          .then(setPlaceData)
+          .catch(() => {})
         }
       },
       { rootMargin: '200px' }
@@ -153,18 +161,20 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
           ? { backgroundImage: `url(${placeData.photoUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
           : { background: restaurant.cover }
         }
-      />
-      <div className="card-body">
-        <div className="card-header">
-          <h3 className="card-name">{restaurant.name}</h3>
+      >
+        <div className="card-cover-overlay" />
+        <div className="card-cover-badges">
           <StarRating rating={placeData?.rating ?? restaurant.rating} />
+          <span className="card-cover-location">📍 {formatCity(restaurant.city, restaurant.address)}</span>
         </div>
+      </div>
+      <div className="card-body">
+        <h3 className="card-name">{restaurant.name}</h3>
+        <p className="card-address">{restaurant.address}</p>
         <p className="card-meta">
           <span>{placeData?.cuisine ?? restaurant.cuisine}</span>
           <span className="card-meta-dot">·</span>
           <span>{placeData?.priceRange ?? restaurant.priceRange}</span>
-          <span className="card-meta-dot">·</span>
-          <span>{formatCity(restaurant.city, restaurant.address)}</span>
         </p>
         <div className="card-tags">
           {restaurant.tags.map(tag => (
@@ -172,38 +182,50 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
           ))}
         </div>
         <div className="card-influencer">
-          <p className="influencer-handle">Recommandé par{' '}
-            {[restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])].map((inf, i, arr) => (
-              <span key={inf.handle}>
-                <strong
-                  className={onInfluencerClick ? 'influencer-link' : ''}
-                  onClick={onInfluencerClick ? (e) => { e.stopPropagation(); onInfluencerClick(inf) } : undefined}
-                >{inf.handle}</strong>{i < arr.length - 1 ? ', ' : ''}
-              </span>
-            ))}
-          </p>
-          <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
+          {(() => {
+            const allInf = [restaurant.recommendedBy, ...(restaurant.coRecommendedBy ?? [])]
+            const multi = allInf.length > 1
+            return (
+              <>
+                <p className="influencer-handle">Recommandé par{' '}
+                  {allInf.map((inf, i, arr) => (
+                    <span key={inf.handle}>
+                      <strong
+                        className={onInfluencerClick ? 'influencer-link' : ''}
+                        onClick={onInfluencerClick ? (e) => { e.stopPropagation(); onInfluencerClick(inf) } : undefined}
+                      >{inf.handle}</strong>
+                      {multi && <span className="influencer-followers-inline"> · {inf.followers}</span>}
+                      {i < arr.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </p>
+                {!multi && <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>}
+              </>
+            )
+          })()}
         </div>
         {active && (
           <div className="card-expanded">
             <p className="card-description">{placeData?.description ?? restaurant.description}</p>
             <div className="card-actions">
-              <a
-                href={restaurant.instagramPost}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-cta card-cta--secondary"
-                onClick={e => { e.stopPropagation(); gtag('event', 'cta_instagram', { restaurant: restaurant.name }) }}
-              >
-                Voir sur Instagram
-              </a>
+              {restaurant.instagramPost && (
+                <a
+                  href={restaurant.instagramPost}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-cta card-cta--secondary"
+                  onClick={e => { e.stopPropagation(); track('cta_instagram', { restaurant: restaurant.name }) }}
+                >
+                  Voir sur Instagram
+                </a>
+              )}
               {restaurant.reservationUrl && (
                 <a
                   href={restaurant.reservationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--primary"
-                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_reserver', { restaurant: restaurant.name }) }}
+                  onClick={e => { e.stopPropagation(); track('cta_reserver', { restaurant: restaurant.name }) }}
                 >
                   Réserver
                 </a>
@@ -212,7 +234,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                 <a
                   href={`tel:${restaurant.phoneNumber}`}
                   className="card-cta card-cta--outline"
-                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_appeler', { restaurant: restaurant.name }) }}
+                  onClick={e => { e.stopPropagation(); track('cta_appeler', { restaurant: restaurant.name }) }}
                 >
                   Appeler
                 </a>
@@ -223,7 +245,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--outline"
-                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_commander', { restaurant: restaurant.name }) }}
+                  onClick={e => { e.stopPropagation(); track('cta_commander', { restaurant: restaurant.name }) }}
                 >
                   Commander en ligne
                 </a>
@@ -234,7 +256,7 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--outline"
-                  onClick={e => { e.stopPropagation(); gtag('event', 'cta_livraison', { restaurant: restaurant.name }) }}
+                  onClick={e => { e.stopPropagation(); track('cta_livraison', { restaurant: restaurant.name }) }}
                 >
                   Se faire livrer
                 </a>
@@ -283,26 +305,28 @@ function RestaurantSheet({ restaurant, onClose, onInfluencerClick }: { restauran
           ))}</p>
           <p className="influencer-followers">{restaurant.recommendedBy.followers} abonnés</p>
           <div className="rsheet-actions">
-            <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary" onClick={() => gtag('event', 'cta_instagram', { restaurant: restaurant.name })}>
-              Voir sur Instagram
-            </a>
+            {restaurant.instagramPost && (
+              <a href={restaurant.instagramPost} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--secondary" onClick={() => track('cta_instagram', { restaurant: restaurant.name })}>
+                Voir sur Instagram
+              </a>
+            )}
             {restaurant.reservationUrl && (
-              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary" onClick={() => gtag('event', 'cta_reserver', { restaurant: restaurant.name })}>
+              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary" onClick={() => track('cta_reserver', { restaurant: restaurant.name })}>
                 Réserver
               </a>
             )}
             {restaurant.phoneNumber && (
-              <a href={`tel:${restaurant.phoneNumber}`} className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_appeler', { restaurant: restaurant.name })}>
+              <a href={`tel:${restaurant.phoneNumber}`} className="rsheet-cta rsheet-cta--outline" onClick={() => track('cta_appeler', { restaurant: restaurant.name })}>
                 Appeler
               </a>
             )}
             {restaurant.orderUrl && (
-              <a href={restaurant.orderUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_commander', { restaurant: restaurant.name })}>
+              <a href={restaurant.orderUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => track('cta_commander', { restaurant: restaurant.name })}>
                 Commander en ligne
               </a>
             )}
             {restaurant.deliveryUrl && (
-              <a href={restaurant.deliveryUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => gtag('event', 'cta_livraison', { restaurant: restaurant.name })}>
+              <a href={restaurant.deliveryUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--outline" onClick={() => track('cta_livraison', { restaurant: restaurant.name })}>
                 Se faire livrer
               </a>
             )}
@@ -467,13 +491,17 @@ export function App() {
   const [search, setSearch] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const searchWrapRef = useRef<HTMLDivElement>(null)
+  const blurTimerRef = useRef<number>(0)
   const [selected, setSelected] = useState<Restaurant | null>(null)
   const [mapSelected, setMapSelected] = useState<Restaurant | null>(null)
   const [view, setView] = useState<ViewMode>('grid')
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
   const [mapMounted, setMapMounted] = useState(true)
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const [influencerPage, setInfluencerPage] = useState<Influencer | null>(null)
   const suggestions = useSearchSuggestions(search)
+
+  useEffect(() => { return () => clearTimeout(blurTimerRef.current) }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -544,7 +572,9 @@ export function App() {
 
   useEffect(() => {
     function onResize() {
-      if (window.innerWidth >= 1024 && selected) {
+      const mobile = window.innerWidth < 1024
+      setIsMobile(mobile)
+      if (!mobile && selected) {
         setMapSelected(selected)
         setSelected(null)
       }
@@ -580,7 +610,7 @@ export function App() {
                 value={search}
                 onChange={e => { setSearch(e.target.value); if (activeFilterCount > 0) { setSelectedCities([]); setSelectedCuisines([]); setSelectedInfluencers([]) } }}
                 onFocus={() => { setSelected(null); setSearchFocused(true) }}
-                onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+                onBlur={() => { blurTimerRef.current = window.setTimeout(() => setSearchFocused(false), 150) }}
               />
               {search && (
                 <button className="search-clear" onClick={() => setSearch('')}>
@@ -590,9 +620,9 @@ export function App() {
             </div>
             {searchFocused && suggestions.length > 0 && (
               <div className="search-suggestions">
-                {suggestions.map((s, i) => (
+                {suggestions.map((s) => (
                   <button
-                    key={i}
+                    key={`${s.type}:${s.label}`}
                     className="search-suggestion-item"
                     onPointerDown={e => { e.preventDefault(); setSearch(s.label); setSearchFocused(false) }}
                   >
@@ -739,7 +769,7 @@ export function App() {
               <div className="grid">
                 {filtered.map(r => (
                   <RestaurantCard key={r.id} restaurant={r} active={mapSelected?.id === r.id} onClick={() => {
-                    if (window.innerWidth >= 1024) setMapSelected(r)
+                    if (!isMobile) setMapSelected(r)
                     else setSelected(r)
                   }} onInfluencerClick={setInfluencerPage} />
                 ))}
@@ -752,7 +782,7 @@ export function App() {
                 <MapView
                   restaurants={filtered}
                   searchActive={search.trim().length > 0}
-                  externalSelected={window.innerWidth >= 1024 ? mapSelected : undefined}
+                  externalSelected={!isMobile ? mapSelected : undefined}
                   onExternalClose={() => setMapSelected(null)}
                   onSelect={r => setMapSelected(r)}
                 />

@@ -17,8 +17,8 @@
     }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font); background: var(--dark);
-      color: #fff; -webkit-font-smoothing: antialiased;
+      font-family: var(--font); background: #FDFAF8;
+      -webkit-font-smoothing: antialiased;
       min-height: 100vh; display: flex; flex-direction: column;
     }
     a { color: inherit; text-decoration: none; }
@@ -28,18 +28,18 @@
     .nav {
       padding: 0 32px; height: 76px; display: flex; align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid var(--border-light);
       flex-shrink: 0;
     }
     .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; text-decoration: none; }
-    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; line-height: 1; width: 170.727px; }
-    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(0,0,0,0.4); letter-spacing: 0.3px; white-space: nowrap; }
     .nav-back {
       display: flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55);
+      font-size: 13px; font-weight: 500; color: rgba(0,0,0,0.55);
       padding: 7px 14px; border-radius: 9999px; transition: background 0.15s, color 0.15s;
     }
-    .nav-back:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-back:hover { background: rgba(0,0,0,0.06); color: var(--dark); }
 
     /* ── MAIN ── */
     .main {
@@ -51,12 +51,12 @@
     /* ── CARD ── */
     .login-card {
       width: 100%; max-width: 420px;
-      background: rgba(255,255,255,0.04);
-      border: 1.5px solid rgba(255,255,255,0.09);
+      background: #fff;
+      border: 1.5px solid var(--border-light);
       border-radius: 24px; padding: 44px 40px;
     }
     .card-eyebrow {
-      font-size: 11px; font-weight: 600; color: var(--secondary);
+      font-size: 11px; font-weight: 600; color: var(--primary);
       letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
     }
     .card-title {
@@ -64,7 +64,7 @@
       line-height: 1.1; margin-bottom: 6px;
     }
     .card-subtitle {
-      font-size: 14px; color: rgba(255,255,255,0.45);
+      font-size: 14px; color: var(--muted);
       line-height: 1.55; margin-bottom: 36px;
     }
 
@@ -72,21 +72,21 @@
     .form-group { margin-bottom: 18px; }
     .form-label {
       display: block; font-size: 12px; font-weight: 600;
-      color: rgba(255,255,255,0.65); margin-bottom: 7px; letter-spacing: 0.2px;
+      color: var(--muted); margin-bottom: 7px; letter-spacing: 0.2px;
     }
     .form-input {
       width: 100%; padding: 12px 14px;
-      background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.1);
+      background: #fff;
+      border: 1.5px solid var(--border-light);
       border-radius: 10px; font-family: var(--font); font-size: 14px;
-      color: #fff; outline: none;
+      color: var(--dark); outline: none;
       transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
       -webkit-appearance: none;
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input::placeholder { color: rgba(0,0,0,0.3); }
     .form-input:focus {
       border-color: var(--primary);
-      background: rgba(255,255,255,0.08);
+      background: #FDFAF8;
       box-shadow: 0 0 0 3px rgba(204,112,57,0.15);
     }
     .form-input.error { border-color: var(--error); }
@@ -94,18 +94,18 @@
     .password-wrap { position: relative; }
     .password-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      color: rgba(255,255,255,0.35); cursor: pointer; padding: 4px;
+      color: rgba(0,0,0,0.4); cursor: pointer; padding: 4px;
       font-size: 12px; font-weight: 500; transition: color 0.15s;
       user-select: none;
     }
-    .password-toggle:hover { color: rgba(255,255,255,0.7); }
+    .password-toggle:hover { color: rgba(0,0,0,0.7); }
 
     .forgot-link {
       display: block; text-align: right; font-size: 12px;
-      color: rgba(255,255,255,0.4); margin-top: 6px;
+      color: var(--muted); margin-top: 6px;
       transition: color 0.15s;
     }
-    .forgot-link:hover { color: rgba(255,255,255,0.75); }
+    .forgot-link:hover { color: var(--dark); }
 
     .form-error-msg {
       display: none; font-size: 12px; color: var(--error);
@@ -126,10 +126,10 @@
 
     .signup-link {
       margin-top: 28px; font-size: 13px;
-      color: rgba(255,255,255,0.35); text-align: center;
+      color: var(--muted); text-align: center;
     }
-    .signup-link a { color: rgba(255,255,255,0.65); font-weight: 500; }
-    .signup-link a:hover { color: #fff; text-decoration: underline; }
+    .signup-link a { color: var(--dark); font-weight: 500; }
+    .signup-link a:hover { color: var(--primary); text-decoration: underline; }
 
     @media (max-width: 480px) {
       .main { padding: 40px 20px 60px; }
@@ -137,22 +137,26 @@
       .card-title { font-size: 24px; }
     }
     /* ── FOOTER ── */
-    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer { background: #F7F4F1; padding: 64px 64px 40px; }
     .footer-inner { max-width: 1280px; margin: 0 auto; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
-    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
-    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
-    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
-    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
-    .footer-col ul a:hover { color: #fff; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; }
-    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
-    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; transition: background 0.15s; }
-    .app-store-btn:hover { background: rgba(255,255,255,0.15); }
+    .footer-col ul a { font-size: 13px; color: var(--dark); transition: color 0.15s; }
+    .footer-col ul a:hover { color: var(--primary); }
+    .footer-bottom { border-top: 1px solid var(--border-light); padding-top: 24px; }
+    .footer-bottom p { font-size: 12px; color: var(--muted); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #fff; border: 1px solid var(--border-light); border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--dark); transition: background 0.15s; }
+    .app-store-btn:hover { background: var(--primary-light); border-color: var(--primary); }
     @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
     @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer { padding: 48px 20px 32px; } }
+  
+    /* ── Hide app download banners ── */
+    .app-banner, .hero-download-bar { display: none !important; }
+    .app-store-btn { display: none !important; }
   </style>
 </head>
 <body>
@@ -244,8 +248,53 @@
       }
 
       if (valid) {
-        // Redirection selon le type de compte (à connecter au backend)
-        window.location.href = '/dashboard.html';
+        const DEMO_ACCOUNTS = [
+          {
+            email: 'margot@atable.com',
+            password: 'test1234',
+            type: 'restaurant',
+            data: {
+              name: 'Chez Margot',
+              cuisine: 'Bistrot français',
+              address: '12 rue de Bretagne, 75003 Paris',
+              instagramUrl: 'https://instagram.com/chezmargot',
+              bookingUrl: 'https://thefork.com',
+              status: 'verified'
+            },
+            key: 'restaurantProfile',
+            redirect: '/dashboard-restaurant.html'
+          },
+          {
+            email: 'theo@atable.com',
+            password: 'test1234',
+            type: 'curator',
+            data: {
+              firstName: 'Théo',
+              lastName: 'Villeneuve-Garnier',
+              handle: '@theo.vg',
+              bio: 'Passionné de gastronomie parisienne. Je partage mes découvertes culinaires, des adresses confidentielles aux tables étoilées.',
+              instagramUrl: 'https://instagram.com/theo.vg',
+              followers: 185000,
+              city: 'Paris',
+              website: ''
+            },
+            key: 'curatorProfile',
+            redirect: '/dashboard.html'
+          }
+        ];
+
+        const match = DEMO_ACCOUNTS.find(
+          a => a.email === email.value.toLowerCase().trim() && a.password === password.value
+        );
+
+        if (match) {
+          localStorage.setItem(match.key, JSON.stringify(match.data));
+          window.location.href = match.redirect;
+        } else {
+          emailError.textContent = 'Identifiants incorrects.';
+          email.classList.add('error');
+          emailError.classList.add('visible');
+        }
       }
     }
   </script>
@@ -255,8 +304,7 @@
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="footer-logo">A Table</div>
-          <span class="footer-tagline">Les restos des influenceurs</span>
+          <img src="/logo.svg" alt="A Table" style="height:80px;width:auto;filter:none;display:block;margin-bottom:10px;" />
           <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
           <div style="display:flex;gap:8px;">
             <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
@@ -276,6 +324,7 @@
           <ul>
             <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
             <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="/statistiques.html">Statistiques</a></li>
             <li><a href="#">Statistiques</a></li>
           </ul>
         </div>
@@ -284,16 +333,17 @@
           <ul>
             <li><a href="/index.html">La carte</a></li>
             <li><a href="/curators.html">Les curateurs</a></li>
-            <li><a href="/categories.html">Par catégorie</a></li>
+            <li><a href="/categories.html">Par cuisine</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Support &amp; Légal</h4>
           <ul>
             <li><a href="/about.html">À propos</a></li>
-            <li><a href="#">Nous contacter</a></li>
-            <li><a href="#">Conditions d'utilisation</a></li>
-            <li><a href="#">Politique de confidentialité</a></li>
+            <li><a href="/about.html#contact">Nous contacter</a></li>
+            <li><a href="/conditions-utilisation.html">Conditions d'utilisation</a></li>
+            <li><a href="/mentions-legales.html">Mentions légales</a></li>
+            <li><a href="/politique-confidentialite.html">Politique de confidentialité</a></li>
           </ul>
         </div>
       </div>

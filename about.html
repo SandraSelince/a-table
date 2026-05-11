@@ -33,79 +33,79 @@
     /* ── NAV ── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      background: rgba(17,16,16,0.88); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-dark);
+      background: #fff;
+      border-bottom: 1px solid var(--border-light);
     }
     .nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 32px;
       height: 76px; display: flex; align-items: center; gap: 24px;
     }
     .nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; flex-shrink: 0; margin-right: 8px; text-decoration: none; }
-    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; line-height: 1; width: 170.727px; }
-    .nav-tagline { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; }
+    .nav-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); letter-spacing: 0; line-height: 1; width: 170.727px; }
+    .nav-tagline { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.3px; white-space: nowrap; }
     .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
     .nav-links a, .nav-links button {
       padding: 7px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500;
-      color: var(--muted-dark); transition: background 0.15s, color 0.15s;
+      color: var(--muted); transition: background 0.15s, color 0.15s;
     }
-    .nav-links a:hover, .nav-links button:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    .nav-btn-login { color: rgba(255,255,255,0.75) !important; }
+    .nav-links a:hover, .nav-links button:hover { color: var(--dark); background: rgba(17,16,16,0.06); }
+    .nav-btn-login { color: var(--dark) !important; }
     .nav-btn-signup { background: var(--primary) !important; color: #fff !important; font-weight: 600 !important; }
     .nav-btn-signup:hover { background: var(--primary-dark) !important; }
     .nav-menu-btn {
       width: 36px; height: 36px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center; flex-direction: column;
-      gap: 4px; color: rgba(255,255,255,0.75); transition: background 0.15s; flex-shrink: 0;
+      gap: 4px; color: var(--dark); transition: background 0.15s; flex-shrink: 0;
     }
-    .nav-menu-btn:hover { background: rgba(255,255,255,0.1); }
+    .nav-menu-btn:hover { background: rgba(17,16,16,0.06); }
     .nav-menu-btn span { display: block; width: 16px; height: 1.5px; background: currentColor; }
 
     /* ── SLIDE-OUT MENU ── */
     .menu-overlay {
-      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.5);
+      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.3);
       opacity: 0; pointer-events: none; transition: opacity 0.2s;
     }
     .menu-overlay.open { opacity: 1; pointer-events: all; }
     .menu-panel {
       position: fixed; top: 0; right: 0; width: 320px; height: 100%;
-      background: var(--dark-2); z-index: 400;
+      background: #fff; border-left: 1px solid var(--border-light); z-index: 400;
       transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
       display: flex; flex-direction: column; padding: 32px;
     }
     .menu-panel.open { transform: translateX(0); }
-    .menu-close { align-self: flex-end; color: rgba(255,255,255,0.5); font-size: 22px; line-height: 1; margin-bottom: 40px; }
-    .menu-close:hover { color: #fff; }
+    .menu-close { align-self: flex-end; color: var(--muted); font-size: 22px; line-height: 1; margin-bottom: 40px; }
+    .menu-close:hover { color: var(--dark); }
     .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
     .menu-nav a {
       display: block; padding: 14px 0; font-size: 20px; font-weight: 700;
-      color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--dark); border-bottom: 1px solid var(--border-light);
       transition: color 0.15s; letter-spacing: -0.3px;
     }
-    .menu-nav a:hover { color: #EBC4AD; }
+    .menu-nav a:hover { color: var(--primary); }
     .menu-bottom { margin-top: auto; display: flex; gap: 12px; }
     .menu-bottom a { flex: 1; text-align: center; padding: 12px; border-radius: 9999px; font-size: 13px; font-weight: 600; transition: all 0.15s; }
-    .menu-login { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
-    .menu-login:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .menu-login { border: 1px solid var(--border-light); color: var(--dark); }
+    .menu-login:hover { border-color: var(--dark); color: var(--dark); }
     .menu-signup { background: var(--primary); color: #fff; }
     .menu-signup:hover { background: var(--primary-dark); }
 
     /* ── HERO ── */
     .hero {
-      margin-top: 76px;
-      background: var(--dark-2);
+
+      background: var(--bg);
       padding: 80px 48px 72px;
       position: relative; overflow: hidden;
     }
     .hero::after {
       content: ''; position: absolute; bottom: -60px; right: -40px;
       width: 340px; height: 340px;
-      background: radial-gradient(circle, rgba(204,112,57,0.18) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(204,112,57,0.12) 0%, transparent 70%);
       pointer-events: none;
     }
     .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
     .hero-eyebrow { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-    .hero-title { font-size: clamp(40px, 6vw, 64px); font-weight: 800; color: #fff; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; }
-    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.65; max-width: 560px; }
+    .hero-title { font-size: clamp(40px, 6vw, 64px); font-weight: 800; color: var(--dark); line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero-sub { font-size: 17px; color: var(--muted); line-height: 1.65; max-width: 560px; }
 
     /* ── CONTENT ── */
     .content { max-width: 720px; margin: 0 auto; padding: 80px 48px 100px; }
@@ -178,13 +178,13 @@
 
     /* Next section */
     .next-card {
-      background: var(--dark-2); border-radius: 24px; padding: 40px 40px 36px;
+      background: var(--primary-light); border-radius: 24px; padding: 40px 40px 36px;
       margin-bottom: 72px;
     }
-    .next-card .section-label { color: rgba(255,255,255,0.45); }
-    .next-card .section-title { color: #fff; }
-    .next-card .section-body { color: rgba(255,255,255,0.65); }
-    .next-card .about-list li { color: rgba(255,255,255,0.65); }
+    .next-card .section-label { color: var(--primary); }
+    .next-card .section-title { color: var(--dark); }
+    .next-card .section-body { color: var(--muted); }
+    .next-card .about-list li { color: var(--muted); }
     .next-card .about-list li::before { background: var(--primary); }
 
     /* Contact */
@@ -210,20 +210,20 @@
     .contact-link--ghost:hover { border-color: var(--dark); background: #fff; }
 
     /* ── FOOTER ── */
-    .footer { background: #0D0B0A; padding: 64px 48px 40px; }
+    .footer { background: #F7F4F1; padding: 64px 64px 40px; }
     .footer-inner { max-width: 1280px; margin: 0 auto; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
-    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: #fff; letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
-    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
-    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
-    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-brand .footer-logo { font-family: 'Jaro', sans-serif; font-size: 56px; font-weight: 400; color: var(--dark); letter-spacing: 0; margin-bottom: 1px; line-height: 1; }
+    .footer-tagline { display: block; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.3px; white-space: nowrap; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 240px; margin-bottom: 20px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.78); transition: color 0.15s; }
-    .footer-col ul a:hover { color: #fff; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.55); }
-    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; transition: background 0.15s; }
-    .app-store-btn:hover { background: rgba(255,255,255,0.14); }
+    .footer-col ul a { font-size: 13px; color: var(--dark); transition: color 0.15s; }
+    .footer-col ul a:hover { color: var(--primary); }
+    .footer-bottom { border-top: 1px solid var(--border-light); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 12px; color: var(--muted); }
+    .app-store-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border-light); color: var(--dark); padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; transition: background 0.15s; }
+    .app-store-btn:hover { background: var(--primary-light); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
@@ -247,37 +247,7 @@
 <body>
 
   <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a class="nav-logo-wrap" href="/landing.html">
-        <span class="nav-logo">A Table</span>
-        <span class="nav-tagline">Les restos des influenceurs</span>
-      </a>
-      <div class="nav-links">
-        <a href="/index.html" class="nav-btn-login">Voir la carte</a>
-        <a href="/signup.html" class="btn nav-btn-signup" style="padding:7px 18px;font-size:13px;">S'inscrire</a>
-        <button type="button" class="nav-menu-btn" onclick="openMenu()" aria-label="Ouvrir le menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- SLIDE-OUT MENU -->
-  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
-  <div class="menu-panel" id="menuPanel">
-    <button type="button" class="menu-close" onclick="closeMenu()" aria-label="Fermer le menu">✕</button>
-    <ul class="menu-nav">
-      <li><a href="/how-it-works.html">Comment ça marche ?</a></li>
-      <li><a href="/index.html">Voir la carte</a></li>
-      <li><a href="/curators.html">Voir les curateurs</a></li>
-      <li><a href="/categories.html">Par cuisine</a></li>
-    </ul>
-    <div class="menu-bottom">
-      <a href="/login.html" class="menu-login">Connexion</a>
-      <a href="/signup.html" class="menu-signup">S'inscrire</a>
-    </div>
-  </div>
+  <nav id="site-nav"></nav>
 
   <!-- HERO -->
   <div class="hero">
@@ -365,7 +335,7 @@
     </div>
 
     <!-- Et la suite + Contact -->
-    <div class="next-card">
+    <div class="next-card" id="contact">
       <span class="section-label">Et la suite ?</span>
       <h2 class="section-title">Un produit en construction</h2>
       <div class="section-body">
@@ -379,15 +349,15 @@
       <div class="section-body" style="margin-top:16px;">
         <p>Si vous souhaitez participer, tester, ou contribuer : vous êtes au bon endroit.</p>
       </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.1);margin-top:28px;padding-top:28px;">
-        <h3 class="contact-title" style="color:#fff;margin-bottom:6px;">Posez-moi vos questions</h3>
-        <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:22px;">Partagez vos feedbacks, vos idées, ou simplement dites bonjour.</p>
+      <div style="border-top:1px solid var(--border-light);margin-top:28px;padding-top:28px;">
+        <h3 class="contact-title" style="color:var(--dark);margin-bottom:6px;">Posez-moi vos questions</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:22px;">Partagez vos feedbacks, vos idées, ou simplement dites bonjour.</p>
         <div class="contact-links">
           <a href="mailto:contact@atable.com" class="contact-link">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             contact@atable.com
           </a>
-          <a href="#" class="contact-link" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);">
+          <a href="#" class="contact-link contact-link--ghost">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             Instagram
           </a>
@@ -402,8 +372,7 @@
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="footer-logo">A Table</div>
-          <span class="footer-tagline">Les restos des influenceurs</span>
+          <img src="/logo.svg" alt="A Table" style="height:80px;width:auto;filter:none;display:block;margin-bottom:10px;" />
           <p>Les restaurants recommandés par les curateurs gastronomiques que vous suivez.</p>
           <div style="display:flex;gap:10px;">
             <a href="#" class="app-store-btn" style="font-size:11px;padding:7px 14px;">App Store</a>
@@ -423,6 +392,7 @@
           <ul>
             <li><a href="/signup-restaurant.html">Inscrire mon restaurant</a></li>
             <li><a href="/dashboard-restaurant.html">Tableau de bord</a></li>
+            <li><a href="/statistiques.html">Statistiques</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -430,7 +400,7 @@
           <ul>
             <li><a href="/index.html">La carte</a></li>
             <li><a href="/curators.html">Les curateurs</a></li>
-            <li><a href="/categories.html">Par catégorie</a></li>
+            <li><a href="/categories.html">Par cuisine</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -438,8 +408,9 @@
           <ul>
             <li><a href="/about.html">À propos</a></li>
             <li><a href="mailto:contact@atable.com">Nous contacter</a></li>
-            <li><a href="#">Conditions d'utilisation</a></li>
-            <li><a href="#">Politique de confidentialité</a></li>
+            <li><a href="/conditions-utilisation.html">Conditions d'utilisation</a></li>
+            <li><a href="/mentions-legales.html">Mentions légales</a></li>
+            <li><a href="/politique-confidentialite.html">Politique de confidentialité</a></li>
           </ul>
         </div>
       </div>
@@ -450,17 +421,7 @@
   </footer>
 
   <script>
-    function openMenu() {
-      document.getElementById('menuOverlay').classList.add('open');
-      document.getElementById('menuPanel').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMenu() {
-      document.getElementById('menuOverlay').classList.remove('open');
-      document.getElementById('menuPanel').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
   </script>
+  <script src="/nav.js"></script>
 </body>
 </html>

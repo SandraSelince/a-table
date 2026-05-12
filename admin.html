@@ -134,6 +134,14 @@
       .topbar-email { display: none; }
     }
   </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JTB7S4ESYQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JTB7S4ESYQ');
+  </script>
 </head>
 <body>
 
@@ -295,7 +303,7 @@ async function doLogin() {
   document.getElementById('login-btn').textContent = 'Se connecter'
 
   if (error) {
-    document.getElementById('login-error').textContent = 'Email ou mot de passe incorrect.'
+    document.getElementById('login-error').textContent = error.message
     return
   }
   showDashboard(data.user.email)

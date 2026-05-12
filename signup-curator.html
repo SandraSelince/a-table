@@ -383,7 +383,30 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
+    const _sb = supabase.createClient(
+      'https://ikcvdepqiozmugiixxps.supabase.co',
+      'sb_publishable_-jxAg_XhmxUMffYrS0aucw_kAVfGDGA'
+    );
+
+    async function saveContactSupabase(profile) {
+      try {
+        await _sb.from('contacts').insert({
+          type: 'curator',
+          email: profile.email,
+          first_name: profile.firstName,
+          last_name: profile.lastName,
+          handle: profile.handle,
+          instagram_url: profile.instagramUrl,
+          followers: profile.followers,
+          status: profile.status
+        });
+      } catch (err) {
+        console.warn('Supabase insert failed (non-blocking):', err);
+      }
+    }
+
     const form = document.getElementById('signupForm');
 
     function togglePassword() {
@@ -458,6 +481,7 @@
           submittedAt: new Date().toISOString()
         };
         localStorage.setItem('curatorProfile', JSON.stringify(profile));
+        saveContactSupabase(profile);
         document.getElementById('pendingName').textContent = firstName;
         showState('state-pending');
         btn.disabled = false; btn.textContent = 'Créer mon profil';

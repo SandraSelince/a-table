@@ -345,7 +345,30 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
+    const _sb = supabase.createClient(
+      'https://ikcvdepqiozmugiixxps.supabase.co',
+      'sb_publishable_-jxAg_XhmxUMffYrS0aucw_kAVfGDGA'
+    );
+
+    async function saveContactSupabase(restaurant) {
+      try {
+        await _sb.from('contacts').insert({
+          type: 'restaurant',
+          email: restaurant.email,
+          restaurant_name: restaurant.restaurantName,
+          address: restaurant.address,
+          cuisine: restaurant.cuisine,
+          instagram_url: restaurant.instagramUrl || null,
+          booking_url: restaurant.bookingUrl || null,
+          status: 'pending'
+        });
+      } catch (err) {
+        console.warn('Supabase insert failed (non-blocking):', err);
+      }
+    }
+
     // ── Garde d'accès ──────────────────────────────────────────────────────────
     var _curatorUser = !!localStorage.getItem('curatorProfile');
     if (_curatorUser) {
@@ -411,6 +434,7 @@
           submittedAt: new Date().toISOString()
         };
         localStorage.setItem('restaurantProfile', JSON.stringify(restaurant));
+        saveContactSupabase(restaurant);
 
         document.getElementById('pendingRestaurantName').textContent = restaurantName;
         showState('state-pending');

@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — A Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Jaro&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #CC7039;
+      --primary-dark: #B8602F;
+      --primary-light: #F5E6D8;
+      --bg: #FDFAF8;
+      --dark: #111010;
+      --dark-2: #1C1A18;
+      --border: #E8D5CC;
+      --muted: #7A5C52;
+      --font: 'Sora', -apple-system, sans-serif;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--dark); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--dark-2);
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+    }
+    .login-logo { font-family: 'Jaro', sans-serif; font-size: 48px; color: var(--dark); line-height: 1; margin-bottom: 6px; }
+    .login-sub { font-size: 12px; color: var(--muted); margin-bottom: 32px; }
+    .login-title { font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 24px; }
+    .form-field { margin-bottom: 16px; }
+    .form-field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .form-field input {
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      border: 1.5px solid var(--border); font-family: var(--font);
+      font-size: 14px; color: var(--dark); background: var(--bg);
+      outline: none; transition: border-color 0.15s;
+    }
+    .form-field input:focus { border-color: var(--primary); }
+    .btn-login {
+      width: 100%; padding: 14px; border-radius: 10px;
+      background: var(--primary); color: #fff;
+      font-size: 14px; font-weight: 700;
+      transition: background 0.15s; margin-top: 8px;
+    }
+    .btn-login:hover { background: var(--primary-dark); }
+    .login-error { font-size: 13px; color: var(--red); margin-top: 12px; min-height: 18px; }
+
+    /* ── DASHBOARD ── */
+    #dashboard-screen { display: none; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-logo { font-family: 'Jaro', sans-serif; font-size: 36px; color: var(--dark); line-height: 1; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-email { font-size: 12px; color: var(--muted); }
+    .btn-logout { font-size: 13px; font-weight: 600; color: var(--primary); padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--primary); transition: background 0.15s, color 0.15s; }
+    .btn-logout:hover { background: var(--primary); color: #fff; }
+
+    .dash-body { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+    .dash-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: var(--dark); margin-bottom: 8px; }
+    .dash-sub { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
+
+    /* KPI cards */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+    .kpi-card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 24px 20px;
+    }
+    .kpi-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .kpi-value { font-size: 36px; font-weight: 800; letter-spacing: -1.5px; color: var(--dark); line-height: 1; }
+    .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .kpi-card--primary { background: var(--primary); border-color: var(--primary); }
+    .kpi-card--primary .kpi-label,
+    .kpi-card--primary .kpi-value,
+    .kpi-card--primary .kpi-sub { color: #fff; }
+
+    /* Section */
+    .section-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 16px; }
+
+    /* Table */
+    .table-wrap { background: #fff; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 40px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg); }
+    tbody td { padding: 14px 16px; font-size: 13px; color: var(--dark); border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--bg); }
+    .td-num { font-weight: 700; font-size: 15px; }
+    .td-rate { color: var(--muted); font-size: 12px; }
+    .td-money { font-weight: 600; color: var(--green); }
+    .badge-primary { display: inline-block; padding: 3px 10px; border-radius: 9999px; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 600; }
+
+    /* Date range */
+    .filters-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .filter-btn { padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 500; color: var(--muted); border: 1px solid var(--border); transition: all 0.15s; }
+    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-btn--active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .filter-btn--active:hover { background: var(--primary-dark); color: #fff; }
+
+    /* Empty */
+    .empty-row td { text-align: center; color: var(--muted); padding: 32px; }
+
+    /* Loading */
+    .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .dash-body { padding: 24px 16px 60px; }
+      .topbar { padding: 0 16px; }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .topbar-email { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">A Table</div>
+    <div class="login-sub">Console d'administration</div>
+    <h1 class="login-title">Connexion</h1>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="sandra.dubosq@gmail.com" />
+    </div>
+    <div class="form-field">
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" id="login-btn" onclick="doLogin()">Se connecter</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard-screen">
+  <div class="topbar">
+    <div class="topbar-logo">A Table</div>
+    <div class="topbar-right">
+      <span class="topbar-email" id="topbar-email"></span>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <h1 class="dash-title">Console admin</h1>
+    <p class="dash-sub" id="dash-updated">Chargement des données…</p>
+
+    <!-- Date filter -->
+    <div class="filters-bar">
+      <button class="filter-btn filter-btn--active" onclick="setRange(7, this)">7 jours</button>
+      <button class="filter-btn" onclick="setRange(30, this)">30 jours</button>
+      <button class="filter-btn" onclick="setRange(90, this)">90 jours</button>
+      <button class="filter-btn" onclick="setRange(0, this)">Tout</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Vues restaurants</div>
+        <div class="kpi-value" id="kpi-views">–</div>
+        <div class="kpi-sub">sessions uniques</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Clics Réserver</div>
+        <div class="kpi-value" id="kpi-reserves">–</div>
+        <div class="kpi-sub">clics totaux</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Taux de clic</div>
+        <div class="kpi-value" id="kpi-ctr">–</div>
+        <div class="kpi-sub">vues → réservation</div>
+      </div>
+      <div class="kpi-card kpi-card--primary">
+        <div class="kpi-label">Commission admin</div>
+        <div class="kpi-value" id="kpi-commission">–</div>
+        <div class="kpi-sub">à 3% / clic (1€)</div>
+      </div>
+    </div>
+
+    <!-- Par restaurant -->
+    <div class="section-title">Performance par restaurant</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Restaurant</th>
+            <th>Vues</th>
+            <th>Clics réserver</th>
+            <th>Taux de clic</th>
+            <th>Comm. admin (€)</th>
+            <th>Influenceur principal</th>
+          </tr>
+        </thead>
+        <tbody id="table-restaurants">
+          <tr class="empty-row"><td colspan="6">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Par influenceur -->
+    <div class="section-title">Commissions par influenceur</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Influenceur</th>
+            <th>Restaurants</th>
+            <th>Clics réserver</th>
+            <th>Position (primaire/co)</th>
+            <th>Commission totale (€)</th>
+          </tr>
+        </thead>
+        <tbody id="table-influencers">
+          <tr class="empty-row"><td colspan="5">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Derniers événements -->
+    <div class="section-title">Derniers événements</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Restaurant</th>
+            <th>Influenceur principal</th>
+            <th>Session</th>
+          </tr>
+        </thead>
+        <tbody id="table-events">
+          <tr class="empty-row"><td colspan="5">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ikcvdepqiozmugiixxps.supabase.co'
+const SUPABASE_ANON = 'sb_publishable_-jxAg_XhmxUMffYrS0aucw_kAVfGDGA'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
+
+const CLICK_VALUE = 1
+const ADMIN_RATE = 0.03
+
+function getCommissionRate(position, total) {
+  if (total === 1) return position === 0 ? 0.15 : 0
+  if (total === 2) return position === 0 ? 0.10 : 0.05
+  return position === 0 ? 0.07 : position === 1 ? 0.05 : 0.03
+}
+
+let currentRange = 7
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession()
+  if (session) showDashboard(session.user.email)
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim()
+  const password = document.getElementById('login-password').value
+  document.getElementById('login-error').textContent = ''
+  document.getElementById('login-btn').textContent = 'Connexion…'
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password })
+  document.getElementById('login-btn').textContent = 'Se connecter'
+
+  if (error) {
+    document.getElementById('login-error').textContent = 'Email ou mot de passe incorrect.'
+    return
+  }
+  showDashboard(data.user.email)
+}
+
+async function doLogout() {
+  await sb.auth.signOut()
+  document.getElementById('dashboard-screen').style.display = 'none'
+  document.getElementById('login-screen').style.display = 'flex'
+}
+
+function showDashboard(email) {
+  document.getElementById('login-screen').style.display = 'none'
+  document.getElementById('dashboard-screen').style.display = 'block'
+  document.getElementById('topbar-email').textContent = email
+  loadData()
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+function setRange(days, btn) {
+  currentRange = days
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-btn--active'))
+  btn.classList.add('filter-btn--active')
+  loadData()
+}
+
+async function loadData() {
+  document.getElementById('dash-updated').textContent = 'Chargement…'
+
+  let query = sb.from('events').select('*').order('created_at', { ascending: false })
+
+  if (currentRange > 0) {
+    const since = new Date()
+    since.setDate(since.getDate() - currentRange)
+    query = query.gte('created_at', since.toISOString())
+  }
+
+  const { data: events, error } = await query
+
+  if (error) {
+    document.getElementById('dash-updated').textContent = 'Erreur de chargement: ' + error.message
+    return
+  }
+
+  renderDashboard(events || [])
+  const now = new Date()
+  document.getElementById('dash-updated').textContent =
+    `Mis à jour le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+}
+
+function renderDashboard(events) {
+  const views = events.filter(e => e.event_type === 'view')
+  const reserves = events.filter(e => e.event_type === 'reserve')
+
+  // Unique view sessions
+  const uniqueViews = new Set(views.map(e => `${e.restaurant_name}:${e.session_id}`)).size
+
+  const totalReserves = reserves.length
+  const ctr = uniqueViews > 0 ? ((totalReserves / uniqueViews) * 100).toFixed(1) : '0.0'
+  const adminCommission = (totalReserves * CLICK_VALUE * ADMIN_RATE).toFixed(2)
+
+  document.getElementById('kpi-views').textContent = uniqueViews
+  document.getElementById('kpi-reserves').textContent = totalReserves
+  document.getElementById('kpi-ctr').textContent = ctr + '%'
+  document.getElementById('kpi-commission').textContent = adminCommission + '€'
+
+  renderRestaurantTable(views, reserves)
+  renderInfluencerTable(reserves)
+  renderEventsTable(events.slice(0, 50))
+}
+
+function renderRestaurantTable(views, reserves) {
+  const tbody = document.getElementById('table-restaurants')
+
+  // Group by restaurant
+  const restMap = {}
+  for (const e of views) {
+    if (!restMap[e.restaurant_name]) restMap[e.restaurant_name] = { views: 0, reserves: 0, viewSessions: new Set(), primaryInfluencer: e.primary_influencer }
+    restMap[e.restaurant_name].viewSessions.add(`${e.session_id}`)
+    restMap[e.restaurant_name].views++
+  }
+  for (const e of reserves) {
+    if (!restMap[e.restaurant_name]) restMap[e.restaurant_name] = { views: 0, reserves: 0, viewSessions: new Set(), primaryInfluencer: e.primary_influencer }
+    restMap[e.restaurant_name].reserves++
+    if (!restMap[e.restaurant_name].primaryInfluencer) restMap[e.restaurant_name].primaryInfluencer = e.primary_influencer
+  }
+
+  const rows = Object.entries(restMap).sort((a, b) => b[1].reserves - a[1].reserves)
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Aucune donnée pour cette période.</td></tr>'
+    return
+  }
+
+  tbody.innerHTML = rows.map(([name, d]) => {
+    const uniqueV = d.viewSessions.size
+    const ctr = uniqueV > 0 ? ((d.reserves / uniqueV) * 100).toFixed(1) : '0.0'
+    const comm = (d.reserves * CLICK_VALUE * ADMIN_RATE).toFixed(2)
+    return `<tr>
+      <td><strong>${escHtml(name)}</strong></td>
+      <td class="td-num">${uniqueV}</td>
+      <td class="td-num">${d.reserves}</td>
+      <td class="td-rate">${ctr}%</td>
+      <td class="td-money">${comm}€</td>
+      <td>${d.primaryInfluencer ? `<span class="badge-primary">${escHtml(d.primaryInfluencer)}</span>` : '–'}</td>
+    </tr>`
+  }).join('')
+}
+
+function renderInfluencerTable(reserves) {
+  const tbody = document.getElementById('table-influencers')
+
+  // Per influencer commissions
+  const infMap = {}
+
+  for (const e of reserves) {
+    if (!e.influencer_handles) continue
+    const handles = Array.isArray(e.influencer_handles) ? e.influencer_handles : JSON.parse(e.influencer_handles)
+    const total = handles.length
+    handles.forEach((handle, pos) => {
+      if (!infMap[handle]) infMap[handle] = { reserves: 0, commission: 0, restaurants: new Set(), primaryCount: 0, coCount: 0 }
+      infMap[handle].reserves++
+      infMap[handle].commission += CLICK_VALUE * getCommissionRate(pos, total)
+      infMap[handle].restaurants.add(e.restaurant_name)
+      if (pos === 0) infMap[handle].primaryCount++
+      else infMap[handle].coCount++
+    })
+  }
+
+  const rows = Object.entries(infMap).sort((a, b) => b[1].commission - a[1].commission)
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Aucune donnée pour cette période.</td></tr>'
+    return
+  }
+
+  tbody.innerHTML = rows.map(([handle, d]) => {
+    return `<tr>
+      <td><span class="badge-primary">${escHtml(handle)}</span></td>
+      <td>${d.restaurants.size}</td>
+      <td class="td-num">${d.reserves}</td>
+      <td class="td-rate">${d.primaryCount} principal · ${d.coCount} co</td>
+      <td class="td-money">${d.commission.toFixed(2)}€</td>
+    </tr>`
+  }).join('')
+}
+
+function renderEventsTable(events) {
+  const tbody = document.getElementById('table-events')
+
+  if (events.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Aucun événement pour cette période.</td></tr>'
+    return
+  }
+
+  const typeLabel = { view: 'Vue', reserve: 'Réservation', instagram: 'Instagram', call: 'Appel', delivery: 'Livraison', order: 'Commande' }
+  const typeColor = { view: '#7A5C52', reserve: '#22c55e', instagram: '#CC7039', call: '#3b82f6', delivery: '#8b5cf6', order: '#f59e0b' }
+
+  tbody.innerHTML = events.map(e => {
+    const date = new Date(e.created_at)
+    const dateStr = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    const label = typeLabel[e.event_type] ?? e.event_type
+    const color = typeColor[e.event_type] ?? '#7A5C52'
+    const sessionShort = e.session_id ? e.session_id.slice(0, 8) + '…' : '–'
+    return `<tr>
+      <td style="color:var(--muted);font-size:12px">${dateStr}</td>
+      <td><span style="color:${color};font-weight:600;font-size:12px">${label}</span></td>
+      <td><strong>${escHtml(e.restaurant_name ?? '–')}</strong></td>
+      <td>${e.primary_influencer ? `<span class="badge-primary">${escHtml(e.primary_influencer)}</span>` : '–'}</td>
+      <td style="color:var(--muted);font-size:12px;font-family:monospace">${sessionShort}</td>
+    </tr>`
+  }).join('')
+}
+
+function escHtml(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+checkSession()
+
+// Allow Enter key on login form
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+    doLogin()
+  }
+})
+</script>
+</body>
+</html>

@@ -25,6 +25,7 @@ export default defineConfig({
         'conditions-utilisation': resolve(__dirname, 'conditions-utilisation.html'),
         'mentions-legales':    resolve(__dirname, 'mentions-legales.html'),
         'politique-confidentialite': resolve(__dirname, 'politique-confidentialite.html'),
+        admin:                     resolve(__dirname, 'admin.html'),
       }
     }
   }

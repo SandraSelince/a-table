@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { RESTAURANTS, CITIES, CUISINES, type Influencer, type Restaurant } from './data'
 import { fetchPlaceDetails, type PlaceData } from './services/places'
+import { trackEvent } from './services/supabase'
 
 const MapView = lazy(() => import('./MapView').then(m => ({ default: m.MapView })))
 import './App.css'
@@ -225,7 +226,12 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
                   target="_blank"
                   rel="noopener noreferrer"
                   className="card-cta card-cta--primary"
-                  onClick={e => { e.stopPropagation(); track('cta_reserver', { restaurant: restaurant.name }) }}
+                  onClick={e => {
+                    e.stopPropagation()
+                    track('cta_reserver', { restaurant: restaurant.name })
+                    const handles = [restaurant.recommendedBy.handle, ...(restaurant.coRecommendedBy?.map(i => i.handle) ?? [])]
+                    trackEvent('reserve', restaurant.name, handles)
+                  }}
                 >
                   Réserver
                 </a>
@@ -271,6 +277,12 @@ function RestaurantCard({ restaurant, onClick, active, onInfluencerClick }: { re
 
 function RestaurantSheet({ restaurant, onClose, onInfluencerClick }: { restaurant: Restaurant; onClose: () => void; onInfluencerClick?: (inf: Influencer) => void }) {
   const placeData = usePlaceDetails(restaurant)
+  const handles = [restaurant.recommendedBy.handle, ...(restaurant.coRecommendedBy?.map(i => i.handle) ?? [])]
+
+  useEffect(() => {
+    trackEvent('view', restaurant.name, handles)
+  }, [restaurant.id])
+
   return (
     <>
       <div className="rsheet-backdrop" onClick={onClose} />
@@ -311,7 +323,10 @@ function RestaurantSheet({ restaurant, onClose, onInfluencerClick }: { restauran
               </a>
             )}
             {restaurant.reservationUrl && (
-              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary" onClick={() => track('cta_reserver', { restaurant: restaurant.name })}>
+              <a href={restaurant.reservationUrl} target="_blank" rel="noopener noreferrer" className="rsheet-cta rsheet-cta--primary" onClick={() => {
+                track('cta_reserver', { restaurant: restaurant.name })
+                trackEvent('reserve', restaurant.name, handles)
+              }}>
                 Réserver
               </a>
             )}

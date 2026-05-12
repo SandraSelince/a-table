@@ -354,8 +354,7 @@
 
     async function saveContactSupabase(restaurant) {
       try {
-        await _sb.from('contacts').insert({
-          type: 'restaurant',
+        await _sb.from('restaurant_contacts').insert({
           email: restaurant.email,
           restaurant_name: restaurant.restaurantName,
           address: restaurant.address,

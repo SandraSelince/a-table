@@ -392,8 +392,7 @@
 
     async function saveContactSupabase(profile) {
       try {
-        await _sb.from('contacts').insert({
-          type: 'curator',
+        await _sb.from('curator_contacts').insert({
           email: profile.email,
           first_name: profile.firstName,
           last_name: profile.lastName,
